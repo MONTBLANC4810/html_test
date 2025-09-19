@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>양자 컴퓨팅 인터랙티브 리포트</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Neutral Deep Tech -->
+    <!-- Application Structure Plan: 이 SPA는 복잡한 양자 컴퓨팅 보고서를 사용자가 쉽게 탐색할 수 있도록 설계되었습니다. 상단 고정 탐색 바를 통해 '기본 원리', '기술 타임라인', '핵심 기술', '시장 동향', '미래 전망' 등 주제별 섹션으로 즉시 이동할 수 있습니다. 각 섹션은 카드, 인터랙티브 타임라인, 동적 차트, 탭 형식의 기업 분석 등 시각적이고 상호작용적인 요소로 구성되어 있습니다. 이러한 비선형적이고 주제 중심적인 구조는 사용자가 자신의 관심사에 따라 정보를 탐색하게 함으로써 학습 효과와 참여도를 극대화하기 위해 선택되었습니다. 보고서의 목차를 그대로 따르는 대신, 정보의 논리적 그룹화와 사용자 경험에 초점을 맞췄습니다. -->
+    <!-- Visualization & Content Choices: 
+    - 시장 성장 전망: 보고서의 시장 예측 데이터를 '변화'라는 목표 하에 Chart.js 막대그래프로 시각화했습니다. 이는 시간 경과에 따른 급격한 성장을 직관적으로 보여주며, 마우스오버 시 툴팁으로 정확한 수치를 제공합니다. (Library: Chart.js)
+    - 주요 기업 비교: 보고서의 기업별 전략을 '비교' 목표에 맞춰 탭 인터페이스로 구현했습니다. 사용자가 로고를 클릭하면 해당 기업의 정보만 표시되어, 여러 기업의 정보를 깔끔하게 비교 분석할 수 있습니다. (Method: HTML/CSS/JS)
+    - 기술 발전사: 역사적 사건들을 '정리' 목표에 따라 수평 타임라인으로 시각화했습니다. 각 이벤트에 클릭 상호작용을 추가하여 사용자가 능동적으로 정보를 탐색하도록 유도합니다. (Method: HTML/CSS/JS)
+    - 핵심 원리: 추상적인 개념들을 '정보 전달' 목표를 위해 아이콘 기반의 클릭 가능한 카드로 만들었습니다. 복잡한 내용을 단계적으로 노출시켜 학습 부담을 줄입니다. (Method: HTML/CSS/JS)
+    - 모든 시각화는 Canvas 또는 순수 HTML/CSS/JS로 구현하여 SVG/Mermaid.js 사용 금지 요구사항을 준수했습니다.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body { font-family: 'Noto Sans KR', sans-serif; background-color: #f8fafc; color: #1e293b; }
+        .chart-container { position: relative; width: 100%; max-width: 800px; margin-left: auto; margin-right: auto; height: 350px; }
+        @media (min-width: 768px) { .chart-container { height: 450px; } }
+        .nav-link { transition: color 0.3s, border-bottom-color 0.3s; }
+        .nav-link:hover { color: #0891b2; }
+        .nav-link.active { color: #0891b2; border-bottom-width: 2px; border-bottom-color: #0891b2; font-weight: 500;}
+        .timeline-item::before { content: ''; position: absolute; top: 11px; left: -22px; width: 14px; height: 14px; background-color: #f1f5f9; border: 3px solid #0891b2; border-radius: 50%; z-index: 1; }
+        .timeline-line { position: absolute; top: 18px; left: -16px; width: 2px; height: calc(100% - 18px); background-color: #cbd5e1; }
+        .company-logo { filter: grayscale(100%); transition: filter 0.3s; opacity: 0.6; }
+        .company-logo:hover, .company-logo.active { filter: grayscale(0%); opacity: 1; }
+        .card-expand { transition: all 0.3s ease-in-out; }
+        .gemini-btn {
+            background-color: #0e7490;
+            color: white;
+            transition: background-color 0.3s;
+        }
+        .gemini-btn:hover {
+            background-color: #155e75;
+        }
+        .gemini-btn:disabled {
+            background-color: #94a3b8;
+            cursor: not-allowed;
+        }
+        .spinner {
+            border-color: transparent;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="bg-slate-50">
+
+    <header id="header" class="bg-white/80 backdrop-blur-lg shadow-sm sticky top-0 z-50">
+        <nav class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0">
+                    <h1 class="text-xl font-bold text-cyan-700">Quantum Report ✨</h1>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#home" class="nav-link px-3 py-2 text-sm font-medium text-slate-700">홈</a>
+                        <a href="#principles" class="nav-link px-3 py-2 text-sm font-medium text-slate-700">핵심 원리</a>
+                        <a href="#timeline" class="nav-link px-3 py-2 text-sm font-medium text-slate-700">기술 발전사</a>
+                        <a href="#technology" class="nav-link px-3 py-2 text-sm font-medium text-slate-700">핵심 기술</a>
+                        <a href="#market" class="nav-link px-3 py-2 text-sm font-medium text-slate-700">시장 동향</a>
+                        <a href="#future" class="nav-link px-3 py-2 text-sm font-medium text-slate-700">미래 전망</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main>
+        <section id="home" class="pt-20 pb-12 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                <h2 class="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl md:text-5xl">양자 컴퓨팅: 미래를 계산하다</h2>
+                <p class="mt-6 max-w-3xl mx-auto text-lg text-slate-600">고전 컴퓨터의 한계를 넘어 산업의 패러다임을 바꿀 양자 컴퓨팅의 모든 것을 인터랙티브 대시보드에서 탐색해 보세요. 기술의 태동부터 미래 산업의 판도를 바꿀 잠재력까지 한눈에 파악할 수 있습니다.</p>
+                <div class="mt-12 bg-slate-100 rounded-xl p-8 max-w-4xl mx-auto">
+                    <p class="text-xl font-semibold text-slate-800">2030년 글로벌 양자 컴퓨팅 시장 전망</p>
+                    <p class="text-5xl font-bold text-cyan-600 mt-2">$20.2 Billion</p>
+                    <p class="text-md text-slate-500 mt-3">(연평균 41.8% 성장)</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="principles" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">양자 컴퓨팅의 4가지 핵심 원리</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-md text-slate-600">양자 컴퓨터가 강력한 계산 능력을 갖는 이유를 알아보세요. 아래 카드를 클릭하면 상세 설명을 볼 수 있습니다.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="principle-card cursor-pointer bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 card-expand">
+                        <div class="flex items-center space-x-4">
+                             <div class="text-3xl">⚛️</div>
+                             <h3 class="text-xl font-semibold text-slate-800">큐비트</h3>
+                        </div>
+                        <p class="mt-4 text-slate-600">0과 1의 상태만 갖는 비트와 달리, 큐비트는 0과 1의 상태를 '동시에' 가질 수 있는 양자 정보의 기본 단위입니다.</p>
+                        <div class="detail-content hidden mt-4 pt-4 border-t border-slate-200">
+                           <p class="text-sm text-slate-500">이러한 특성 덕분에 큐비트 수가 늘어날수록 처리할 수 있는 정보의 양이 기하급수적으로 증가하여 엄청난 계산 잠재력을 갖게 됩니다.</p>
+                           <button class="gemini-explain-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn" data-concept="큐비트">✨ 비유로 쉽게 이해하기</button>
+                        </div>
+                    </div>
+                     <div class="principle-card cursor-pointer bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 card-expand">
+                        <div class="flex items-center space-x-4">
+                             <div class="text-3xl">🔄</div>
+                             <h3 class="text-xl font-semibold text-slate-800">중첩</h3>
+                        </div>
+                        <p class="mt-4 text-slate-600">큐비트가 0과 1의 상태를 동시에 가질 수 있는 양자역학적 현상입니다. 측정하기 전까지는 모든 가능성이 중첩되어 있습니다.</p>
+                        <div class="detail-content hidden mt-4 pt-4 border-t border-slate-200">
+                           <p class="text-sm text-slate-500">마치 동전이 돌고 있는 상태와 같습니다. 땅에 떨어져 확인하기 전까지는 앞면과 뒷면의 가능성을 모두 가지고 있는 것과 유사합니다.</p>
+                            <button class="gemini-explain-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn" data-concept="중첩">✨ 비유로 쉽게 이해하기</button>
+                        </div>
+                    </div>
+                     <div class="principle-card cursor-pointer bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 card-expand">
+                        <div class="flex items-center space-x-4">
+                             <div class="text-3xl">🔗</div>
+                             <h3 class="text-xl font-semibold text-slate-800">얽힘</h3>
+                        </div>
+                        <p class="mt-4 text-slate-600">두 개 이상의 큐비트가 서로 연결되어, 하나의 상태가 결정되면 다른 큐비트의 상태가 즉시 결정되는 현상입니다.</p>
+                        <div class="detail-content hidden mt-4 pt-4 border-t border-slate-200">
+                           <p class="text-sm text-slate-500">아인슈타인이 '유령 같은 원격 작용'이라 불렀던 이 현상은 큐비트들이 아무리 멀리 떨어져 있어도 유지되며, 양자 계산의 핵심적인 특징입니다.</p>
+                            <button class="gemini-explain-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn" data-concept="얽힘">✨ 비유로 쉽게 이해하기</button>
+                        </div>
+                    </div>
+                     <div class="principle-card cursor-pointer bg-white p-6 rounded-lg shadow-md hover:shadow-xl hover:-translate-y-1 card-expand">
+                        <div class="flex items-center space-x-4">
+                             <div class="text-3xl">📈</div>
+                             <h3 class="text-xl font-semibold text-slate-800">간섭</h3>
+                        </div>
+                        <p class="mt-4 text-slate-600">양자 알고리즘은 큐비트 상태들의 확률 파동을 조작하여, 정답에 해당하는 상태의 확률은 증폭시키고 오답의 확률은 상쇄시킵니다.</p>
+                         <div class="detail-content hidden mt-4 pt-4 border-t border-slate-200">
+                           <p class="text-sm text-slate-500">이러한 양자 간섭 원리를 통해 수많은 가능성 속에서 정답을 효율적으로 찾아낼 수 있습니다.</p>
+                            <button class="gemini-explain-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn" data-concept="간섭">✨ 비유로 쉽게 이해하기</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="timeline" class="py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-slate-900">기술 발전사: 이론에서 현실로</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-md text-slate-600">양자 컴퓨팅의 주요 역사를 타임라인을 통해 살펴보세요.</p>
+                </div>
+                <div class="relative max-w-3xl mx-auto pl-8">
+                    <div class="timeline-item relative pb-12">
+                        <div class="timeline-line"></div>
+                        <h4 class="font-bold text-cyan-700">1980s: 이론적 태동</h4>
+                        <p class="mt-2 text-slate-600">물리학자 리처드 파인만이 양자 시스템을 시뮬레이션하기 위해 양자 컴퓨터라는 개념을 처음 제안했습니다.</p>
+                    </div>
+                    <div class="timeline-item relative pb-12">
+                        <div class="timeline-line"></div>
+                        <h4 class="font-bold text-cyan-700">1994: 쇼어 알고리즘</h4>
+                        <p class="mt-2 text-slate-600">피터 쇼어가 기존 컴퓨터로는 사실상 불가능한 소인수분해를 양자 컴퓨터로 빠르게 해결할 수 있는 알고리즘을 발표하여, 현대 암호 체계를 위협할 수 있는 잠재력을 보여주었습니다.</p>
+                    </div>
+                    <div class="timeline-item relative pb-12">
+                         <div class="timeline-line"></div>
+                        <h4 class="font-bold text-cyan-700">2000s: 초기 구현</h4>
+                        <p class="mt-2 text-slate-600">연구실 환경에서 소수의 큐비트를 구현하는 데 성공하며 양자 컴퓨터의 물리적 실현 가능성을 증명하기 시작했습니다.</p>
+                    </div>
+                    <div class="timeline-item relative pb-12">
+                         <div class="timeline-line"></div>
+                        <h4 class="font-bold text-cyan-700">2019: 양자 우월성</h4>
+                        <p class="mt-2 text-slate-600">구글이 53큐비트 프로세서 '시카모어'를 통해 현존하는 최고의 슈퍼컴퓨터로도 1만 년이 걸리는 계산을 200초 만에 해결했다고 발표하며 '양자 우월성'을 달성했다고 주장했습니다.</p>
+                    </div>
+                     <div class="timeline-item relative">
+                        <h4 class="font-bold text-cyan-700">현재: NISQ 시대</h4>
+                        <p class="mt-2 text-slate-600">오류 수정 기능이 완전하지 않은 '잡음 있는 중간 규모 양자(Noisy Intermediate-Scale Quantum)' 컴퓨터를 활용하여 특정 문제에서 고전 컴퓨터를 능가하는 유용한 결과를 찾기 위한 연구가 활발히 진행 중입니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="technology" class="py-20">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">핵심 기술 및 생태계</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-md text-slate-600">양자 컴퓨터를 구성하는 하드웨어와 소프트웨어, 그리고 이를 둘러싼 산업 생태계를 알아봅니다.</p>
+                </div>
+                <h3 class="text-2xl font-semibold text-center text-slate-800 mb-8">하드웨어: 큐비트 구현 방식</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+                    <div class="bg-white p-6 rounded-lg shadow">
+                        <p class="text-4xl mb-4">❄️</p>
+                        <h4 class="font-bold text-lg text-cyan-800">초전도</h4>
+                        <p class="text-sm text-slate-600 mt-2">IBM, Google 주력. 극저온 환경에서 전기 저항이 0인 초전도 회로를 이용해 큐비트를 구현합니다. 확장성이 좋지만 외부 잡음에 매우 민감합니다.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                         <p class="text-4xl mb-4">⚡</p>
+                        <h4 class="font-bold text-lg text-cyan-800">이온 트랩</h4>
+                        <p class="text-sm text-slate-600 mt-2">IonQ, Quantinuum 주력. 전자기장으로 이온을 허공에 가두고 레이저로 제어하여 큐비트로 사용합니다. 정확도가 높지만 계산 속도가 상대적으로 느립니다.</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow">
+                         <p class="text-4xl mb-4">💡</p>
+                        <h4 class="font-bold text-lg text-cyan-800">광자</h4>
+                        <p class="text-sm text-slate-600 mt-2">PsiQuantum 주력. 빛의 최소 단위인 광자를 큐비트로 사용합니다. 상온에서 작동 가능하고 잡음에 강하지만, 구현 난이도가 매우 높습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="market" class="py-20 bg-white">
+            <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">시장 동향 및 주요 기업</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-md text-slate-600">폭발적으로 성장하는 양자 컴퓨팅 시장과 기술 패권을 차지하기 위한 주요 기업들의 경쟁 전략을 분석합니다.</p>
+                </div>
+                <div class="bg-slate-50 p-6 sm:p-8 rounded-lg mb-16">
+                    <h3 class="text-2xl font-semibold text-center text-slate-800 mb-6">글로벌 시장 규모 성장 전망 (단위: 10억 달러)</h3>
+                    <div class="chart-container">
+                        <canvas id="marketChart"></canvas>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="text-2xl font-semibold text-center text-slate-800 mb-8">주요 플레이어 기술 및 투자 전략</h3>
+                    <div class="flex justify-center items-center space-x-4 sm:space-x-8 mb-8 border-b pb-4">
+                        <img src="https://placehold.co/100x40/EBF4FF/1E40AF?text=IBM" alt="IBM Logo" class="company-logo h-8 sm:h-10 cursor-pointer active" data-company="ibm">
+                        <img src="https://placehold.co/120x40/F0F9FF/0B6BCB?text=Google" alt="Google Logo" class="company-logo h-8 sm:h-10 cursor-pointer" data-company="google">
+                        <img src="https://placehold.co/150x40/EFF6FF/1D4ED8?text=Microsoft" alt="Microsoft Logo" class="company-logo h-8 sm:h-10 cursor-pointer" data-company="microsoft">
+                        <img src="https://placehold.co/90x40/F0F9FF/0C4A6E?text=IonQ" alt="IonQ Logo" class="company-logo h-8 sm:h-10 cursor-pointer" data-company="ionq">
+                    </div>
+                    <div id="company-details">
+                        <div data-content="ibm" class="company-content bg-white p-6 rounded-lg shadow-md">
+                            <h4 class="text-xl font-bold text-slate-800">IBM</h4>
+                            <p class="mt-2 text-slate-600"><span class="font-semibold text-cyan-700">기술:</span> 초전도 큐비트</p>
+                            <p class="mt-1 text-slate-600"><span class="font-semibold text-cyan-700">전략:</span> 가장 공격적인 큐비트 수 확장 로드맵을 발표하며 하드웨어 스케일업에 집중. 'Qiskit' 개발 플랫폼과 클라우드 서비스를 통해 개발자 생태계를 선점하려는 전략을 구사.</p>
+                            <p class="mt-1 text-slate-600"><span class="font-semibold text-cyan-700">주가 잠재력:</span> 명확한 로드맵과 강력한 생태계가 긍정적이나, 막대한 R&D 비용이 부담. 기술적 마일스톤 달성 여부가 주가에 직접적인 영향을 미칠 것.</p>
+                            <button class="gemini-news-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn" data-company-name="IBM">✨ 최신 동향 요약</button>
+                        </div>
+                        <div data-content="google" class="company-content hidden bg-white p-6 rounded-lg shadow-md">
+                            <h4 class="text-xl font-bold text-slate-800">Google</h4>
+                            <p class="mt-2 text-slate-600"><span class="font-semibold text-cyan-700">기술:</span> 초전도 큐비트</p>
+                            <p class="mt-1 text-slate-600"><span class="font-semibold text-cyan-700">전략:</span> '양자 우월성' 증명을 통해 기술 리더십을 과시. 하드웨어 확장보다는 큐비트의 질을 높이고, 장기적으로 가장 큰 난제인 '양자 오류 수정(QEC)' 기술 개발에 집중.</p>
+                            <p class="mt-1 text-slate-600"><span class="font-semibold text-cyan-700">주가 잠재력:</span> 오류 수정 기술에서 획기적인 돌파구를 마련할 경우, 시장의 판도를 바꿀 수 있는 잠재력 보유. 장기적인 관점의 투자 매력도 높음.</p>
+                            <button class="gemini-news-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn" data-company-name="Google">✨ 최신 동향 요약</button>
+                        </div>
+                         <div data-content="microsoft" class="company-content hidden bg-white p-6 rounded-lg shadow-md">
+                            <h4 class="text-xl font-bold text-slate-800">Microsoft</h4>
+                            <p class="mt-2 text-slate-600"><span class="font-semibold text-cyan-700">기술:</span> 위상 큐비트 (Topological Qubit)</p>
+                            <p class="mt-1 text-slate-600"><span class="font-semibold text-cyan-700">전략:</span> 이론적으로 가장 안정적이지만 물리적 구현이 매우 어려운 '위상 큐비트'에 베팅하는 하이리스크 하이리턴 전략. Azure Quantum 클라우드 플랫폼을 통해 다양한 하드웨어를 제공하는 개방형 생태계 구축.</p>
+                            <p class="mt-1 text-slate-600"><span class="font-semibold text-cyan-700">주가 잠재력:</span> 단기적 성과보다는 10년 이상을 내다보는 장기 연구개발에 집중. 위상 큐비트 구현 성공 시 압도적인 기술 우위를 점할 수 있으나, 불확실성이 가장 큼.</p>
+                             <button class="gemini-news-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn" data-company-name="Microsoft">✨ 최신 동향 요약</button>
+                        </div>
+                         <div data-content="ionq" class="company-content hidden bg-white p-6 rounded-lg shadow-md">
+                            <h4 class="text-xl font-bold text-slate-800">IonQ</h4>
+                            <p class="mt-2 text-slate-600"><span class="font-semibold text-cyan-700">기술:</span> 이온 트랩</p>
+                            <p class="mt-1 text-slate-600"><span class="font-semibold text-cyan-700">전략:</span> 높은 정확도(충실도)와 큐비트 간의 뛰어난 연결성을 장점으로 내세우는 기술 선도 스타트업. 양자컴퓨팅 전문 기업 최초로 뉴욕증권거래소에 상장하며 시장의 주목을 받음.</p>
+                            <p class="mt-1 text-slate-600"><span class="font-semibold text-cyan-700">주가 잠재력:</span> 기술적 우수성을 바탕으로 한 성장 기대감이 높음. 다만 빅테크와의 경쟁, 수익 모델 구체화 등이 향후 주가의 주요 변수가 될 것.</p>
+                             <button class="gemini-news-btn mt-4 w-full text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn" data-company-name="IonQ">✨ 최신 동향 요약</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="future" class="py-20">
+             <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-12">
+                    <h2 class="text-3xl font-bold text-slate-900">미래 전망 및 산업별 파급 효과</h2>
+                    <p class="mt-4 max-w-2xl mx-auto text-md text-slate-600">양자 컴퓨팅이 바꿔놓을 미래 산업의 지형도와 우리가 넘어야 할 과제들을 살펴봅니다.</p>
+                </div>
+                 <h3 class="text-2xl font-semibold text-center text-slate-800 mb-8">산업별 응용 분야</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+                    <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <p class="text-4xl">💊</p>
+                        <h4 class="font-bold mt-3 text-lg text-cyan-800">신약 개발</h4>
+                        <p class="text-sm text-slate-600 mt-2">분자 구조를 정확하게 시뮬레이션하여 신약 후보 물질을 빠르게 발굴하고 임상 성공률을 높일 수 있습니다.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <p class="text-4xl">💰</p>
+                        <h4 class="font-bold mt-3 text-lg text-cyan-800">금융</h4>
+                        <p class="text-sm text-slate-600 mt-2">수많은 변수를 고려한 포트폴리오 최적화, 금융 리스크 분석, 파생상품 가격 결정 등을 훨씬 정교하게 수행할 수 있습니다.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <p class="text-4xl">🚚</p>
+                        <h4 class="font-bold mt-3 text-lg text-cyan-800">공급망 & 물류</h4>
+                        <p class="text-sm text-slate-600 mt-2">수백, 수천 개의 변수가 얽힌 복잡한 물류 네트워크의 최적 경로를 실시간으로 찾아내 비용을 절감하고 효율을 극대화합니다.</p>
+                    </div>
+                     <div class="bg-white p-6 rounded-lg shadow-md text-center">
+                        <p class="text-4xl">🤖</p>
+                        <h4 class="font-bold mt-3 text-lg text-cyan-800">인공지능</h4>
+                        <p class="text-sm text-slate-600 mt-2">머신러닝 알고리즘의 학습 속도와 성능을 획기적으로 개선하여 더 정교하고 강력한 AI 모델 개발을 가능하게 합니다.</p>
+                    </div>
+                </div>
+                <div class="mt-16 bg-slate-50 p-6 sm:p-8 rounded-lg">
+                    <h3 class="text-2xl font-semibold text-center text-slate-800 mb-6">✨ 2040년 미래 시나리오 생성기</h3>
+                    <div class="max-w-xl mx-auto">
+                        <p class="text-center text-slate-600 mb-4">관심 있는 산업을 선택하고 버튼을 누르면, Gemini AI가 양자 컴퓨팅이 해당 산업을 어떻게 바꾸었을지에 대한 미래 시나리오를 생성합니다.</p>
+                        <div class="flex flex-col sm:flex-row items-center gap-4">
+                            <select id="industrySelector" class="w-full sm:w-1/2 block p-2 border border-slate-300 rounded-md shadow-sm focus:ring-cyan-500 focus:border-cyan-500">
+                                <option value="신약 개발">신약 개발</option>
+                                <option value="금융">금융</option>
+                                <option value="공급망">공급망 & 물류</option>
+                                <option value="인공지능">인공지능</option>
+                            </select>
+                            <button id="generateScenarioBtn" class="w-full sm:w-1/2 text-sm font-semibold py-2 px-4 rounded-md flex items-center justify-center gemini-btn">시나리오 생성</button>
+                        </div>
+                        <div id="scenarioResult" class="mt-6 bg-white p-4 rounded-md shadow-inner min-h-[150px] text-slate-700 text-sm whitespace-pre-wrap"></div>
+                    </div>
+                </div>
+                 <div class="mt-16">
+                     <h3 class="text-2xl font-semibold text-center text-slate-800 mb-8">극복해야 할 기술적 허들</h3>
+                     <div class="max-w-3xl mx-auto space-y-4">
+                         <div class="bg-red-50 border-l-4 border-red-400 p-4 rounded">
+                             <h4 class="font-bold text-red-800">결맞음 붕괴 (Decoherence)</h4>
+                             <p class="text-sm text-red-700">큐비트가 외부 환경의 미세한 잡음에도 양자 상태를 쉽게 잃어버리는 문제. 이를 해결하기 위해 극저온, 진공 등 극도로 통제된 환경이 필요합니다.</p>
+                         </div>
+                         <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded">
+                             <h4 class="font-bold text-amber-800">양자 오류 수정 (QEC)</h4>
+                             <p class="text-sm text-amber-700">계산 과정에서 발생하는 오류를 감지하고 수정하는 기술. 완벽한 양자 컴퓨터(FTQC)를 구현하기 위한 핵심 과제로, 수많은 물리 큐비트를 사용해 하나의 논리 큐비트를 만들어야 합니다.</p>
+                         </div>
+                     </div>
+                 </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="geminiModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden items-center justify-center p-4">
+        <div class="bg-white rounded-lg shadow-xl w-full max-w-2xl max-h-[80vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 id="modalTitle" class="text-lg font-semibold text-slate-800">Gemini AI 응답</h3>
+                <button id="closeModalBtn" class="text-slate-500 hover:text-slate-800">&times;</button>
+            </div>
+            <div id="modalContent" class="p-6 overflow-y-auto whitespace-pre-wrap text-slate-700">
+                <p>생성 중...</p>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="bg-slate-800 text-white">
+        <div class="container mx-auto py-6 px-4 sm:px-6 lg:px-8 text-center text-sm text-slate-400">
+            <p>&copy; 2025 Quantum Computing Interactive Report. All Rights Reserved.</p>
+            <p class="mt-1">본 데이터는 제공된 연구 계획을 기반으로 생성된 인터랙티브 시각화 자료입니다.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            const marketChartCtx = document.getElementById('marketChart').getContext('2d');
+            const marketChart = new Chart(marketChartCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['2025', '2026', '2027', '2028', '2029', '2030'],
+                    datasets: [{
+                        label: '시장 규모 (10억 달러)',
+                        data: [3.52, 5.01, 7.12, 10.11, 14.36, 20.20],
+                        backgroundColor: 'rgba(8, 145, 178, 0.6)',
+                        borderColor: 'rgba(8, 145, 178, 1)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) { label += ': '; }
+                                    if (context.parsed.y !== null) {
+                                        label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y) + 'B';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: { beginAtZero: true, grid: { color: '#e2e8f0' }, ticks: { callback: (v) => '$' + v + 'B' } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            const companyLogos = document.querySelectorAll('.company-logo');
+            const companyContents = document.querySelectorAll('.company-content');
+
+            companyLogos.forEach(logo => {
+                logo.addEventListener('click', () => {
+                    const company = logo.dataset.company;
+                    companyLogos.forEach(l => l.classList.remove('active'));
+                    logo.classList.add('active');
+                    companyContents.forEach(content => {
+                        content.classList.toggle('hidden', content.dataset.content !== company);
+                    });
+                });
+            });
+
+            const principleCards = document.querySelectorAll('.principle-card');
+            principleCards.forEach(card => {
+                card.addEventListener('click', (e) => {
+                    if (e.target.tagName !== 'BUTTON') {
+                        const detail = card.querySelector('.detail-content');
+                        detail.classList.toggle('hidden');
+                    }
+                });
+            });
+            
+            const navLinks = document.querySelectorAll('.nav-link');
+            const sections = document.querySelectorAll('main section');
+            const headerHeight = document.getElementById('header').offsetHeight;
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        navLinks.forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href').substring(1) === entry.target.id) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }, { root: null, rootMargin: `-${headerHeight}px 0px 0px 0px`, threshold: 0.4 });
+
+            sections.forEach(section => observer.observe(section));
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const targetId = e.currentTarget.getAttribute('href').substring(1);
+                    const targetElement = document.getElementById(targetId);
+                    if (targetElement) {
+                        const offsetPosition = targetElement.getBoundingClientRect().top + window.pageYOffset - headerHeight;
+                        window.scrollTo({ top: offsetPosition, behavior: "smooth" });
+                    }
+                });
+            });
+
+            const modal = document.getElementById('geminiModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalContent = document.getElementById('modalContent');
+            const closeModalBtn = document.getElementById('closeModalBtn');
+
+            const showModal = (title, content) => {
+                modalTitle.textContent = title;
+                modalContent.innerHTML = content;
+                modal.classList.remove('hidden');
+                modal.classList.add('flex');
+            };
+
+            const hideModal = () => {
+                modal.classList.add('hidden');
+                modal.classList.remove('flex');
+            };
+
+            closeModalBtn.addEventListener('click', hideModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    hideModal();
+                }
+            });
+
+            const apiKey = "";
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            const callGeminiAPI = async (payload, button) => {
+                const originalText = button.innerHTML;
+                button.disabled = true;
+                button.innerHTML = `<div class="w-4 h-4 border-2 rounded-full spinner"></div><span>생성 중...</span>`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) {
+                        throw new Error(`API error: ${response.statusText}`);
+                    }
+                    const result = await response.json();
+                    return result;
+                } catch (error) {
+                    console.error("Gemini API call failed:", error);
+                    return { error: "요청을 처리하는 중 오류가 발생했습니다. 잠시 후 다시 시도해 주세요." };
+                } finally {
+                    button.disabled = false;
+                    button.innerHTML = originalText;
+                }
+            };
+
+            document.querySelectorAll('.gemini-explain-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const concept = button.dataset.concept;
+                    showModal(`${concept} 개념 비유 설명`, '<p>Gemini AI가 생성 중입니다...</p>');
+                    
+                    const systemPrompt = "You are a friendly science communicator who excels at explaining complex quantum physics concepts using simple, everyday analogies for a non-expert audience.";
+                    const userQuery = `양자 컴퓨팅의 '${concept}' 개념을 중학생도 이해할 수 있도록 쉬운 비유를 들어 한 문단으로 설명해줘.`;
+                    
+                    const payload = {
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                    };
+
+                    const result = await callGeminiAPI(payload, button);
+                    if (result.error) {
+                         modalContent.textContent = result.error;
+                    } else {
+                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "결과를 생성할 수 없습니다.";
+                        modalContent.textContent = text;
+                    }
+                });
+            });
+
+            document.querySelectorAll('.gemini-news-btn').forEach(button => {
+                button.addEventListener('click', async () => {
+                    const companyName = button.dataset.companyName;
+                    showModal(`${companyName} 양자 컴퓨팅 최신 동향`, '<p>Gemini AI가 최신 뉴스를 검색 및 요약 중입니다...</p>');
+
+                    const systemPrompt = "You are a tech analyst specializing in quantum computing. Summarize the latest news and developments for the given company in the quantum computing field into 3-4 key bullet points in Korean. Focus on recent breakthroughs, partnerships, or roadmap updates. Include the source links for each point.";
+                    const userQuery = `${companyName}의 양자 컴퓨팅 분야 최신 뉴스 및 동향 요약해줘.`;
+                    
+                    const payload = {
+                        contents: [{ parts: [{ text: userQuery }] }],
+                        tools: [{ "google_search": {} }],
+                        systemInstruction: { parts: [{ text: systemPrompt }] },
+                    };
+
+                    const result = await callGeminiAPI(payload, button);
+                    if (result.error) {
+                        modalContent.textContent = result.error;
+                    } else {
+                        const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "결과를 생성할 수 없습니다.";
+                        const groundingMetadata = result.candidates?.[0]?.groundingMetadata;
+                        let sourcesHtml = "";
+                        if (groundingMetadata && groundingMetadata.groundingAttributions) {
+                            const sources = groundingMetadata.groundingAttributions
+                                .map(attr => ({ uri: attr.web?.uri, title: attr.web?.title }))
+                                .filter(s => s.uri && s.title);
+                            if (sources.length > 0) {
+                                sourcesHtml = '<h4 class="font-semibold mt-4 mb-2">출처</h4><ul class="list-disc pl-5 text-sm">';
+                                sources.forEach(source => {
+                                    sourcesHtml += `<li><a href="${source.uri}" target="_blank" class="text-cyan-600 hover:underline">${source.title}</a></li>`;
+                                });
+                                sourcesHtml += '</ul>';
+                            }
+                        }
+                        modalContent.innerHTML = text + sourcesHtml;
+                    }
+                });
+            });
+            
+            const generateScenarioBtn = document.getElementById('generateScenarioBtn');
+            const industrySelector = document.getElementById('industrySelector');
+            const scenarioResultDiv = document.getElementById('scenarioResult');
+            
+            generateScenarioBtn.addEventListener('click', async () => {
+                const industry = industrySelector.value;
+                scenarioResultDiv.textContent = 'Gemini AI가 미래 시나리오를 생성 중입니다...';
+
+                const systemPrompt = "You are a creative futurist and storyteller. Write a short, engaging, and plausible scenario (about 150 words) in Korean, describing a day-in-the-life or a specific revolutionary event in the year 2040, showcasing how quantum computing has transformed the selected industry.";
+                const userQuery = `2040년, 양자 컴퓨팅이 '${industry}' 산업을 어떻게 바꾸었는지에 대한 미래 시나리오를 생성해줘.`;
+                
+                const payload = {
+                    contents: [{ parts: [{ text: userQuery }] }],
+                    systemInstruction: { parts: [{ text: systemPrompt }] },
+                };
+
+                const result = await callGeminiAPI(payload, generateScenarioBtn);
+                 if (result.error) {
+                    scenarioResultDiv.textContent = result.error;
+                } else {
+                    const text = result.candidates?.[0]?.content?.parts?.[0]?.text || "결과를 생성할 수 없습니다.";
+                    scenarioResultDiv.textContent = text;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+

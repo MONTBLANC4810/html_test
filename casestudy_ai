@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생성형 AI 활용 컨설팅 케이스 스터디</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Subtle Accents -->
+    <!-- Application Structure Plan: A single-page dashboard featuring a filterable grid of interactive cards. Each card represents a case study and can be clicked to reveal detailed information in a modal window. This structure allows for easy scanning of all cases while enabling deep dives into specific ones without leaving the page. A summary chart provides a high-level overview of the potential benefits across all cases, enhancing data synthesis. This user-driven, non-linear exploration path was chosen for its flexibility and efficiency in presenting dense information. -->
+    <!-- Visualization & Content Choices: 
+        1. Case Information -> Goal: Organize & Inform -> Presentation: Interactive HTML/CSS Cards -> Interaction: Click to open modal with details, Filter by category -> Justification: Breaks down complex scenarios into manageable chunks, preventing information overload. Filtering helps users focus on relevant areas. Method: HTML/Tailwind CSS, Vanilla JS.
+        2. Overall Benefits -> Goal: Compare & Summarize -> Presentation: Horizontal Bar Chart -> Interaction: Tooltips on hover provide exact values. Future enhancement could be filtering cards by clicking on a bar. -> Justification: Provides a quick, quantitative overview of where GenAI can have the most impact, facilitating strategic decision-making. Library: Chart.js (Canvas). 
+        3. Generative Content -> Goal: Synthesize & Plan -> Presentation: Dynamically generated text blocks -> Interaction: Button click calls Gemini API to generate executive summaries or implementation roadmaps -> Justification: Adds significant value by transforming static case data into actionable, tailored content, demonstrating the power of generative AI directly within the application. Method: Vanilla JS, Fetch API (Gemini). -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #fdfcfb;
+            color: #3f3c3a;
+        }
+        .filter-btn {
+            transition: all 0.3s ease;
+        }
+        .filter-btn.active {
+            background-color: #a58d78;
+            color: #ffffff;
+            font-weight: 700;
+        }
+        .case-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            cursor: pointer;
+        }
+        .case-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        .modal-backdrop {
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-content {
+            transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+            transform: translateY(20px);
+        }
+        .chart-container {
+            position: relative; 
+            width: 100%; 
+            max-width: 900px; 
+            margin-left: auto; 
+            margin-right: auto; 
+            height: 400px;
+            max-height: 500px;
+        }
+        .gemini-btn {
+            flex: 1;
+            background-color: #3f3c3a;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .gemini-btn:hover:not(:disabled) {
+            background-color: #5a5551;
+        }
+        .gemini-btn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+        #gemini-output.loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        #gemini-output.loading::before {
+            content: '';
+            display: block;
+            width: 32px;
+            height: 32px;
+            border: 4px solid #e5e7eb;
+            border-top-color: #a58d78;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        @media (max-width: 768px) {
+            .chart-container {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container mx-auto p-4 md:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-[#3f3c3a] mb-2">생성형 AI 활용 컨설팅 케이스 스터디</h1>
+            <p class="text-lg text-gray-600">컨설팅 비즈니스의 업무 개선, 생산성 향상, 비용 절감을 위한 10가지 가상 시나리오</p>
+        </header>
+
+        <section id="introduction" class="mb-12 bg-white rounded-xl shadow-md p-6 md:p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold mb-4 text-[#a58d78]">프로젝트 개요</h2>
+            <p class="text-gray-700 leading-relaxed">
+                본 문서는 품질경영, 제조혁신, ESG, HR 등 다양한 분야의 전문 컨설팅 및 교육 서비스를 제공하는 기업이 생성형 AI를 도입하여 비즈니스 모델을 혁신할 수 있는 10가지 구체적인 활용 사례를 제시합니다. 각 케이스는 실제 컨설팅 현장에서 마주할 수 있는 문제 상황을 바탕으로, 생성형 AI와 코딩을 활용한 문제 해결 프로세스와 기대효과를 상세히 기술하여 실질적인 도입 전략 수립에 도움을 주는 것을 목표로 합니다. 아래 필터를 사용하여 관심 분야별 사례를 탐색하거나, 전체 사례를 살펴보며 생성형 AI의 무한한 가능성을 확인해 보세요.
+            </p>
+        </section>
+
+
+        <div id="filters" class="flex flex-wrap justify-center gap-2 mb-10">
+        </div>
+
+        <main id="case-studies-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+        </main>
+
+        <section id="summary-chart-section" class="mt-16 bg-white rounded-xl shadow-md p-6 md:p-8 border border-gray-200">
+            <h2 class="text-2xl font-bold text-center mb-6 text-[#a58d78]">케이스별 기대효과 종합 분석</h2>
+            <p class="text-center text-gray-600 mb-8">각 케이스 스터디를 통해 달성할 수 있는 주요 기대효과를 종합적으로 비교 분석한 차트입니다. 이를 통해 어떤 영역에서 생성형 AI의 도입 효과가 가장 클지 직관적으로 파악할 수 있습니다.</p>
+            <div class="chart-container">
+                <canvas id="summaryChart"></canvas>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center p-4 z-50 hidden modal-backdrop">
+        <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-y-auto modal-content">
+            <div class="sticky top-0 bg-white p-6 border-b border-gray-200 flex justify-between items-center">
+                <h2 id="modal-title" class="text-2xl font-bold text-[#3f3c3a]"></h2>
+                <button id="close-modal-btn" class="text-gray-500 hover:text-gray-800 transition-colors">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="modal-body" class="p-6 md:p-8">
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const caseData = [
+            {
+                id: 1,
+                title: "품질 불량 원인 분석 자동화",
+                category: "품질경영",
+                problem: "고객 클레임, 작업자 보고 등 비정형 데이터 분석에 많은 시간 소요",
+                situation: "자동차 부품 제조사 'A사'는 월 수백 건의 고객 클레임과 내부 공정 불량 보고서를 받고 있으나, 데이터가 텍스트, 이미지 등 비정형 형태라 원인 분석에 최소 2명의 엔지니어가 일주일 이상 매달려야 했습니다. 이로 인해 문제 해결이 지연되고 동일 불량이 반복되는 악순환이 있었습니다.",
+                solution: "자연어 처리(NLP) 기반의 생성형 AI 모델을 구축하여, 다양한 채널의 비정형 데이터를 자동으로 분류하고 핵심 키워드를 추출하여 불량 원인을 군집화하고 다차원 분석 리포트를 생성합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>데이터 수집 및 전처리:</b> VOC, 공정 기록, 검사 데이터 등 텍스트 및 이미지 데이터를 통합 DB에 수집하고 정제합니다.</li>
+                        <li><b>AI 모델 학습:</b> 과거 불량 보고서와 원인 분석 데이터를 AI 모델에 학습시켜, 특정 패턴과 불량 원인 간의 상관관계를 학습시킵니다. (Python, TensorFlow/PyTorch 활용)</li>
+                        <li><b>원인 분석 자동화:</b> 새로운 데이터가 입력되면, AI가 실시간으로 데이터를 분석하여 '과열', '오염', '조립 불량' 등 원인별로 자동 분류하고, 관련 증거(텍스트, 이미지)를 함께 제시합니다.</li>
+                        <li><b>시각화 대시보드 개발:</b> 분석 결과를 실시간으로 확인할 수 있는 대시보드를 구축하여, 불량 발생 트렌드와 가장 시급한 문제점을 직관적으로 파악할 수 있게 합니다. (Chart.js, D3.js 활용)</li>
+                        <li><b>개선 방안 추천:</b> AI가 분석된 원인을 바탕으로 과거 성공적인 개선 사례를 참조하여, 가장 효과적인 해결책 초안을 추천합니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 70, "정확도 향상": 30, "비용 절감": 40, "업무 자동화": 80 }
+            },
+            {
+                id: 2,
+                title: "제조 공정 및 공장 레이아웃 최적화",
+                category: "제조혁신",
+                problem: "신제품 생산 라인 증설 시, 최적의 레이아웃 설계에 대한 데이터 기반 의사결정 부족",
+                situation: "중견 가전제품 제조사 'B사'는 신제품 라인 증설을 앞두고 있으나, 기존의 경험 기반 레이아웃 설계 방식으로는 물류 동선, 작업 효율성, 재고 최소화 등을 종합적으로 고려한 최적의 안을 도출하기 어려웠습니다. 잘못된 설계는 지속적인 비용 증가와 생산성 저하로 이어질 수 있다는 우려가 컸습니다.",
+                solution: "물류 데이터, 작업 시간, 설비 제원 등 복합적인 변수를 입력하면, 강화학습 기반의 AI가 수천 개의 가상 레이아웃 시뮬레이션을 실행하여 물류 이동 거리가 최소화되고 생산성이 극대화되는 최적의 레이아웃 안을 3D 형태로 제안합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>데이터 모델링:</b> 공정 순서, 설비 크기, 작업자 동선, 자재 이동 빈도 등 레이아웃 설계에 필요한 모든 변수를 디지털 트윈으로 모델링합니다.</li>
+                        <li><b>AI 시뮬레이션 환경 구축:</b> 강화학습 에이전트가 다양한 레이아웃을 시도하고, '물류 이동 총거리', '대기 시간' 등의 지표를 보상으로 받아 학습할 수 있는 가상 환경을 구축합니다. (Python, AnyLogic/FlexSim 연동)</li>
+                        <li><b>최적화 알고리즘 실행:</b> AI가 수만 번의 시뮬레이션을 통해 최적의 설비 배치, 동선, 버퍼 재고 위치를 탐색하고, 상위 3개의 추천 안을 도출합니다.</li>
+                        <li><b>3D 시각화 및 결과 분석:</b> 추천된 레이아웃 안을 3D로 시각화하여 컨설턴트와 고객사가 직관적으로 이해하고, 각 안의 장단점을 비교 분석할 수 있는 보고서를 자동 생성합니다. (Three.js 활용)</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 50, "정확도 향상": 60, "비용 절감": 70, "업무 자동화": 40 }
+            },
+            {
+                id: 3,
+                title: "ESG 경영 보고서 초안 작성 자동화",
+                category: "ESG",
+                problem: "ESG 정보 공시 의무화에 따라 보고서 작성에 많은 리소스가 투입되나, 전문 인력 부족",
+                situation: "코스피 상장사 'C사'는 매년 ESG 보고서를 발간해야 하지만, GRI, SASB 등 복잡한 글로벌 가이드라인을 충족시키면서 내부 데이터를 취합하고 보고서를 작성하는 데 어려움을 겪고 있습니다. 컨설턴트들이 매번 수작업으로 데이터를 분석하고 원고를 작성하여 시간이 오래 걸리고 일관성 유지가 어려웠습니다.",
+                solution: "기업 내부의 에너지 사용량, 폐기물 배출량, 사회공헌 활동, 지배구조 데이터 등을 자동으로 분석하고, 선택된 글로벌 가이드라인(GRI 등)의 프레임워크에 맞춰 ESG 보고서의 초안을 생성합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>데이터 소스 연동:</b> ERP, 그룹웨어 등 내부 시스템에 흩어져 있는 ESG 관련 정형/비정형 데이터를 API를 통해 연동하고, 데이터 파이프라인을 구축합니다.</li>
+                        <li><b>가이드라인 프롬프트 엔지니어링:</b> 생성형 AI에게 GRI, TCFD 등 주요 ESG 공시 기준의 구조와 요구사항을 상세한 프롬프트로 학습시킵니다.</li>
+                        <li><b>보고서 초안 자동 생성:</b> AI가 연동된 내부 데이터를 바탕으로, 학습된 가이드라인에 맞춰 각 챕터별(환경, 사회, 지배구조) 서술형 보고서 초안과 관련 데이터 차트를 자동으로 생성합니다.</li>
+                        <li><b>검토 및 수정:</b> 컨설턴트는 AI가 생성한 초안을 바탕으로 기업의 특성과 전략적 메시지를 반영하여 최종 보고서를 완성합니다. 이 과정에서 수정된 내용은 AI 모델에 재학습되어 정확도를 높입니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 80, "정확도 향상": 50, "비용 절감": 60, "업무 자동화": 75 }
+            },
+            {
+                id: 4,
+                title: "개인화된 HR 교육 프로그램 추천 및 설계",
+                category: "HR",
+                problem: "획일화된 교육 프로그램으로 인한 낮은 참여도와 교육 효과 저하",
+                situation: "IT 솔루션 기업 'D사'는 전 직원을 대상으로 동일한 리더십 및 직무 교육을 제공했으나, 개인별 역량 수준과 경력 목표가 달라 교육 만족도와 실질적인 역량 향상 효과가 낮았습니다. 컨설팅팀이 맞춤형 프로그램을 제안하고 싶어도, 전 직원의 데이터를 분석하고 설계하는 데 한계가 있었습니다.",
+                solution: "직원의 역량 평가 결과, 성과 데이터, 경력 개발 계획(CDP)을 바탕으로 AI가 개인별 강점과 약점을 분석하고, 맞춤형 교육 커리큘럼(온라인 강의, 멘토링, 프로젝트 참여 등)을 자동으로 설계하고 추천합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>역량 모델링 및 데이터 통합:</b> 회사의 직무별 역량 모델을 정의하고, 개인별 인사 정보, 성과 평가, 다면진단 결과를 데이터베이스화합니다.</li>
+                        <li><b>AI 기반 역량 진단:</b> AI가 통합된 데이터를 분석하여 직원 개인의 역량 갭(Gap)과 잠재력을 식별합니다.</li>
+                        <li><b>맞춤형 커리큘럼 생성:</b> AI가 사내외 교육 컨텐츠 DB(Coursera, Udemy 등 API 연동)를 기반으로, 개인의 역량 갭을 채우고 경력 목표 달성에 도움이 될 최적의 학습 경로를 조합하여 제안합니다.</li>
+                        <li><b>학습 경과 모니터링 및 피드백:</b> 직원의 학습 진행 상황을 추적하고, 퀴즈 결과 등을 분석하여 추가적인 학습 자료를 추천하거나, 어려움을 겪는 부분에 대해 AI 튜터가 1차적인 피드백을 제공합니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 60, "정확도 향상": 70, "비용 절감": 30, "업무 자동화": 65 }
+            },
+            {
+                id: 5,
+                title: "컨설팅 보고서 및 제안서 초안 작성 지원",
+                category: "업무효율",
+                problem: "컨설턴트들이 자료 조사와 보고서의 기본 구조 작성에 과도한 시간을 사용",
+                situation: "컨설팅펌 'E사'의 컨설턴트들은 프로젝트마다 고객 인터뷰, 시장 데이터, 내부 자료 등을 분석하여 보고서를 작성하는데, 특히 자료 요약과 초안 작성 등 반복적인 작업에 프로젝트 시간의 약 30%를 소모하고 있었습니다. 이는 고부가가치 활동인 문제 해결 및 전략 수립에 집중할 시간을 부족하게 만들었습니다.",
+                solution: "프로젝트 관련 자료(음성 인터뷰, 회의록, 시장 분석 리포트 등)를 업로드하면, AI가 핵심 내용을 자동으로 요약하고, 표준 보고서 목차에 따라 각 섹션의 초안을 논리적으로 구성하여 생성합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>자료 업로드 및 DB화:</b> STT(Speech-to-Text) 기술로 음성 파일을 텍스트로 변환하고, 모든 프로젝트 자료를 벡터 데이터베이스에 저장합니다.</li>
+                        <li><b>내부 RAG(검색 증강 생성) 시스템 구축:</b> AI가 질문을 받으면, 먼저 내부 DB에서 가장 관련성 높은 정보를 검색한 후, 그 정보를 바탕으로 답변과 보고서 내용을 생성하여 '환각 현상'을 최소화하고 정보의 신뢰도를 높입니다. (LangChain, LlamaIndex 활용)</li>
+                        <li><b>보고서 템플릿 기반 생성:</b> 산업별/프로젝트 유형별 우수 보고서 템플릿을 AI에 학습시켜, 새로운 프로젝트 데이터 입력 시 해당 템플릿 구조에 맞춰 초안을 자동으로 생성합니다.</li>
+                        <li><b>인사이트 도출 지원:</b> '이 데이터에서 찾을 수 있는 3가지 핵심 인사이트는?'과 같이 컨설턴트가 질문하면, AI가 데이터를 다각도로 분석하여 숨겨진 패턴이나 시사점 초안을 제시합니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 85, "정확도 향상": 40, "비용 절감": 50, "업무 자동화": 90 }
+            },
+            {
+                id: 6,
+                title: "시장 변화 예측 및 경영전략 시뮬레이션",
+                category: "경영전략",
+                problem: "경쟁사 동향, 규제 변화 등 외부 변수에 따른 시장 변화를 예측하고 대응 전략을 수립하는 데 어려움",
+                situation: "화학소재 기업 'F사'는 원자재 가격 변동, 미중 무역 분쟁, 환경 규제 강화 등 복잡한 외부 변수들이 수익성에 미치는 영향을 예측하기 어려워, 중장기 경영 전략 수립에 애를 먹고 있었습니다. 시나리오별 손익 분석을 수작업으로 진행하여 시간이 오래 걸리고 정확도도 낮았습니다.",
+                solution: "거시 경제 지표, 경쟁사 뉴스, 원자재 가격 동향 등 외부 데이터를 실시간으로 분석하고, 이를 바탕으로 다양한 경영 시나리오(예: '유가 10% 상승 시', '최대 경쟁사 M&A 시')에 따른 예상 매출과 손익을 AI가 시뮬레이션하고, 최적의 대응 전략을 추천합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>데이터 수집 및 통합:</b> 웹 크롤링과 API를 통해 뉴스, 공시, 경제 지표 등 외부 데이터를 수집하고, 회사의 내부 재무/판매 데이터와 통합합니다. (Python, Scrapy 활용)</li>
+                        <li><b>AI 기반 예측 모델 개발:</b> 시계열 분석, 회귀 분석 등 머신러닝 모델을 활용하여 핵심 변수들의 미래 추세를 예측합니다. (Prophet, ARIMA 모델 활용)</li>
+                        <li><b>에이전트 기반 시뮬레이션:</b> 시장을 구성하는 '자사', '경쟁사', '고객' 등을 각각의 의사결정 규칙을 가진 AI 에이전트로 모델링하고, 외부 충격에 따라 각 에이전트가 어떻게 반응하는지 시뮬레이션합니다. (Agent-Based Modeling)</li>
+                        <li><b>전략 추천 및 근거 제시:</b> 각 시나리오별로 가장 높은 수익을 기대할 수 있는 전략(가격 조정, 투자 축소/확대 등)을 추천하고, AI가 왜 그런 결론을 내렸는지 근거가 되는 데이터와 분석 과정을 자연어로 설명해줍니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 50, "정확도 향상": 80, "비용 절감": 40, "업무 자동화": 50 }
+            },
+            {
+                id: 7,
+                title: "AI 기반 수요예측 및 재고관리 최적화",
+                category: "재고관리",
+                problem: "계절성, 프로모션 등 복잡한 요인으로 인한 수요예측 실패로 과잉/결품 재고 발생",
+                situation: "패션 유통사 'G사'는 트렌드에 민감하고 상품 수명이 짧아 수요예측이 매우 중요하지만, 기존 통계 기반 예측 방식으로는 프로모션, 날씨, 인플루언서 마케팅 등 다양한 변수를 반영하기 어려워 잦은 재고 문제를 겪었습니다. 이로 인해 재고 처리 비용과 판매 기회 손실이 막대했습니다.",
+                solution: "과거 판매 데이터, 재고 수준, 프로모션 기록뿐만 아니라 날씨, 소셜 미디어 트렌드 등 외부 데이터까지 학습한 AI가 상품별/지역별 수요를 높은 정확도로 예측하고, 이를 바탕으로 최적의 발주량과 안전 재고 수준을 자동으로 계산하여 제안합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>다차원 데이터 통합:</b> POS 데이터, 재고 데이터, SNS 버즈량, 기상 예보 등 내/외부 데이터를 통합하여 AI 모델의 입력 변수로 사용합니다.</li>
+                        <li><b>머신러닝 예측 모델 구축:</b> LSTM(Long Short-Term Memory) 등 시계열 데이터 예측에 강한 딥러닝 모델을 사용하여 복잡한 패턴을 학습하고 미래 수요를 예측합니다.</li>
+                        <li><b>재고 최적화 시뮬레이션:</b> 예측된 수요를 바탕으로, 재고 유지 비용과 결품으로 인한 기회손실 비용을 최소화하는 최적의 재고 정책(발주점, 발주량)을 시뮬레이션으로 도출합니다.</li>
+                        <li><b>자동 발주 시스템 연동:</b> 도출된 최적 발주량을 ERP 시스템과 연동하여, 담당자의 검토 후 클릭 한 번으로 발주가 이루어지도록 프로세스를 자동화합니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 60, "정확도 향상": 85, "비용 절감": 75, "업무 자동화": 70 }
+            },
+            {
+                id: 8,
+                title: "지능형 생산 스케줄링 시스템",
+                category: "생산관리",
+                problem: "예상치 못한 설비 고장, 긴급 주문 발생 시 생산 계획을 수동으로 재조정하여 비효율 발생",
+                situation: "반도체 장비 부품을 생산하는 'H사'는 다품종 소량생산 방식으로 인해 생산 스케줄이 매우 복잡했습니다. 설비 고장이나 긴급 주문이 발생할 때마다 생산관리자가 엑셀로 모든 공정을 재조정해야 했고, 이 과정에서 납기 지연과 생산 병목 현상이 빈번하게 발생했습니다.",
+                solution: "설비 상태, 자재 현황, 작업자 숙련도 등 실시간 데이터를 반영하여, 돌발 상황 발생 시 AI가 수 분 내로 전체 생산라인에 미치는 영향을 최소화하는 최적의 생산 스케줄을 재편성하고, 각 공정에 새로운 작업 지시를 자동으로 전달합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>실시간 데이터 연동:</b> MES(생산관리시스템), SCM(공급망관리) 시스템과 연동하여 설비 가동 상태, 재고 현황, 주문 정보 등을 실시간으로 모니터링합니다.</li>
+                        <li><b>제약 조건 프로그래밍:</b> 각 공정의 제약 조건(선후 관계, 설비 능력, 작업자 요구 스킬 등)을 정의하고, 이를 만족시키면서 전체 생산 리드타임을 최소화하는 것을 목표로 설정합니다.</li>
+                        <li><b>AI 기반 스케줄링 엔진 개발:</b> 유전 알고리즘(Genetic Algorithm)이나 강화학습을 활용하여, 돌발 변수 발생 시 수많은 대안 스케줄을 빠르게 탐색하고 최적의 해답을 도출합니다.</li>
+                        <li><b>결과 시각화 및 배포:</b> 재편성된 스케줄을 간트 차트(Gantt Chart) 형태로 시각화하여 관리자가 쉽게 이해할 수 있도록 하고, 확정된 작업 지시를 현장의 키오스크나 작업자 태블릿으로 즉시 전송합니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 75, "정확도 향상": 70, "비용 절감": 50, "업무 자동화": 80 }
+            },
+            {
+                id: 9,
+                title: "고객 맞춤형 교육 콘텐츠 자동 생성",
+                category: "교육",
+                problem: "고객사의 산업 및 직무 특성을 반영한 맞춤형 교육 자료 제작에 많은 시간과 노력이 소요",
+                situation: "컨설팅펌 'E사'의 교육팀은 '스마트 팩토리' 교육을 진행할 때, 고객사가 자동차 산업인지, 반도체 산업인지에 따라 교육 내용과 예시를 다르게 구성해야 했습니다. 하지만 매번 교안과 실습 자료를 새로 만드는 데 시간이 오래 걸려 다양한 고객의 요구에 신속하게 대응하기 어려웠습니다.",
+                solution: "표준 교육 커리큘럼을 기반으로, 고객사의 산업, 주요 생산품, 당면 과제 등 키워드를 입력하면, AI가 해당 산업의 특성과 용어에 맞는 맞춤형 교육 교안, 사례 연구, 역할극 시나리오, 예상 Q&A 목록을 자동으로 생성합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>교육 콘텐츠 모듈화:</b> 기존 교육 자료를 '개념', '사례', '실습', '퀴즈' 등 작은 단위의 모듈로 분해하여 데이터베이스화합니다.</li>
+                        <li><b>고객 정보 입력 및 프롬프트 생성:</b> 컨설턴트가 간단한 양식에 고객사 정보(산업, 직급, 교육 목표 등)를 입력하면, 시스템이 이를 최적화된 프롬프트로 자동 변환합니다.</li>
+                        <li><b>AI 기반 콘텐츠 재구성:</b> 생성형 AI가 프롬프트를 바탕으로 DB에서 가장 적합한 콘텐츠 모듈들을 조합하고, 고객사 맞춤형 용어와 예시를 추가하여 새로운 교안을 생성합니다.</li>
+                        <li><b>다양한 포맷으로 변환:</b> 생성된 텍스트 기반 교안을 파워포인트, 워드, PDF 등 원하는 형식의 파일로 변환하는 기능을 제공하여 강사의 준비 시간을 단축시킵니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 90, "정확도 향상": 60, "비용 절감": 70, "업무 자동화": 85 }
+            },
+            {
+                id: 10,
+                title: "공급망 리스크 실시간 감지 및 대응",
+                category: "제조혁신",
+                problem: "자연재해, 지정학적 리스크 등 예측 불가능한 이벤트로 인한 공급망 중단에 대한 대응 지연",
+                situation: "글로벌 전자부품 기업 'I사'는 특정 국가에 부품 공급업체가 집중되어 있어, 해당 지역의 자연재해나 정치적 불안정성이 발생할 때마다 부품 수급에 큰 차질을 빚었습니다. 리스크가 발생한 후에야 대체 공급선을 찾기 시작해 생산 중단으로 이어지는 경우가 많았습니다.",
+                solution: "전 세계 뉴스와 물류 데이터를 실시간으로 모니터링하여 공급망에 영향을 줄 수 있는 리스크(지진, 태풍, 항만 파업 등)를 조기에 감지하고, 해당 리스크 발생 시 AI가 사전에 설정된 대체 공급선을 자동으로 평가하여 최적의 비상 계획(Contingency Plan)을 추천합니다.",
+                process: `
+                    <ol class="list-decimal list-inside space-y-2 text-gray-700">
+                        <li><b>글로벌 리스크 데이터 수집:</b> 뉴스 피드, 기상 정보, 소셜 미디어, 물류 운송 데이터 등 다양한 소스로부터 공급망 리스크 관련 데이터를 24시간 수집합니다.</li>
+                        <li><b>리스크 이벤트 감지 및 분류:</b> AI가 수집된 데이터에서 '공급업체 공장 화재', '항구 폐쇄' 등 의미 있는 이벤트를 실시간으로 식별하고, 심각도와 영향을 분석하여 관련 담당자에게 즉시 알림을 보냅니다.</li>
+                        <li><b>영향 분석 시뮬레이션:</b> 특정 공급업체에 문제가 생겼을 때, 전체 생산 계획에 미치는 영향(생산 차질 예상 수량, 손실 금액)을 AI가 시뮬레이션하여 보여줍니다.</li>
+                        <li><b>최적 대응 방안 추천:</b> AI가 대체 가능한 공급업체들의 재고 현황, 생산 능력, 운송 리드타임을 종합적으로 비교 분석하여, 가장 빠르고 비용 효율적인 대안을 순위별로 제시하고, 연락해야 할 담당자 정보까지 제공합니다.</li>
+                    </ol>
+                `,
+                benefits: { "시간 절감": 70, "정확도 향상": 90, "비용 절감": 60, "업무 자동화": 75 }
+            }
+        ];
+        
+        const apiKey = ""; // Per instructions, leave as is for runtime injection.
+
+        async function callGeminiAPI(prompt, outputElement, buttons) {
+            buttons.forEach(btn => btn.disabled = true);
+            outputElement.innerHTML = '';
+            outputElement.classList.add('loading');
+            
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: prompt }] }],
+            };
+
+            let response;
+            let retries = 3;
+            let delay = 1000;
+
+            for (let i = 0; i < retries; i++) {
+                try {
+                    response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (response.ok) break; 
+                    if (response.status === 429 || response.status >= 500) {
+                        console.warn(`API call failed with status ${response.status}. Retrying in ${delay}ms...`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2;
+                    } else {
+                        throw new Error(`API call failed with status ${response.status}`);
+                    }
+                } catch (error) {
+                    console.error('Fetch error:', error);
+                    if (i === retries - 1) {
+                        outputElement.classList.remove('loading');
+                        outputElement.innerHTML = `<p class="text-red-500 text-center">API 호출 중 오류가 발생했습니다. 네트워크 연결을 확인하거나 나중에 다시 시도해 주세요.</p>`;
+                        buttons.forEach(btn => btn.disabled = false);
+                        return;
+                    }
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+
+            outputElement.classList.remove('loading');
+
+            try {
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    let text = candidate.content.parts[0].text;
+                    text = text.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold">$1</strong>');
+                    text = text.replace(/(\d+\.\s)/g, '<br><strong class="font-semibold">$1</strong>');
+                    outputElement.innerHTML = text;
+                } else {
+                    console.error('Unexpected API response structure:', result);
+                    outputElement.innerHTML = `<p class="text-red-500 text-center">AI로부터 유효한 응답을 받지 못했습니다.</p>`;
+                }
+            } catch (error) {
+                console.error('Error parsing API response:', error);
+                outputElement.innerHTML = `<p class="text-red-500 text-center">응답 처리 중 오류가 발생했습니다.</p>`;
+            } finally {
+                buttons.forEach(btn => btn.disabled = false);
+            }
+        }
+
+        function handleGenerateSummary(caseItem) {
+            const outputElement = document.getElementById('gemini-output');
+            const buttons = [document.getElementById('generate-summary-btn'), document.getElementById('generate-roadmap-btn')];
+            const prompt = `당신은 최고의 경영 컨설턴트입니다. 다음 비즈니스 케이스 스터디를 바쁜 C레벨 경영진을 위해 간결한 단일 문단으로 요약해 주세요. 핵심 문제, 혁신적인 해결책, 그리고 주요 비즈니스 효과에 초점을 맞춰 한국어로 작성해 주세요.
+
+            케이스 스터디 상세 내용:
+            - 제목: ${caseItem.title}
+            - 문제점: ${caseItem.problem} ${caseItem.situation}
+            - 해결책: ${caseItem.solution}
+
+            이제 경영진 요약 보고서를 생성해 주세요.`;
+            callGeminiAPI(prompt, outputElement, buttons);
+        }
+
+        function handleGenerateRoadmap(caseItem) {
+            const outputElement = document.getElementById('gemini-output');
+            const buttons = [document.getElementById('generate-summary-btn'), document.getElementById('generate-roadmap-btn')];
+            const cleanProcess = caseItem.process.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+
+            const prompt = `당신은 전문 프로젝트 관리자이자 전략가입니다. 다음 케이스 스터디를 기반으로, 실행 가능한 5단계의 고수준 실행 로드맵을 생성해 주세요. 각 단계별로 명확한 제목과 1~2문장의 핵심 활동 설명을 포함해야 합니다. 전체 답변은 실용적이고 실행 가능해야 하며, 반드시 한국어로 작성되어야 합니다.
+
+            케이스 스터디 상세 내용:
+            - 제목: ${caseItem.title}
+            - 문제점: ${caseItem.problem}
+            - 제안된 해결책: ${caseItem.solution}
+            - 개요 프로세스 단계: ${cleanProcess}
+
+            이제 5단계 실행 로드맵을 생성해 주세요.`;
+            callGeminiAPI(prompt, outputElement, buttons);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const grid = document.getElementById('case-studies-grid');
+            const filtersContainer = document.getElementById('filters');
+            const modal = document.getElementById('modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalBody = document.getElementById('modal-body');
+            const closeModalBtn = document.getElementById('close-modal-btn');
+            
+            const categories = ['전체', ...new Set(caseData.map(c => c.category))];
+
+            function renderFilters() {
+                categories.forEach(category => {
+                    const btn = document.createElement('button');
+                    btn.className = 'filter-btn px-4 py-2 rounded-full text-sm font-medium bg-white border border-gray-300 hover:bg-gray-100';
+                    btn.textContent = category;
+                    btn.dataset.category = category;
+                    if (category === '전체') {
+                        btn.classList.add('active');
+                    }
+                    btn.addEventListener('click', handleFilterClick);
+                    filtersContainer.appendChild(btn);
+                });
+            }
+
+            function renderCards(filter = '전체') {
+                grid.innerHTML = '';
+                const filteredData = filter === '전체' ? caseData : caseData.filter(c => c.category === filter);
+                
+                filteredData.forEach(caseItem => {
+                    const card = document.createElement('div');
+                    card.className = 'case-card bg-white rounded-xl shadow-md overflow-hidden border border-gray-200';
+                    card.innerHTML = `
+                        <div class="p-6">
+                            <div class="flex justify-between items-start mb-2">
+                                <span class="text-xs font-semibold inline-block py-1 px-2 uppercase rounded-full text-[#a58d78] bg-[#f5f1ed]">
+                                    ${caseItem.category}
+                                </span>
+                                <span class="text-2xl font-bold text-gray-300">#${caseItem.id}</span>
+                            </div>
+                            <h3 class="text-xl font-bold text-gray-800 mb-2 h-14">${caseItem.title}</h3>
+                            <p class="text-gray-600 text-sm h-10">${caseItem.problem}</p>
+                            <div class="text-right mt-4">
+                                <span class="text-sm font-medium text-[#a58d78] hover:text-[#8a6d57]">상세보기 →</span>
+                            </div>
+                        </div>
+                    `;
+                    card.addEventListener('click', () => openModal(caseItem));
+                    grid.appendChild(card);
+                });
+            }
+
+            function handleFilterClick(e) {
+                const selectedCategory = e.target.dataset.category;
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                renderCards(selectedCategory);
+            }
+            
+            function openModal(caseItem) {
+                modalTitle.textContent = caseItem.title;
+                const benefitsHTML = Object.entries(caseItem.benefits).map(([key, value]) => `
+                    <li class="bg-gray-50 p-3 rounded-lg">
+                        <span class="font-semibold text-gray-800">${key}</span>
+                        <div class="w-full bg-gray-200 rounded-full h-2.5 mt-1">
+                            <div class="bg-gradient-to-r from-[#c4b3a4] to-[#a58d78] h-2.5 rounded-full" style="width: ${value}%"></div>
+                        </div>
+                        <span class="text-xs text-right block text-gray-500 mt-1">${value}% 향상</span>
+                    </li>`).join('');
+
+                const geminiSectionHTML = `
+                    <div class="mt-8 pt-6 border-t border-gray-200">
+                        <h4 class="text-lg font-bold text-[#a58d78] mb-4 flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor" class="text-[#a58d78]"><path d="M12.75 2.75a.75.75 0 0 0-1.5 0v5.5a.75.75 0 0 0 1.5 0v-5.5Z M18.14 5.86a.75.75 0 1 0-1.06-1.06l-3.89 3.89a.75.75 0 0 0 1.06 1.06l3.89-3.89Z M21.25 11.25a.75.75 0 0 0 0 1.5h-5.5a.75.75 0 0 0 0-1.5h5.5Z M18.14 18.14a.75.75 0 0 0-1.06 1.06l3.89 3.89a.75.75 0 0 0 1.06-1.06l-3.89-3.89Z M12.75 21.25a.75.75 0 0 0-1.5 0v-5.5a.75.75 0 0 0 1.5 0v5.5Z M5.86 18.14a.75.75 0 1 0 1.06 1.06l-3.89 3.89a.75.75 0 1 0-1.06-1.06l3.89-3.89Z M2.75 12.75a.75.75 0 0 0 0-1.5h5.5a.75.75 0 0 0 0 1.5h-5.5Z M5.86 5.86a.75.75 0 0 0 1.06-1.06l-3.89-3.89a.75.75 0 0 0-1.06 1.06l3.89 3.89Z"></path></svg>
+                            Gemini AI 어시스턴트
+                        </h4>
+                        <p class="text-sm text-gray-600 mb-4">아래 버튼을 클릭하여 각 케이스에 대한 AI 기반 요약 또는 실행 계획을 생성해 보세요.</p>
+                        <div class="flex flex-col sm:flex-row gap-4 mb-4">
+                            <button id="generate-summary-btn" class="gemini-btn">✨ 임원용 요약 생성</button>
+                            <button id="generate-roadmap-btn" class="gemini-btn">✨ 실행 로드맵 생성</button>
+                        </div>
+                        <div id="gemini-output" class="mt-4 p-4 bg-gray-50 rounded-lg border border-gray-200 min-h-[120px] whitespace-pre-wrap font-normal text-gray-800 leading-relaxed transition-all duration-300">
+                            <p class="text-gray-500 text-center py-8">AI 어시스턴트를 사용하여 요약 또는 로드맵을 생성해 보세요.</p>
+                        </div>
+                    </div>`;
+
+                modalBody.innerHTML = `
+                    <div class="space-y-6">
+                        <div><h4 class="text-lg font-bold text-[#a58d78] mb-2">상세 상황</h4><p class="text-gray-700 leading-relaxed">${caseItem.situation}</p></div>
+                        <div><h4 class="text-lg font-bold text-[#a58d78] mb-2">핵심 문제점</h4><p class="text-gray-700 leading-relaxed">${caseItem.problem}</p></div>
+                        <div><h4 class="text-lg font-bold text-[#a58d78] mb-2">생성형 AI 활용 방안</h4><p class="text-gray-700 leading-relaxed">${caseItem.solution}</p></div>
+                        <div><h4 class="text-lg font-bold text-[#a58d78] mb-2">해결 프로세스</h4>${caseItem.process}</div>
+                        <div><h4 class="text-lg font-bold text-[#a58d78] mb-2">기대 효과</h4><ul class="grid grid-cols-1 sm:grid-cols-2 gap-4">${benefitsHTML}</ul></div>
+                        ${geminiSectionHTML}
+                    </div>
+                `;
+
+                document.getElementById('generate-summary-btn').addEventListener('click', () => handleGenerateSummary(caseItem));
+                document.getElementById('generate-roadmap-btn').addEventListener('click', () => handleGenerateRoadmap(caseItem));
+
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                    modal.querySelector('.modal-content').classList.remove('translate-y-20px', 'opacity-0');
+                }, 10);
+            }
+
+            function closeModal() {
+                modal.classList.add('opacity-0');
+                modal.querySelector('.modal-content').classList.add('translate-y-20px', 'opacity-0');
+                setTimeout(() => {
+                    modal.classList.add('hidden');
+                }, 300);
+            }
+
+            closeModalBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (e) => {
+                if (e.target === modal) {
+                    closeModal();
+                }
+            });
+
+            function renderChart() {
+                const ctx = document.getElementById('summaryChart').getContext('2d');
+                const benefitLabels = ["시간 절감", "정확도 향상", "비용 절감", "업무 자동화"];
+                
+                const datasets = caseData.map(caseItem => {
+                    return {
+                        label: `Case ${caseItem.id}`,
+                        data: benefitLabels.map(label => caseItem.benefits[label] || 0),
+                        backgroundColor: `rgba(165, 141, 120, ${0.4 + (caseItem.id * 0.05)})`,
+                        borderWidth: 0
+                    };
+                });
+                
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: benefitLabels,
+                        datasets: datasets
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: { beginAtZero: true, max: 100, title: { display: true, text: '기대효과 향상률 (%)' }},
+                            y: { stacked: true }
+                        },
+                        plugins: {
+                            title: { display: false },
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const originalLabel = context.dataset.label || '';
+                                        const caseInfo = caseData.find(c => `Case ${c.id}` === originalLabel);
+                                        return `${caseInfo.title}: ${context.formattedValue}%`;
+                                    }
+                                }
+                            }
+                        },
+                        interaction: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                    }
+                });
+            }
+
+            renderFilters();
+            renderCards();
+            renderChart();
+        });
+    </script>
+</body>
+</html>
+

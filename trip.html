@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>노르망디 감성 하루 여행 가이드</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background-color: #F8F9FA;
+            color: #333333;
+        }
+        h1, h2, h3, .font-montserrat {
+            font-family: 'Montserrat', sans-serif;
+        }
+        .text-shadow-custom {
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 350px;
+            max-height: 400px;
+        }
+        .nav-link {
+            transition: color 0.3s, border-bottom-color 0.3s;
+        }
+        .nav-link:hover {
+            color: #F28F3B;
+            border-bottom-color: #F28F3B;
+        }
+        .timeline-item {
+            position: relative;
+            padding-bottom: 2rem;
+            padding-left: 2.5rem;
+        }
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: #00A6A6;
+            border: 3px solid white;
+            z-index: 10;
+        }
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 20px;
+            width: 2px;
+            height: 100%;
+            background-color: #E5E7EB;
+        }
+    </style>
+</head>
+<body class="bg-[#F8F9FA]">
+
+    <header class="bg-cover bg-center h-screen relative" style="background-image: url('https://placehold.co/1920x1080/aaccff/ffffff?text=Normandy+Coast')">
+        <div class="absolute inset-0 bg-black bg-opacity-40"></div>
+        <div class="relative z-10 flex flex-col items-center justify-center h-full text-white text-center px-4">
+            <h1 class="text-5xl md:text-7xl font-extrabold font-montserrat text-shadow-custom">A PERFECT DAY IN NORMANDY</h1>
+            <p class="mt-4 text-lg md:text-2xl max-w-3xl">바람이 빚은 절벽, 그림이 남은 마을, 그리고 기적처럼 솟은 섬. 당신의 감성을 깨울 완벽한 하루 여행.</p>
+        </div>
+    </header>
+
+    <nav class="sticky top-0 bg-white z-20 shadow-md">
+        <div class="container mx-auto px-6 py-3 flex justify-center items-center space-x-6 md:space-x-12">
+            <a href="#itinerary" class="nav-link text-gray-700 font-bold border-b-2 border-transparent pb-1">🗺️ 일정</a>
+            <a href="#etretat" class="nav-link text-gray-700 font-bold border-b-2 border-transparent pb-1">🌊 에트르타</a>
+            <a href="#honfleur" class="nav-link text-gray-700 font-bold border-b-2 border-transparent pb-1">🎨 옹플뢰르</a>
+            <a href="#mont-saint-michel" class="nav-link text-gray-700 font-bold border-b-2 border-transparent pb-1">🏰 몽생미셸</a>
+        </div>
+    </nav>
+    
+    <main class="container mx-auto p-4 md:p-8">
+        <section id="itinerary" class="my-16">
+            <h2 class="text-4xl font-bold text-center mb-12 text-[#333333]">하루의 여정: 시간 여행</h2>
+            <div class="card p-8">
+                <div class="flex flex-col md:flex-row justify-between items-center space-y-8 md:space-y-0 md:space-x-4 text-center">
+                    <div class="flex-1">
+                        <p class="text-5xl">⏰</p>
+                        <h3 class="text-xl font-bold mt-2 text-[#00A6A6]">07:20</h3>
+                        <p class="text-gray-600 mt-1">파리 집결 후 출발</p>
+                    </div>
+                    <div class="flex-1 text-2xl text-gray-300 hidden md:block">→</div>
+                    <div class="flex-1">
+                        <p class="text-5xl">🐘</p>
+                        <h3 class="text-xl font-bold mt-2 text-[#F28F3B]">10:30</h3>
+                        <p class="text-gray-600 mt-1">에트르타 코끼리 바위</p>
+                    </div>
+                    <div class="flex-1 text-2xl text-gray-300 hidden md:block">→</div>
+                    <div class="flex-1">
+                        <p class="text-5xl">⛵</p>
+                        <h3 class="text-xl font-bold mt-2 text-[#772D8B]">13:00</h3>
+                        <p class="text-gray-600 mt-1">옹플뢰르 항구 마을</p>
+                    </div>
+                    <div class="flex-1 text-2xl text-gray-300 hidden md:block">→</div>
+                    <div class="flex-1">
+                        <p class="text-5xl">🏰</p>
+                        <h3 class="text-xl font-bold mt-2 text-[#00A6A6]">16:00</h3>
+                        <p class="text-gray-600 mt-1">몽생미셸 수도원</p>
+                    </div>
+                    <div class="flex-1 text-2xl text-gray-300 hidden md:block">→</div>
+                    <div class="flex-1">
+                        <p class="text-5xl">🌙</p>
+                        <h3 class="text-xl font-bold mt-2 text-[#F2622E]">22:30</h3>
+                        <p class="text-gray-600 mt-1">파리 도착</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="etretat" class="my-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-[#333333]">🌊 에트르타: 자연이 빚은 예술</h2>
+                <p class="text-lg mt-4 text-gray-600 max-w-3xl mx-auto">인상파 화가들에게 영감을 준 프랑스 해안 절경의 대표지. 알바트르 해안의 하얀 석회암 절벽이 빚어낸 경이로운 풍경을 만나보세요.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="card p-6 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4 text-[#00A6A6]">예술가들의 뮤즈</h3>
+                    <p class="text-gray-700 mb-6">에트르타의 독특한 풍경은 수많은 예술가들을 매료시켰습니다. 특히 클로드 모네는 다양한 시간과 날씨 속에서 변화하는 절벽의 빛을 화폭에 담았으며, 귀스타브 쿠르베는 파도의 역동적인 힘을 그렸습니다. 소설가 기 드 모파상은 이곳에서 어린 시절을 보내며 그의 작품에 깊은 영감을 받았습니다.</p>
+                    <div class="chart-container h-64 md:h-80">
+                        <canvas id="artistsChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-2">에트르타에 영감을 받은 주요 예술가들의 활동 시기</p>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-[#00A6A6]">MUST-DO</h3>
+                    <ul class="space-y-4">
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3">1️⃣</span>
+                            <div>
+                                <h4 class="font-bold">아발 절벽(Falaise d'Aval) 하이킹</h4>
+                                <p class="text-gray-600 text-sm">가장 유명한 코끼리 바위(Porte d'Aval)와 바늘 바위(L'Aiguille)를 가장 가까이서 볼 수 있는 최고의 뷰포인트입니다.</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start">
+                            <span class="text-2xl mr-3">2️⃣</span>
+                             <div>
+                                <h4 class="font-bold">아몽 절벽(Falaise d'Amont) 오르기</h4>
+                                <p class="text-gray-600 text-sm">마을과 아발 절벽을 한눈에 조망할 수 있는 곳으로, 정상의 노트르담 드 라 가르드 예배당이 인상적입니다.</p>
+                            </div>
+                        </li>
+                         <li class="flex items-start">
+                            <span class="text-2xl mr-3">3️⃣</span>
+                            <div>
+                                <h4 class="font-bold">해변에서 인생샷 남기기</h4>
+                                <p class="text-gray-600 text-sm">자갈 해변을 배경으로 자연의 웅장함을 사진에 담아보세요. 썰물 때에는 바위 아치 아래를 걸을 수도 있습니다.</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-[#F28F3B]">LOCAL TASTE</h3>
+                     <p class="text-gray-700 mb-4">신선한 해산물이 풍부한 노르망디의 맛을 느껴보세요.</p>
+                    <ul class="space-y-3">
+                        <li><strong class="text-[#F2622E]">물 마리니에르 (Moules Marinières):</strong> 화이트 와인과 허브로 끓여낸 홍합 요리.</li>
+                        <li><strong class="text-[#F2622E]">노르망디 크레프 (Crêpes Normandes):</strong> 지역 특산물인 사과, 카라멜, 칼바도스를 곁들인 달콤한 크레프.</li>
+                        <li><strong class="text-[#F2622E]">시드르 (Cidre):</strong> 사과로 만든 상쾌한 발포주.</li>
+                    </ul>
+                </div>
+                <div class="card p-6 lg:col-span-2">
+                    <h3 class="text-2xl font-bold mb-4 text-[#F28F3B]">예술과 문학 속 에트르타</h3>
+                    <p class="text-gray-700 mb-4">에트르타는 단순한 풍경을 넘어, 예술 작품 그 자체가 되었습니다.</p>
+                    <ul class="list-disc list-inside space-y-2 text-gray-700">
+                        <li><strong>클로드 모네의 연작:</strong> <The Cliff, Étretat, Sunset> (1883) 등 30점 이상의 작품에서 시시각각 변하는 빛과 색을 포착했습니다.</li>
+                        <li><strong>귀스타브 쿠르베의 <The Wave> (1869):</strong> 사실주의의 대가 쿠르베는 에트르타 해변의 거친 파도의 힘을 생생하게 담아냈습니다.</li>
+                        <li><strong>기 드 모파상의 소설 <여자의 일생 Une Vie> (1883):</strong> 주인공 잔느가 에트르타의 풍경 속에서 삶의 희로애락을 겪는 모습이 그려집니다.</li>
+                        <li><strong>모리스 르블랑의 <괴도 루팡>:</strong> 소설 '기암성(L'Aiguille Creuse)'의 배경이 바로 에트르타의 바늘 바위로, 소설 속에서 비밀 통로가 숨겨진 장소로 등장합니다.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="honfleur" class="my-16">
+            <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-[#333333]">🎨 옹플뢰르: 인상파의 태동지</h2>
+                <p class="text-lg mt-4 text-gray-600 max-w-3xl mx-auto">시간이 멈춘 듯한 동화 속 항구 마을. 모네가 화가의 꿈을 키운 이곳에서 예술적 영감을 느껴보세요.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-[#772D8B]">Vieux Bassin (구 항구)</h3>
+                    <p class="text-gray-700">옹플뢰르의 심장부인 구 항구는 17세기에 지어진 건물들로 둘러싸여 있습니다. 좁고 높게 솟은 건물들의 파사드가 물에 비치는 모습은 그 자체로 한 폭의 그림입니다. 수많은 화가들이 이 풍경을 사랑했으며, 지금도 항구 주변에는 갤러리와 예술가들의 작업실이 즐비합니다.</p>
+                </div>
+                <div class="card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-[#772D8B]">생트 카트린 교회</h3>
+                    <p class="text-gray-700">프랑스에서 가장 큰 목조 교회로, 백년전쟁 후 조선공들이 배를 만들던 기술로 지었습니다. 뒤집어진 배 모양의 천장은 독특한 건축미를 자랑하며, 종탑이 교회 본당과 분리되어 있는 점도 특징입니다. 이는 화재 시 종의 무게로 교회가 무너지는 것을 막기 위함이었습니다.</p>
+                </div>
+                <div class="md:col-span-2 card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-center text-[#772D8B]">인상주의의 요람, 생 시메옹 농장</h3>
+                     <p class="text-gray-700 text-center mb-6">옹플뢰르는 '인상주의의 요람'이라 불립니다. 이곳 출신의 화가 외젠 부댕은 젊은 모네에게 야외에서 그림을 그리도록 격려하며 그의 스승이 되었습니다. 이들의 만남이 이루어진 '생 시메옹 농장(Ferme Saint-Siméon)'은 인상파 화가들의 아지트였으며, 이곳에서 빛과 자연을 포착하는 새로운 화풍이 태동했습니다.</p>
+                    <div class="flex justify-center items-center space-x-4 text-center p-4 rounded-lg bg-gray-50">
+                        <div class="text-center">
+                            <p class="font-bold">외젠 부댕</p>
+                            <p class="text-sm text-gray-500">옹플뢰르의 스승</p>
+                        </div>
+                        <div class="text-4xl font-thin text-[#772D8B]">→</div>
+                         <div class="text-center">
+                            <p class="font-bold">클로드 모네</p>
+                            <p class="text-sm text-gray-500">인상주의의 시작</p>
+                        </div>
+                        <div class="text-4xl font-thin text-[#772D8B]">→</div>
+                        <div class="text-center">
+                            <p class="font-bold">인상주의</p>
+                            <p class="text-sm text-gray-500">새로운 예술 사조</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="mont-saint-michel" class="my-16">
+             <div class="text-center mb-12">
+                <h2 class="text-4xl font-bold text-[#333333]">🏰 몽생미셸: 천사의 성, 시간의 요새</h2>
+                <p class="text-lg mt-4 text-gray-600 max-w-3xl mx-auto">1300년 역사를 간직한 신비로운 수도원. 조수간만의 차가 만들어내는 경이로운 풍경과 함께, 믿음이 쌓아 올린 건축의 기적을 경험하세요.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+                <div class="md:col-span-3 card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-[#00A6A6]">대천사 미카엘의 계시</h3>
+                    <p class="text-gray-700 mb-4">몽생미셸의 역사는 708년, 아브랑슈의 주교였던 성 오베르의 꿈에서 시작됩니다. 대천사 미카엘이 꿈에 나타나 '몽 통브(Mont Tombe)'라 불리던 이 바위섬에 성전을 지으라는 계시를 내렸습니다. 오베르 주교가 세 번의 계시 끝에 대천사의 손가락 자국이 남은 후에야 성전 건축을 시작했다는 전설이 내려옵니다. 이렇게 세워진 작은 성당은 수세기에 걸쳐 증축되며 오늘날의 대수도원으로 발전했습니다.</p>
+                    <div class="mt-6">
+                         <div class="timeline-item">
+                            <h4 class="font-bold text-lg">708년</h4>
+                            <p class="text-gray-600">오베르 주교, 첫 성당 건축</p>
+                        </div>
+                         <div class="timeline-item">
+                            <h4 class="font-bold text-lg">966년</h4>
+                            <p class="text-gray-600">베네딕토회 수도사 정착, 로마네스크 양식 수도원 건축 시작</p>
+                        </div>
+                         <div class="timeline-item">
+                            <h4 class="font-bold text-lg">13세기</h4>
+                            <p class="text-gray-600">프랑스 왕의 지원으로 고딕 양식의 '라 메르베유(La Merveille)' 완공</p>
+                        </div>
+                         <div class="timeline-item">
+                            <h4 class="font-bold text-lg">15~19세기</h4>
+                            <p class="text-gray-600">백년전쟁 시 요새 역할, 프랑스 혁명 후 감옥으로 사용</p>
+                        </div>
+                        <div class="timeline-item">
+                            <h4 class="font-bold text-lg">1874년~현재</h4>
+                            <p class="text-gray-600">국가 사적 지정, 복원 및 유네스코 세계문화유산 등재</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="md:col-span-2 card p-6">
+                    <h3 class="text-2xl font-bold mb-4 text-[#00A6A6]">조수의 마법</h3>
+                    <p class="text-gray-700 mb-4">몽생미셸은 유럽에서 가장 조수간만의 차가 큰 곳 중 하나로, 최대 15미터에 이릅니다. "바다의 감옥"이라 불렸던 이곳은 밀물 때면 섬이 되고, 썰물 때면 육지와 연결되는 신비로운 모습을 연출합니다.</p>
+                    <div class="chart-container h-64">
+                         <canvas id="tidesChart"></canvas>
+                    </div>
+                    <p class="text-center text-sm text-gray-500 mt-2">조수 높이 변화 예시 (6시간 주기)</p>
+                    <div class="mt-6">
+                        <h4 class="font-bold text-lg mb-2 text-[#F28F3B]">건축의 경이, 라 메르베유</h4>
+                        <p class="text-gray-700">수도원의 북쪽 면에 위치한 '라 메르베유(경이)'는 고딕 건축의 정수입니다. 좁은 바위산의 지형을 극복하기 위해 3개 층으로 지어졌으며, 각 층은 수도사들의 식당, 귀빈실, 순례자들을 위한 공간 등으로 사용되었습니다.</p>
+                    </div>
+                     <div class="mt-6">
+                        <h4 class="font-bold text-lg mb-2 text-[#F28F3B]">미디어 속 몽생미셸</h4>
+                        <p class="text-gray-700 text-sm">신비로운 모습 덕분에 영화와 애니메이션의 배경으로 자주 등장했습니다. 영화 <반지의 제왕> 속 '미나스 티리스'의 영감이 되었으며, 디즈니 애니메이션 <라푼젤>의 왕국 '코로나'의 모티브가 되기도 했습니다.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="bg-[#333333] text-white text-center py-8 mt-16">
+        <p class="font-montserrat text-xl font-bold">A Journey to Remember</p>
+        <p class="mt-2 text-gray-400">노르망디의 바람과 빛, 역사가 함께한 하루를 추억하며.</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+
+            const wrapLabel = (label, maxLength = 16) => {
+                if (label.length <= maxLength) {
+                    return label;
+                }
+                const words = label.split(' ');
+                const lines = [];
+                let currentLine = '';
+                words.forEach(word => {
+                    if ((currentLine + word).length > maxLength) {
+                        lines.push(currentLine.trim());
+                        currentLine = '';
+                    }
+                    currentLine += word + ' ';
+                });
+                lines.push(currentLine.trim());
+                return lines;
+            };
+
+            const tooltipTitleCallback = {
+                plugins: {
+                    tooltip: {
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                const item = tooltipItems[0];
+                                let label = item.chart.data.labels[item.dataIndex];
+                                return Array.isArray(label) ? label.join(' ') : label;
+                            }
+                        }
+                    }
+                }
+            };
+            
+            const artistsCtx = document.getElementById('artistsChart')?.getContext('2d');
+            if(artistsCtx) {
+                new Chart(artistsCtx, {
+                    type: 'bar',
+                    data: {
+                        labels: ['클로드 모네', '귀스타브 쿠르베', '외젠 부댕'],
+                        datasets: [{
+                            label: '주요 활동 시기',
+                            data: [
+                                [1860, 1926], 
+                                [1840, 1877],
+                                [1845, 1898]
+                            ],
+                            backgroundColor: ['#00A6A6', '#F28F3B', '#772D8B'],
+                            borderWidth: 1,
+                            barPercentage: 0.5,
+                        }]
+                    },
+                    options: {
+                        indexAxis: 'y',
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                min: 1840,
+                                max: 1930,
+                                title: { display: true, text: '연도' }
+                            }
+                        },
+                        plugins: {
+                           ...tooltipTitleCallback.plugins,
+                            legend: {
+                                display: false
+                            },
+                        }
+                    }
+                });
+            }
+
+            const tidesCtx = document.getElementById('tidesChart')?.getContext('2d');
+            if(tidesCtx) {
+                new Chart(tidesCtx, {
+                    type: 'line',
+                    data: {
+                        labels: ['-6h', '-3h', '만조', '+3h', '+6h'],
+                        datasets: [{
+                            label: '조수 높이 (m)',
+                            data: [1, 7.5, 14, 7.5, 1],
+                            borderColor: '#00A6A6',
+                            backgroundColor: 'rgba(0, 166, 166, 0.1)',
+                            fill: true,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 15,
+                                title: {
+                                    display: true,
+                                    text: '높이 (m)'
+                                }
+                            }
+                        },
+                        plugins: {
+                            ...tooltipTitleCallback.plugins,
+                            legend: {
+                                display: false
+                            }
+                        }
+                    }
+                });
+            }
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+
+</body>
+</html>

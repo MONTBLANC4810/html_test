@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="ko" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>생성형 AI 경진대회: 아이디어 포털</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&family=Inter:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans KR', sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            word-break: keep-all;
+        }
+        .gradient-text {
+            background: linear-gradient(to right, #3b82f6, #1d4ed8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .bar-container {
+            height: 8px;
+            background-color: #e5e7eb;
+            border-radius: 9999px;
+            width: 100%;
+        }
+        .bar {
+            height: 100%;
+            border-radius: 9999px;
+        }
+        .bar-color-1 { background-color: #0ea5e9; } /* sky-500 */
+        .bar-color-2 { background-color: #10b981; } /* emerald-500 */
+        .bar-color-cost { background-color: #f43f5e; } /* rose-500 */
+        .bar-color-4 { background-color: #f59e0b; } /* amber-500 */
+        .bar-color-5 { background-color: #8b5cf6; } /* violet-500 */
+        .bar-color-6 { background-color: #06b6d4; } /* cyan-500 */
+
+        /* Modal Styles */
+        .modal {
+            transition: opacity 0.3s ease;
+        }
+        .modal-content {
+            transition: transform 0.3s ease;
+        }
+        .headline-spacing {
+            line-height: 1.8;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+    <!-- Header & Navigation -->
+    <header id="main-header" class="bg-white/80 backdrop-blur-sm sticky top-0 z-40 border-b border-gray-200">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-gray-900">
+                <a href="#hero">생성형 AI 활용 경진대회 계획서</a>
+            </h1>
+            <div class="hidden md:flex space-x-8 text-sm font-semibold text-gray-600">
+                <a href="#ideas" class="nav-link hover:text-blue-600 transition-colors">제안 프로젝트s</a>
+                <a href="#assessment" class="nav-link hover:text-blue-600 transition-colors">자체 평가</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-4">
+
+        <!-- Hero Section -->
+        <section id="hero" class="text-center py-8 md:py-20">
+            <h2 class="headline-spacing text-4xl md:text-5xl font-extrabold tracking-tight text-gray-900 mb-10">
+                <span class="gradient-text">생성형 AI</span>로 재정의하는<br>비즈니스 프로세스
+            </h2>
+        </section>
+
+        <!-- 아이디어 섹션 -->
+        <section id="ideas">
+            <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-14">
+                <!-- Idea Card 1 -->
+                <div class="idea-card bg-white p-6 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-modal-target="modal-idea-2">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">AI 교육 경험 설계 시스템</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">AI가 '가상 FGI'를 수행하여 교육 대상자의 숨겨진 니즈를 파악하고, 교육 콘텐츠 설계부터 자료 제작까지 전 과정을 자동화합니다.</p>
+                </div>
+                <!-- Idea Card 2 -->
+                <div class="idea-card bg-white p-6 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-modal-target="modal-idea-3">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">AI RFP 분석 어시스턴트</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">RFP 문서를 업로드하면 AI가 사전 정의된 체크리스트에 따라 자동 분석하여, 의사결정에 필요한 '사업성 검토 Fast Report'를 생성합니다.</p>
+                </div>
+                <!-- Idea Card 3 -->
+                <div class="idea-card bg-white p-6 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-modal-target="modal-idea-1">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">AI 영업 기회 내비게이터</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">전사 지식 자산을 학습한 AI 어시스턴트가, 모든 직원이 언제 어디서든 고객 질문에 전문가처럼 답변하도록 실시간으로 지원합니다.</p>
+                </div>
+                <!-- Idea Card 4 -->
+                <div class="idea-card bg-white p-6 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-modal-target="modal-idea-4">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">ESG 정보공시 자동화 AI</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">노동집약적 컨설팅을 SaaS 플랫폼으로 전환합니다. AI가 데이터 분류, 보고서 초안 작성, 검증 준비까지 전 과정을 자동화합니다.</p>
+                </div>
+                <!-- Idea Card 5 -->
+                <div class="idea-card bg-white p-6 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-modal-target="modal-idea-6">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">ESG 특화 AI 번역기</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">내부 보고서 데이터를 AI에게 학습시켜, ESG 분야에서 세계 최고 수준의 정확성과 품질을 보장하는 전문 AI 번역기를 개발합니다.</p>
+                </div>
+                <!-- Idea Card 6 -->
+                <div class="idea-card bg-white p-6 rounded-2xl border border-gray-200 shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer" data-modal-target="modal-idea-5">
+                    <h3 class="text-2xl font-bold text-gray-900 mb-2">차세대 사내 위키 (K-Pedia)</h3>
+                    <p class="text-gray-600 text-base leading-relaxed">AI가 콘텐츠를 자동 생성/요약/연결하고, 자연어 질문에 종합적인 답변까지 제공하는 '스스로 성장하는 지능형 지식 허브'를 구축합니다.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 아이디어 비교 분석 매트릭스 -->
+        <section id="assessment" class="bg-white p-8 mt-32 rounded-2xl border border-gray-200 shadow-lg">
+            <h3 class="text-3xl font-bold text-gray-900 mb-8 text-center">프로젝트별 자체 평가</h3>
+            <div>
+                <table class="w-full text-sm text-left table-fixed">
+                    <thead class="border-b-2 border-gray-200 text-gray-500 font-semibold text-sm">
+                        <tr>
+                            <th class="py-3 pr-4">프로젝트 (Initiative)</th>
+                            <th class="py-3 px-2 whitespace-nowrap">사업 연계성</th>
+                            <th class="py-3 px-2 whitespace-nowrap">기대 효과 (ROI)</th>
+                            <th class="py-3 px-2 whitespace-nowrap">구현 가능성</th>
+                            <th class="py-3 px-2 whitespace-nowrap">데이터 접근성</th>
+                            <th class="py-3 px-2 whitespace-nowrap">혁신성</th>
+                            <th class="py-3 px-2 whitespace-nowrap">확장성</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <tr class="hover:bg-gray-50"><td class="py-4 pr-4 font-bold text-gray-800">AI 교육 경험 설계 시스템</td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-1" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-2" style="width: 60%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-cost" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-4" style="width: 100%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-5" style="width: 100%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-6" style="width: 80%;"></div></div></td></tr>
+                        <tr class="hover:bg-gray-50"><td class="py-4 pr-4 font-bold text-gray-800">AI RFP 분석 어시스턴트</td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-1" style="width: 100%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-2" style="width: 100%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-cost" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-4" style="width: 60%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-5" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-6" style="width: 60%;"></div></div></td></tr>
+                        <tr class="hover:bg-gray-50"><td class="py-4 pr-4 font-bold text-gray-800">AI 영업 기회 내비게이터</td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-1" style="width: 100%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-2" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-cost" style="width: 60%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-4" style="width: 20%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-5" style="width: 60%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-6" style="width: 80%;"></div></div></td></tr>
+                        <tr class="hover:bg-gray-50"><td class="py-4 pr-4 font-bold text-gray-800">ESG 정보공시 자동화 AI</td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-1" style="width: 100%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-2" style="width: 100%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-cost" style="width: 60%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-4" style="width: 40%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-5" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-6" style="width: 100%;"></div></div></td></tr>
+                        <tr class="hover:bg-gray-50"><td class="py-4 pr-4 font-bold text-gray-800">ESG 특화 AI 번역기</td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-1" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-2" style="width: 60%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-cost" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-4" style="width: 100%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-5" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-6" style="width: 60%;"></div></div></td></tr>
+                        <tr class="hover:bg-gray-50"><td class="py-4 pr-4 font-bold text-gray-800">차세대 사내 위키</td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-1" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-2" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-cost" style="width: 80%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-4" style="width: 40%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-5" style="width: 60%;"></div></div></td><td class="py-4 px-2"><div class="bar-container"><div class="bar bar-color-6" style="width: 100%;"></div></div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Gemini AI Feature Section -->
+        <section id="gemini-feature" class="bg-white p-8 mt-24 rounded-2xl border border-gray-200 shadow-lg text-center">
+            <h3 class="text-3xl font-bold text-gray-900 mb-4">새로운 아이디어 제안받기</h3>
+            <p class="text-gray-600 mb-6">아래 버튼을 눌러 Gemini AI에게 현재 프로젝트들을 기반으로<br>새로운 시너지 아이디어를 제안받아 보세요.</p>
+            <div class="flex justify-center">
+                <input type="text" id="user-prompt-input" class="w-full max-w-md border border-gray-300 rounded-l-lg p-3 focus:ring-2 focus:ring-blue-500 focus:outline-none" placeholder="예: ESG와 교육을 결합한 아이디어는?">
+                <button id="gemini-prompt-button" class="bg-blue-600 text-white font-bold py-3 px-6 rounded-r-lg hover:bg-blue-700 transition-colors flex items-center justify-center">
+                    <span class="gemini-button-text whitespace-nowrap">아이디어 생성</span>
+                    <svg class="gemini-spinner hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                </button>
+            </div>
+            <div id="gemini-response" class="mt-6 text-left bg-gray-100 p-6 rounded-lg border border-gray-200 min-h-[100px] whitespace-pre-wrap"></div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-gray-200 mt-24">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-500">
+            <p>&copy; 2025 생성형 AI 경진대회 아이디어 제안서. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <!-- Modals Container -->
+    <div id="modal-container" class="modal fixed inset-0 bg-black bg-opacity-60 backdrop-blur-sm flex items-center justify-center p-4 z-50 opacity-0 pointer-events-none">
+        <div id="modal-content-wrapper" class="modal-content bg-white rounded-2xl shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 transform scale-95">
+            <!-- Modal content will be injected here by JS -->
+        </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const ideaData = {
+            'modal-idea-2': {
+                title: 'AI 교육 경험 설계 시스템',
+                subtitle: 'AI Learning Experience Designer',
+                content: `
+                    <div class="grid md:grid-cols-2 gap-x-12 gap-y-8 mb-8">
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">가상 상황 (Scenario)</h4><p class="text-gray-600">'현대자동차 연구소'의 긴급 요청으로 'R&D 신임 팀장' 맞춤형 리더십 과정을 2주 내 재설계해야 하나, 핵심적인 교육 대상자 FGI를 진행할 시간과 예산이 절대적으로 부족한 상황.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">핵심 문제점 (Pain Points)</h4><p class="text-gray-600">추측에 기반한 교육 설계, 강사용 가이드/워크북 등 파생 자료 제작 포기, 강사의 개인 역량에 의존하는 '인디언 기우제'식 교육으로 품질의 불확실성이 높음.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">해결 방안 (Solution)</h4><p class="text-gray-600">AI가 교육 대상자의 페르소나에 빙의하여 '가상 FGI'를 수행, 숨겨진 니즈를 도출. 이를 바탕으로 강의안, 강사용 가이드, 워크북 등 교육 경험 전체를 일관된 고품질로 자동 생성.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">기대 효과 (Impact)</h4><p class="text-gray-600">교육 과정 개발 시간 70% 단축, 건당 수백만 원의 FGI 비용 절감, 데이터 기반 분석을 통한 교육 품질 상향 평준화.</p></div>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg border border-gray-200"><h5 class="text-xl font-bold text-gray-900 mb-4">상세 구현 계획</h5><h6 class="font-bold text-gray-900 mb-2">Phase 1: 분석 및 기획</h6><p class="text-gray-600 text-sm mb-4">사람이 프로젝트 목표와 키워드를 정의하고, AI에게 '산업 분석 전문가', 'R&D 팀장' 역할을 부여하여 '산업 분석 리포트'와 '가상 FGI 결과'를 생성합니다. 사람은 AI 결과물을 검토하여 최종 커스터마이징 전략을 수립합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 2: 콘텐츠 제작 및 자동화</h6><p class="text-gray-600 text-sm mb-4">사람이 전략에 따라 필요한 콘텐츠 '조각'을 AI에게 요청하여 생성합니다. 코드가 최종 PPT의 텍스트를 추출하여 AI에게 보내 '강사용 멘트', '워크북 과제' 등을 생성하도록 요청하고, 이를 조합하여 결과 파일을 자동으로 생성합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 3: 전달 및 최종 검수</h6><p class="text-gray-600 text-sm">사람이 핵심 결과물을 AI에게 요약 요청하여 브리핑 자료 초안을 작성하고, 모든 산출물을 최종 검토하여 이해관계자에게 전달합니다.</p></div>`
+            },
+            'modal-idea-3': {
+                title: 'AI RFP 자동 분석 및 사업성 검토 어시스턴트',
+                subtitle: 'AI RFP Analyzer & Viability Checker',
+                content: `
+                    <div class="grid md:grid-cols-2 gap-x-12 gap-y-8 mb-8">
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">가상 상황 (Scenario)</h4><p class="text-gray-600">금요일 오후, 2주 마감인 70억 원 규모 사업 공고 확인. 330페이지가 넘는 HWP/PDF 문서를 월요일 아침까지 분석하여 'Go/No-Go'를 결정해야 하는 상황.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">핵심 문제점 (Pain Points)</h4><p class="text-gray-600">방대한 문서에서 핵심 정보를 찾는 데 엄청난 시간 소모. 수작업 검토 시 치명적인 조항을 놓칠 위험이 크며, 결국 불완전한 정보와 '감'에 의존한 비효율적 의사결정을 내리게 됨.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">해결 방안 (Solution)</h4><p class="text-gray-600">RFP 문서를 업로드하면 AI가 사전 정의된 체크리스트에 따라 자동 분석, 의사결정에 필수적인 정보를 담은 '사업성 검토 Fast Report'를 시각화 대시보드 및 상세 스프레드시트로 생성.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">기대 효과 (Impact)</h4><p class="text-gray-600">초기 RFP 분석 시간 95% 단축, 부적격 사업 참여로 인한 비용 낭비 원천 차단, 데이터 기반의 신속하고 정확한 의사결정 문화 정착.</p></div>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg border border-gray-200"><h5 class="text-xl font-bold text-gray-900 mb-4">상세 구현 계획</h5><h6 class="font-bold text-gray-900 mb-2">Phase 1: 기반 구축 및 PoC</h6><p class="text-gray-600 text-sm mb-4">Python 환경을 구축하고, HWP 등 원본 파일을 텍스트로 변환합니다. 코드가 텍스트를 읽고 체크리스트 기반 프롬프트를 생성하여 AI에게 분석을 요청하며, JSON으로 반환된 답변을 파싱하여 .xlsx 스프레드시트 파일을 생성합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 2: 웹 애플리케이션 개발</h6><p class="text-gray-600 text-sm">파일 업로드, HWP 자동 변환, AI 엔진 호출, 결과 다운로드를 처리하는 백엔드 서버와 간단한 프론트엔드 웹페이지를 구축하여 사내 서버나 클라우드에 배포합니다.</p></div>`
+            },
+            'modal-idea-1': {
+                title: 'AI 영업 기회 내비게이터',
+                subtitle: 'AI Opportunity Navigator',
+                content: `
+                    <div class="grid md:grid-cols-2 gap-x-12 gap-y-8 mb-8">
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">가상 상황 (Scenario)</h4><p class="text-gray-600">영업 대표가 전문 분야가 아닌 'EU 공급망 실사법 대응'에 대한 갑작스러운 고객 질문에 즉시 답변하지 못하고 잠재적인 대형 계약 기회를 놓칠 위험에 처한 상황.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">핵심 문제점 (Pain Points)</h4><p class="text-gray-600">'지식의 사일로화'로 인해 회사의 성공 사례가 부서와 개인에게 갇혀있어, 고객의 다양한 니즈에 즉시 대응하지 못하고 "알아보고 연락드리겠습니다"라는 답변을 반복하게 됨.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">해결 방안 (Solution)</h4><p class="text-gray-600">전사 지식 자산을 학습한 AI 어시스턴트를 통해, 모든 직원이 언제 어디서든 고객의 어떤 질문에도 즉시 전문가처럼 답변하고 맞춤형 영업 자료까지 제공.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">기대 효과 (Impact)</h4><p class="text-gray-600">교차 판매 성공률 20% 증가, 신규 제안서 작성 시간 50% 단축 등 직접적인 매출 증대 효과와 함께, 회사의 모든 지적 자산이 매출로 직결되는 선순환 구조 구축.</p></div>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg border border-gray-200"><h5 class="text-xl font-bold text-gray-900 mb-4">상세 구현 계획</h5><h6 class="font-bold text-gray-900 mb-2">Phase 1: 지식 기반 구축</h6><p class="text-gray-600 text-sm mb-4">PoC 대상 사업 분야를 선정하고, 학습시킬 핵심 문서를 선별합니다. 각 사업별 '정답지' 역할의 엑셀(Master DB)을 구축하고, 코드로 문서들을 텍스트화합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 2: AI 엔진 개발 및 PoC</h6><p class="text-gray-600 text-sm mb-4">사용자 질문을 이해하고, Master DB와 텍스트화된 문서에서 관련 정보를 찾아 AI에게 전달하는 RAG 아키텍처를 구현합니다. 웹 기반 챗봇 인터페이스로 AI 답변의 정확성을 검증합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 3: 전사 서비스화 및 고도화</h6><p class="text-gray-600 text-sm">검증된 시스템을 사내 메신저 챗봇 형태로 연동하여 배포하고, 사용자 피드백을 지속적으로 수집 및 학습하여 시스템 성능을 고도화합니다.</p></div>`
+            },
+            'modal-idea-4': {
+                title: 'ESG 정보공시 자동화 AI',
+                subtitle: 'AI ESG Disclosure Automation',
+                content: `
+                    <div class="grid md:grid-cols-2 gap-x-12 gap-y-8 mb-8">
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">가상 상황 (Scenario)</h4><p class="text-gray-600">한 중견 제조기업이 유럽 고객사로부터 CSRD에 준하는 ESG 데이터 공시를 긴급 요구받음. 원본 데이터는 모두 있으나, 엑셀, PDF, HWP 등 제각각 흩어져 있어 어디서부터 시작할지 막막한 상황.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">핵심 문제점 (Pain Points)</h4><p class="text-gray-600">ESG 공시 표준은 복잡하고 방대하며, 비정형 데이터를 수집/가공하는 과정이 노동집약적이라 높은 컨설팅 비용 발생. 수작업 기반으로 오류 발생 가능성이 높고 확장성이 낮음.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">해결 방안 (Solution)</h4><p class="text-gray-600">컨설팅 서비스를 확장 가능한 SaaS 플랫폼으로 전환. 고객이 데이터를 업로드하면 AI가 데이터 분류/맵핑, 보고서 초안 작성, 검증 준비까지 자동화하고, 컨설턴트는 전략 자문에 집중.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">기대 효과 (Impact)</h4><p class="text-gray-600">컨설턴트의 단순 반복 업무 80% 이상 절감, 가격 경쟁력 확보로 신규 고객층 확보, 일회성 컨설팅 수익을 지속 가능한 연간 구독 기반의 SaaS 수익 모델로 전환.</p></div>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg border border-gray-200"><h5 class="text-xl font-bold text-gray-900 mb-4">상세 구현 계획</h5><h6 class="font-bold text-gray-900 mb-2">Phase 1: 기반 구축</h6><p class="text-gray-600 text-sm mb-4">주요 ESG 표준(GRI, SASB) 원문과 해설서를 수집하여 체계적인 지식 베이스를 구축합니다. 다양한 비정형 데이터에서 핵심 정보를 추출하는 파서를 개발하고, 핵심 AI 맵핑 엔진의 기술적 가능성을 검증합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 2: 핵심 기능 개발</h6><p class="text-gray-600 text-sm mb-4">고객이 데이터를 업로드하고, AI 분석 결과를 확인하며, 최종 보고서를 다운로드할 수 있는 웹 기반 SaaS 플랫폼을 구축합니다. Phase 1에서 개발한 AI 엔진을 백엔드에 연동하고 내부 테스트를 진행합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 3: 런칭 및 고도화</h6><p class="text-gray-600 text-sm">소수의 실제 고객을 대상으로 베타 서비스를 운영하며 시스템을 검증 및 개선합니다. 정식 서비스를 런칭하고, 지속적으로 업데이트되는 ESG 표준과 사용자 피드백을 반영하여 시스템을 고도화합니다.</p></div>`
+            },
+            'modal-idea-6': {
+                title: 'ESG 특화 AI 번역기',
+                subtitle: 'Specialized AI Translator for ESG',
+                content: `
+                    <div class="grid md:grid-cols-2 gap-x-12 gap-y-8 mb-8">
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">가상 상황 (Scenario)</h4><p class="text-gray-600">국문 ESG 컨설팅 보고서를 영문으로 번역 시, 범용 번역기가 '이중 중대성(Double Materiality)' 같은 전문 용어를 오역하고, 공식 보고서의 격식 있는 문체(Tone & Manner)를 구현하지 못해 신뢰도가 하락하는 문제.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">핵심 문제점 (Pain Points)</h4><p class="text-gray-600">범용 번역기는 특정 도메인의 미묘한 문맥을 이해하지 못해 오역을 발생시킴. 여러 명이 수정/감수하는 과정은 높은 비용과 시간을 유발하며, 결과물의 품질이 비일관적임.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">해결 방안 (Solution)</h4><p class="text-gray-600">수년간 축적한 수천 건의 국문/영문 ESG 보고서와 자료를 AI에게 학습시켜, ESG 분야만큼은 세계 최고 수준의 정확성과 품질을 보장하는 'ESG 전문 AI 번역기'를 개발.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">기대 효과 (Impact)</h4><p class="text-gray-600">ESG 보고서 번역 및 감수 시간 80% 단축, 외부 전문 번역 비용 90% 이상 절감. 회사의 핵심 지적 자산을 활용한 기술적 해자(Moat) 구축.</p></div>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg border border-gray-200"><h5 class="text-xl font-bold text-gray-900 mb-4">상세 구현 계획</h5><h6 class="font-bold text-gray-900 mb-2">Phase 1: 데이터 준비 및 학습</h6><p class="text-gray-600 text-sm mb-4">과거 국문/영문 ESG 보고서, 용어집 등 고품질의 병렬 코퍼스(Parallel Corpus) 데이터를 최대한 많이 수집하고 정제하여 AI 학습용 데이터베이스를 구축합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 2: AI 번역 엔진 개발</h6><p class="text-gray-600 text-sm mb-4">최신 LLM을 기본 번역 모델로 선정하고, Phase 1에서 구축한 데이터셋을 사용하여 ESG 도메인에 맞게 미세조정(Fine-tuning)합니다. '공식 보고서 스타일' 등 결과물의 톤앤매너를 조절할 수 있는 정교한 프롬프트를 개발합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 3: 서비스 구현 및 검증</h6><p class="text-gray-600 text-sm">사용자가 텍스트나 파일을 업로드하고 번역 스타일을 선택할 수 있는 웹 인터페이스를 개발합니다. 내부 전문가 및 원어민이 AI 번역 결과물과 범용 번역기 결과물을 비교 평가하여 성능을 검증합니다.</p></div>`
+            },
+            'modal-idea-5': {
+                title: '차세대 사내 위키 (K-Pedia)',
+                subtitle: 'Next-Gen Corporate Wiki',
+                content: `
+                    <div class="grid md:grid-cols-2 gap-x-12 gap-y-8 mb-8">
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">가상 상황 (Scenario)</h4><p class="text-gray-600">신입사원이 '스마트공장' 프로젝트에 투입되어 배경지식을 얻기 위해 사내 파일 서버를 검색하지만, 수많은 버전의 파일 속에서 어떤 내용을 먼저 읽어야 할지 몰라 혼란에 빠지고 바쁜 선배에게 여러 번 질문하게 됨.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">핵심 문제점 (Pain Points)</h4><p class="text-gray-600">지식이 개인 PC나 부서별 서버에 파편화되어 접근성이 낮음. 인력 변동 시 회사의 핵심 자산인 경험과 노하우가 유실될 위험이 크고, 동일한 질문에 대한 반복적인 Q&A가 발생.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">해결 방안 (Solution)</h4><p class="text-gray-600">모든 직원이 함께 정보를 만들고, AI가 콘텐츠를 자동 생성/요약/연결해주며, 자연어 질문에 종합적인 답변까지 제공하는 '스스로 성장하는 지능형 지식 허브'를 구축.</p></div>
+                        <div><h4 class="text-lg font-bold text-gray-900 mb-2">기대 효과 (Impact)</h4><p class="text-gray-600">정보 검색 시간 50% 이상 단축, 신입사원 업무 적응 기간(Onboarding) 30% 단축. 회사의 집단 지성을 통해 전 직원의 업무 능력 상향 평준화.</p></div>
+                    </div>
+                    <div class="bg-gray-100 p-6 rounded-lg border border-gray-200"><h5 class="text-xl font-bold text-gray-900 mb-4">상세 구현 계획</h5><h6 class="font-bold text-gray-900 mb-2">Phase 1: 기반 구축 및 초기 콘텐츠 확보</h6><p class="text-gray-600 text-sm mb-4">오픈소스 위키 엔진을 설치하고, 파일 서버에서 핵심 보고서 100개를 선별합니다. 코드로 텍스트를 추출하고 AI가 각 보고서를 요약하여 초기 위키 문서 100개의 초안을 자동 생성하면, 전문가가 검수 및 수정합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 2: AI 핵심 기능 개발</h6><p class="text-gray-600 text-sm mb-4">위키의 모든 텍스트를 벡터로 변환하여 DB에 저장합니다. 사용자의 자연어 질문을 벡터로 변환하고, DB에서 유사 문서를 찾아 그 내용을 AI에게 전달하여 최종 답변을 생성하는 RAG 기반 Q&A 챗봇을 개발합니다.</p><h6 class="font-bold text-gray-900 mb-2">Phase 3: 런칭 및 활성화</h6><p class="text-gray-600 text-sm">특정 본부를 대상으로 파일럿을 시작하고 피드백을 받아 시스템을 개선합니다. '이달의 우수 기여자' 선정 등 다양한 제도를 통해 직원들의 자발적인 참여와 지식 공유 문화를 만들어 나갑니다.</p></div>`
+            },
+        };
+        const modalContainer = document.getElementById('modal-container');
+        const modalContentWrapper = document.getElementById('modal-content-wrapper');
+        const ideaCards = document.querySelectorAll('.idea-card');
+
+        const openModal = (modalId) => {
+            const data = ideaData[modalId];
+            if (!data) return;
+
+            modalContentWrapper.innerHTML = `
+                <div class="relative">
+                    <button id="modal-close-btn" class="absolute -top-4 -right-4 text-gray-500 hover:text-gray-800 text-4xl">&times;</button>
+                    <div class="mb-6">
+                        <h3 class="text-3xl font-bold text-gray-900">${data.title}</h3>
+                        <p class="text-blue-600 font-semibold mt-1">${data.subtitle}</p>
+                    </div>
+                    ${data.content}
+                </div>
+            `;
+            
+            modalContainer.classList.remove('opacity-0', 'pointer-events-none');
+            modalContentWrapper.classList.remove('scale-95');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeModal = () => {
+            modalContainer.classList.add('opacity-0', 'pointer-events-none');
+            modalContentWrapper.classList.add('scale-95');
+            document.body.style.overflow = '';
+        };
+
+        ideaCards.forEach(card => {
+            card.addEventListener('click', () => {
+                const modalId = card.getAttribute('data-modal-target');
+                openModal(modalId);
+            });
+        });
+
+        modalContainer.addEventListener('click', (e) => {
+            if (e.target === modalContainer || e.target.id === 'modal-close-btn' || e.target.parentElement.id === 'modal-close-btn') {
+                closeModal();
+            }
+        });
+        
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && !modalContainer.classList.contains('pointer-events-none')) {
+                closeModal();
+            }
+        });
+
+        // Gemini API Feature
+        const geminiButton = document.getElementById('gemini-prompt-button');
+        const geminiResponseEl = document.getElementById('gemini-response');
+        const userInputEl = document.getElementById('user-prompt-input');
+        const buttonText = document.querySelector('.gemini-button-text');
+        const spinner = document.querySelector('.gemini-spinner');
+
+        const allIdeasText = Object.values(ideaData).map(idea => {
+            return `제목: ${idea.title}\n부제: ${idea.subtitle}\n내용: ${idea.content.replace(/<[^>]*>?/gm, '')}`;
+        }).join('\n\n---\n\n');
+
+        geminiButton.addEventListener('click', async () => {
+            const userPrompt = userInputEl.value;
+            if (!userPrompt) {
+                geminiResponseEl.textContent = "질문을 입력해주세요.";
+                return;
+            }
+
+            buttonText.classList.add('hidden');
+            spinner.classList.remove('hidden');
+            geminiButton.disabled = true;
+            geminiResponseEl.textContent = "Gemini AI가 아이디어를 생성 중입니다...";
+
+            const systemPrompt = `당신은 6개의 AI 프로젝트 아이디어를 기반으로 새로운 시너지 아이디어를 제안하는 전문 컨설턴트입니다. 다음은 6개의 프로젝트에 대한 요약입니다:\n\n${allIdeasText}\n\n사용자의 요청에 따라, 이 프로젝트들을 결합하거나 확장하여 새롭고 창의적인 시너지 아이디어를 제안해주세요. 답변은 한국어로, 전문가적이고 설득력 있는 톤으로 작성해주세요.`;
+            
+            const apiKey = ""; // API 키
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+            try {
+                const payload = {
+                    contents: [{ parts: [{ text: userPrompt }] }],
+                    systemInstruction: {
+                        parts: [{ text: systemPrompt }]
+                    },
+                };
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API 요청 실패: ${response.statusText}`);
+                }
+
+                const result = await response.json();
+                const candidate = result.candidates?.[0];
+
+                if (candidate && candidate.content?.parts?.[0]?.text) {
+                    geminiResponseEl.textContent = candidate.content.parts[0].text;
+                } else {
+                    geminiResponseEl.textContent = "죄송합니다, 유효한 답변을 생성하지 못했습니다. 응답 구조를 확인해주세요.";
+                    console.error("Unexpected API response structure:", result);
+                }
+            } catch (error) {
+                console.error("Gemini API 호출 중 오류 발생:", error);
+                geminiResponseEl.textContent = "오류가 발생했습니다. 잠시 후 다시 시도해주세요.";
+            } finally {
+                buttonText.classList.remove('hidden');
+                spinner.classList.add('hidden');
+                geminiButton.disabled = false;
+            }
+        });
+
+        // Smooth scrolling for nav links
+        document.querySelectorAll('.nav-link').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                const header = document.getElementById('main-header');
+                const headerOffset = header.offsetHeight;
+                const elementPosition = targetElement.getBoundingClientRect().top;
+                const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: "smooth"
+                });
+            });
+        });
+
+    });
+    </script>
+
+</body>
+</html>
+

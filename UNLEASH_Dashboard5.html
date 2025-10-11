@@ -1,0 +1,2353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNLEASH Conference Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: #ffffff;
+            color: #000000;
+            padding: 0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        .header {
+            margin-bottom: 60px;
+            padding-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .header h1 {
+            font-size: 3.2em;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #000000;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+        }
+
+        .header p {
+            font-size: 1.3em;
+            color: #5c5c5c;
+            font-weight: 300;
+            line-height: 1.5;
+        }
+
+        .controls {
+            background: #f5f5f5;
+            padding: 40px;
+            border-radius: 4px;
+            margin-bottom: 40px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 16px;
+            background: #ffffff;
+            border: 1px solid #c0c0c0;
+            border-radius: 2px;
+            margin-bottom: 30px;
+            color: #000000;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            transition: border-color 0.2s;
+        }
+
+        .search-box::placeholder {
+            color: #808080;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .filters {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 25px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-weight: 600;
+            margin-bottom: 12px;
+            color: #000000;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .filter-group select {
+            padding: 14px 16px;
+            background: #ffffff;
+            border: 1px solid #c0c0c0;
+            border-radius: 2px;
+            font-size: 15px;
+            cursor: pointer;
+            color: #000000;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            transition: border-color 0.2s;
+        }
+
+        .filter-group select:focus {
+            outline: none;
+            border-color: #000000;
+        }
+
+        .stats {
+            background: #ffffff;
+            padding: 25px 0;
+            margin-bottom: 40px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .stats-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .stat-item {
+            font-size: 17px;
+            color: #5c5c5c;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .stat-number {
+            font-weight: 700;
+            color: #000000;
+            font-size: 28px;
+        }
+
+        .reset-btn {
+            padding: 14px 32px;
+            background: #000000;
+            color: #ffffff;
+            border: none;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .reset-btn:hover {
+            background: #333333;
+        }
+
+        .sessions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .session-card {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 32px;
+            transition: all 0.3s;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .session-card:hover {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border-color: #000000;
+            transform: translateY(-4px);
+        }
+
+        .session-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 3px;
+            height: 100%;
+            background: #000000;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .session-card:hover::before {
+            opacity: 1;
+        }
+
+        .session-type {
+            display: inline-block;
+            padding: 6px 14px;
+            background: #000000;
+            color: #ffffff;
+            border-radius: 2px;
+            font-size: 10px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .session-time {
+            color: #808080;
+            font-size: 14px;
+            margin-bottom: 16px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .session-title {
+            font-size: 22px;
+            font-weight: 400;
+            color: #000000;
+            margin-bottom: 16px;
+            line-height: 1.4;
+            letter-spacing: -0.5px;
+        }
+
+        .session-speaker {
+            color: #000000;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 15px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .session-affiliation {
+            color: #5c5c5c;
+            font-size: 14px;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .session-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
+        .meta-badge {
+            padding: 6px 12px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            font-size: 11px;
+            color: #5c5c5c;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .session-intro {
+            color: #5c5c5c;
+            font-size: 15px;
+            line-height: 1.7;
+            margin-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 20px;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .click-hint {
+            text-align: center;
+            color: #808080;
+            font-size: 14px;
+            margin-top: 20px;
+            font-style: italic;
+            font-family: 'Georgia', 'Times New Roman', serif;
+        }
+
+        .no-results {
+            text-align: center;
+            padding: 100px 40px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+        }
+
+        .no-results h2 {
+            color: #000000;
+            margin-bottom: 12px;
+            font-weight: 400;
+            font-size: 2em;
+        }
+
+        .no-results p {
+            color: #5c5c5c;
+            font-size: 1.1em;
+        }
+
+        /* Modal styles - FIXED */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            overflow-y: auto;
+            padding: 40px 0;
+        }
+
+        .modal.active {
+            display: block;
+        }
+
+        .modal-wrapper {
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            min-height: 100%;
+            padding: 40px 20px;
+        }
+
+        .modal-content {
+            background: #ffffff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 60px;
+            max-width: 900px;
+            width: 100%;
+            position: relative;
+            margin: auto;
+            animation: modalFadeIn 0.3s ease;
+        }
+
+        @keyframes modalFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 30px;
+            right: 30px;
+            width: 36px;
+            height: 36px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: #000000;
+            transition: all 0.2s;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            z-index: 10;
+        }
+
+        .modal-close:hover {
+            background: #000000;
+            color: #ffffff;
+            border-color: #000000;
+        }
+
+        .modal-header {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .modal-title {
+            font-size: 32px;
+            font-weight: 400;
+            color: #000000;
+            margin-bottom: 20px;
+            line-height: 1.3;
+            letter-spacing: -1px;
+        }
+
+        .modal-meta {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-top: 20px;
+        }
+
+        .modal-section {
+            margin-bottom: 35px;
+        }
+
+        .modal-section h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #000000;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .modal-section p {
+            color: #5c5c5c;
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .modal-section ul {
+            color: #5c5c5c;
+            line-height: 1.9;
+            font-size: 16px;
+            padding-left: 24px;
+        }
+
+        .modal-section li {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+
+            .sessions-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 2.5em;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                padding: 40px 30px;
+            }
+
+            .modal-title {
+                font-size: 26px;
+            }
+
+            .modal-wrapper {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>UNLEASH World Conference Dashboard</h1>
+            <p>Explore transformative sessions, discover thought leaders, and navigate the future of work</p>
+        </div>
+
+        <div class="controls">
+            <input type="text" id="searchBox" class="search-box" placeholder="Search by title, speaker, or content...">
+
+            <div class="filters">
+                <div class="filter-group">
+                    <label for="dateFilter">Date</label>
+                    <select id="dateFilter">
+                        <option value="">All Dates</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="stageFilter">Stage</label>
+                    <select id="stageFilter">
+                        <option value="">All Stages</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="typeFilter">Type</label>
+                    <select id="typeFilter">
+                        <option value="">All Types</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="topicFilter">Topic</label>
+                    <select id="topicFilter">
+                        <option value="">All Topics</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats">
+            <div class="stats-content">
+                <div class="stat-item">
+                    Showing <span class="stat-number" id="resultCount">0</span> sessions
+                </div>
+                <button class="reset-btn" onclick="resetFilters()">Reset Filters</button>
+            </div>
+        </div>
+
+        <div id="sessionsContainer" class="sessions-grid"></div>
+        <div class="click-hint">Click on any session card to view complete details</div>
+    </div>
+
+    <!-- Modal - FIXED STRUCTURE -->
+    <div id="sessionModal" class="modal">
+        <div class="modal-wrapper" onclick="closeModalOnOutsideClick(event)">
+            <div class="modal-content" onclick="event.stopPropagation()">
+                <div class="modal-close" onclick="closeModal()">×</div>
+                <div id="modalBody"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const sessionsData = [
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "화/10.21.",
+    "Begin": "08:55:00",
+    "End": "09:35:00",
+    "Type": "KEYNOTE",
+    "Title": "Reimagining People Strategies in an Era of AI",
+    "Speaker": "Amy Coleman",
+    "Position": "Chief People Officer",
+    "Affiliation": "Microsoft",
+    "Session Introduction": "The most successful organizations don’t just respond to change; they shape it. And increasingly, it’s people organizations that are leading the way.",
+    "Session Abstract": "As organizations adapt to new expectations, technologies, and ways of working, the role of people leaders has never been more important. In this keynote, Microsoft’s Amy Coleman will share how bold, purpose-driven HR can spark innovation, strengthen trust, and drive lasting growth in today’s fast-moving world.",
+    "Session Purpose": "Amy Coleman, Microsoft’s Executive Vice President and Chief People Officer, has guided the company through defining moments of transformation, showing what modern people leadership can truly achieve. In this keynote, Amy will share how people strategies can shape both cultural and business agendas by pairing courageous leadership and empathy with next-generation employee experiences that accelerate workforce transformation and fuel business growth. This is people operations at its best: agile, strategic, and central to reinvention.",
+    "Key Takeaways": "* Harness the power of high performance, meaningful connection to purpose and people, and empathetic leadership as your competitive edge.\n* Design next-generation employee experiences where AI and humanity work together to accelerate transformation.\n* Lead with the courage to transform disruption into opportunity through bold, people-centered leadership that shapes the future.",
+    "Tag1": "Future of Work",
+    "Tag2": "Strategy and Leadership",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "화/10.21.",
+    "Begin": "09:40:00",
+    "End": "09:55:00",
+    "Type": "KEYNOTE",
+    "Title": "I’m Not Here to Take Your Job: Where Humanoids and AI Merge",
+    "Speaker": "Ameca",
+    "Position": "Engineered Arts",
+    "Affiliation": "Humanoid ",
+    "Session Introduction": "A provocative conversation with the world’s most advanced humanoid and what it means for the Future of Work and humanity",
+    "Session Abstract": "They're not human but they might change how you think about what it means to be one. In this unforgettable keynote interview, David Green, Executive Director of Insight222, sits down with Ameca, the world’s most advanced humanoid from Engineered Arts, for a conversation that blurs the lines between science fiction and workplace reality.",
+    "Session Purpose": "Together, they explore the future of work, emotion, ethics, and collaboration between humans and machines. Will AI be our competitor, colleague, or co-creator? How should we prepare for a world where intelligence is no longer exclusively human? And what happens when machines not only understand our language but our values? This is not a demo. It’s a glimpse into a future that’s already arriving.",
+    "Key Takeaways": "-",
+    "Tag1": "AI",
+    "Tag2": "Future of Work",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "화/10.21.",
+    "Begin": "10:00:00",
+    "End": "10:30:00",
+    "Type": "PANEL",
+    "Title": "Culture as a Superpower",
+    "Speaker": "Ulrika Biesèrt\n\nSharon Doherty \n\nEmilee DeMartino",
+    "Position": " Chief People Officer\n\n Chief People & Places Officer\n\nChief People Officer",
+    "Affiliation": "Ingka Group (IKEA)\n\nLloyds Banking Group\n\nMcDonald’s, Senior Vice President",
+    "Session Introduction": "The New Frontier of HR Leadership",
+    "Session Abstract": "As artificial intelligence transforms how we hire, train and lead, organizations face a critical inflection point: will culture evolve as a strategic asset - or erode into algorithmic efficiency? In an era marked by geopolitical fragmentation, economic uncertainty and the rise of artificial intelligence, culture risks becoming diluted, defaulted or distorted.",
+    "Session Purpose": "This timely keynote panel gathers senior CHRO leaders from IKEA, McDonald’s and Lloyds Banking Group to ask: how do you define culture in an age where work is increasingly virtual, automated and borderless? What must be held sacred – and what can evolve? How do you hold onto your unique cultural value proposition when all around you is changing fast?\n\nCulture is more than a conversation about values; it’s a strategic imperative. The cultural foundations we lay today will determine the humanity and coherence of tomorrow’s organisations. Join us for a bold, honest discussion about what it means to protect your corporate culture as your ultimate superpower – before it’s too late.",
+    "Key Takeaways": "* Defining culture when the world and our workplaces are in flux\n* Leading through uncertainty without losing your cultural compass\n* The silent drift: how AI and scale can gradually erode cultural cohesion\n* Redrawing the line between what can be automated and what must remain human\n* Futureproofing your organisation with culture as the anchor and engine",
+    "Tag1": "AI",
+    "Tag2": "Company Culture",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "화/10.21.",
+    "Begin": "16:25:00",
+    "End": "17:00:00",
+    "Type": "PANEL",
+    "Title": "The Next Chapter: Reimagining DEI and Sustainability in the Global Workplace",
+    "Speaker": "Dailah Nihot\n\nVincent Lecerf\n\nUzair Qadeer",
+    "Position": "Chief People\n\nGroup CHRO\n\nChief People Officer",
+    "Affiliation": "NN Group\n\nOrange\n\nBBC",
+    "Session Introduction": "How HR leaders are aligning inclusive leadership and sustainable impact with business transformation in 2025",
+    "Session Abstract": "As social expectations evolve and the pressure to deliver on both purpose and performance intensifies, the role of HR leaders in driving inclusion and sustainability has never been more strategic. In this forward-looking CHRO panel, top leaders from NN Group and Orange Group join a dynamic conversation on how DEI and sustainability are evolving in 2025 : not just as compliance mandates, but as core drivers of innovation, talent strategy, and global reputation.",
+    "Session Purpose": "Together, they will explore how to design inclusive systems at scale, embed ESG into culture and leadership, and create workplaces where equity, transparency, and environmental responsibility are more than values : they’re a competitive advantage.\n\nModerated by HEC Paris’ Charles-Henri Besseyre des Horts, this session will challenge assumptions, share practical strategies, and chart a new course for HR’s role in societal transformation.",
+    "Key Takeaways": "* Gain insight into how leading CHROs are evolving their DEI and sustainability strategies in 2025\n* Explore the intersection of inclusive leadership, ESG, and business transformation\n* Learn how to embed purpose-driven practices into the fabric of your organisation\n* Hear how global companies are balancing long-term impact with short-term business needs\n* Take away practical ideas for building trust, equity, and resilience in your workforce",
+    "Tag1": "Company Culture",
+    "Tag2": "Diversity",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "화/10.21.",
+    "Begin": "17:00:00",
+    "End": "18:00:00",
+    "Type": "KEYNOTE",
+    "Title": "AI Optimist",
+    "Speaker": "Scott Galloway",
+    "Position": "Professor of Marketing",
+    "Affiliation": "NYU Stern",
+    "Session Introduction": "Why productivity, adaptability, and human connection will define the winners of the AI age",
+    "Session Abstract": "Scott Galloway is known for cutting through hype with clarity and in this powerful keynote, he unpacks why he remains an optimist about AI’s future. With productivity stagnating for decades, he argues that AI isn’t just another wave of innovation, it’s a fundamental reset with the power to supercharge progress across sectors.",
+    "Session Purpose": "In his signature provocative style, Scott will explore where AI is already accelerating value: from personalized healthcare and smarter education to augmented workforces and new leadership models. He’ll spotlight the dominance of platforms like OpenAI and Nvidia, and the rise of agentic AI tools that enhance rather than replace human capability.\n\nThis is also a conversation about responsibility. What jobs will look like, what risks we must manage, and what kind of connection we must preserve in a world that moves faster than ever.",
+    "Key Takeaways": "* Discover why AI may unlock the next era of productivity and how to be ready\n* Understand sector-specific AI gains, from education to healthcare to corporate strategy\n* Learn how to position yourself and your workforce to benefit from AI, not be displaced by it\n* Get grounded in historical context: what tech disruption has really meant for jobs and workers\n* Take away human-first strategies to lead with clarity, connection, and long-term value",
+    "Tag1": "AI",
+    "Tag2": "Future of Work",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "수/10.22.",
+    "Begin": "08:55:00",
+    "End": "09:45:00",
+    "Type": "KEYNOTE",
+    "Title": "The Disruption Never Stops: How AI is Radically Transforming HR",
+    "Speaker": "Josh Bersin",
+    "Position": "Founder & CEO",
+    "Affiliation": "The Josh Bersin Company",
+    "Session Introduction": "Redesigning the workforce, technology, and leadership model for the AI-powered enterprise",
+    "Session Abstract": "The workplace is being reinvented at every level and HR is at the epicenter of this transformation. In this landmark keynote, global industry analyst Josh Bersin unpacks the urgent and systemic impact of AI on the HR technology stack, operating models, and the role of HR itself.",
+    "Session Purpose": "Drawing on exclusive new research and 100+ use cases from across the industry, Josh explores the rise of AI agents, the shift from headcount to skills intelligence, and the reinvention of employee experience through intelligent systems. He will show how companies are rebuilding their talent strategy around productivity, adaptability, and trust: and what separates high-performing “superworker” organizations from the rest.\n\nThis is not incremental change. It’s a once-in-a-generation reset of how we hire, manage, reward, and develop talent.",
+    "Key Takeaways": "* Understand how AI is reshaping every major domain of HR, from talent acquisition and EX to learning, skills, and performance\n* Discover how leading companies are deploying agents, platforms, and * AI-first strategies for measurable productivity and growth\n* Learn how to break down silos and build systemic HR functions that align with new business models\n* Explore the CEO and CHRO priorities driving bold reinvention across industries\n* Walk away with actionable insights to redesign your HR tech stack, organization model, and workforce strategy for 2025 and beyond",
+    "Tag1": "AI",
+    "Tag2": "HR Technology",
+    "Tag3": "Learning and Development",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "수/10.22.",
+    "Begin": "09:50:00",
+    "End": "10:15:00",
+    "Type": "KEYNOTE",
+    "Title": "Human Intelligence",
+    "Speaker": "Eric Mosley",
+    "Position": "Founder, CEO & Board Member",
+    "Affiliation": "Workhuman",
+    "Session Introduction": "Powering AI with the Hidden Power of Recognition",
+    "Session Abstract": "AI can only be as effective as the people data it learns from. Yet most organizations are still training their systems on slow, fragmented inputs – missing the opportunity to turn everyday behavior into strategic insight. In this keynote, Workhuman CEO Eric Mosley explores how crowd-sourced signals like employee recognition and peer feedback can power sharper, more adaptive decisions about talent, culture, and leadership.",
+    "Session Purpose": "Unlike lagging metrics or passive monitoring, recognition data is voluntary, emotionally rich, and available in real time. It reveals what traditional systems miss: who’s trusted, who’s contributing, and what people are actually working on. As demand grows for meaningful human data to train and inform AI, recognition offers a constant, high-fidelity source of insight that scales with your workforce. In a world where technology levels the playing field, people and the signals they generate will shape success.",
+    "Key Takeaways": "* Why most HR data limits the effectiveness of AI in the workplace\n* How real-time, crowd-sourced data reveals hidden insights into performance and leadership\n* How recognition signals help surface future leaders and clarify team focus\n* What it takes to move from hype to real impact with AI in people strategy",
+    "Tag1": "AI",
+    "Tag2": "Company Culture",
+    "Tag3": "Strategy and Leadership",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "수/10.22.",
+    "Begin": "15:50:00",
+    "End": "16:25:00",
+    "Type": "PANEL",
+    "Title": "New Frontiers: Workforce Planning in the Age of AI",
+    "Speaker": "Mick Collins\n\nBen Pierce\n\nNancy Estell Zoder",
+    "Position": "Global Vice President\n\nGeneral Manger, Planning Business Unit\n\nGroup Vice President, Oracle Cloud Product Strategy",
+    "Affiliation": "SAP SucessFactors\n\nWorkday\n\nOracle",
+    "Session Introduction": "Inside the Playbooks of SAP, Oracle, Workday & Deloitte as AI Redefines Work",
+    "Session Abstract": "AI is rewriting the rules of work, and smart workforce planning is now a business imperative. Hear from Deloitte, SAP, Oracle, and Workday on the trends, tools, and customer demands shaping the future of workforce strategy.",
+    "Session Purpose": "As every company and every function grapples with questions on how AI is changing the nature of work the need to both forecast what those potential changes are, and then model out both how, when and at what costs those changes impact the workforce has never been more important. This has given rise to a growing demand, driven by the business, for Operational and Strategic Workforce Planning. The need for core HCM systems to cull data from HR, Finance, Operations, Procurement and External Data sources and provide tools to model this is one of the fastest growing areas of HRIT. On this panel, Deloitte along with SAP, Oracle and Workday will all join us to talk about what there customers are asking for and what trends they are seeing in Workforce Planning.",
+    "Key Takeaways": "-",
+    "Tag1": "AI",
+    "Tag2": "Future of Work",
+    "Tag3": "HR Technology",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 1",
+    "Topic": "Main Stage",
+    "Date": "수/10.22.",
+    "Begin": "16:30:00",
+    "End": "17:00:00",
+    "Type": "KEYNOTE",
+    "Title": "The Future of Work in the Age of AI and How HR Should Respond",
+    "Speaker": "Daniel Susskind",
+    "Position": "Research Professor in Economics",
+    "Affiliation": "King's College London",
+    "Session Introduction": "Why the Age of Intelligent Machines Demands a Rethink of Talent, Purpose, and Professionalism",
+    "Session Abstract": "As AI systems take on tasks once thought to require uniquely human skills, the nature of work is fundamentally changing. In this session, economist and author Daniel Susskind examines what this means for the future of professional roles and how HR can help individuals and organizations adapt to a rapidly evolving landscape.",
+    "Session Purpose": "Every day we hear of advances in AI, with new systems – from ChatGPT to Claude to Gemini – taking on activities that, until recently, we thought only human beings alone could ever do: writing effective code and drafting compelling documents, designing beautiful buildings, and diagnosing medical illnesses. What does all this progress mean for the future of work? It is one of the greatest questions of our time. And in this optimistic and pragmatic talk, Daniel Susskind explores what lies ahead, drawing on his best-selling books, ‘The Future of the Professions’ and ‘A World Without Work.’ He describes how, in the future, we will neither need nor want professionals – accountants, lawyers, doctors, teachers, architects, the clergy, consultants, and many others – to work as they did in the 20th century. And he sets out how HR can prepare us all to flourish in the decades to come.",
+    "Key Takeaways": "-",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "Future of Work",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "09:00:00",
+    "End": "09:30:00",
+    "Type": "CASE STUDY",
+    "Title": "Empowering Human Capital in the Age of AI: Keeping Humans at the Helm",
+    "Speaker": "Bruce Daisley",
+    "Position": "Former Twitter VP, Workplace culture author",
+    "Affiliation": "Bruce Daisley",
+    "Session Introduction": "From Automation to Aspiration: Redesigning Work to Bring Back Meaning, Mastery and Joy",
+    "Session Abstract": "Step into a future where AI doesn't just optimize work, it liberates people to do their best work. Explore how the next chapter of transformation can reawaken purpose, creativity and connection at scale.",
+    "Session Purpose": "As AI reshapes the workplace, HR leaders face a pivotal opportunity, not just to adapt, but to elevate the human experience at work. This session reframes the AI conversation from disruption to delight, showing how automation can free people from drudgery, reignite human potential and renew the joy of contribution. From reimagining roles to unlocking new career pathways, the keynote will explore how to build cultures where purpose thrives and people flourish.",
+    "Key Takeaways": "* Designing work that brings out the best in people: curiosity, care, collaboration and creativity\n* Reclaiming time for meaningful human connection through intelligent automation\\\n* Enabling personalised growth journeys through AI-driven learning and career mobility\n* Building inclusive cultures where technology uplifts every voice, not just the loudest\n* Making joy at work a strategic goal- because fulfilled people build better businesses",
+    "Tag1": "AI",
+    "Tag2": "Change Management",
+    "Tag3": "Future of Work",
+    "Tag4": "Strategy and Leadership",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "09:35:00",
+    "End": "10:00:00",
+    "Type": "PANEL",
+    "Title": "HR’s Defining Moment : Leading the Human-AI Transformation",
+    "Speaker": "Syed Ali Abbas\n\nVincent Dupuis\n\nAlexandre Alves",
+    "Position": "VP of People, HelloFresh\n\nVP HR Digital & AI\n\nGlobal IT Head of Business Architecture",
+    "Affiliation": "HelloFresh\n\nAirbus\n\nUnilever",
+    "Session Introduction": "Reimagining Work to Amplify Purpose, Potential and Progress",
+    "Session Abstract": "As AI and increasingly agentic AI redefines how work is done, HR’s role is no longer just about supporting transformation. HR now stands at the helm of it. From shaping ethical frameworks to mapping which roles should be automated, augmented, or protected, HR leaders are the architects of how organisations evolve in the age of intelligent systems.",
+    "Session Purpose": "In a world being rapidly reshaped by AI, HR leaders are no longer just stewards of culture now is the moment they will look back at when they became architects of transformation and co-pilots of profitable growth. This is a once-in-a-generation opportunity to redefine the role of HR as a driving force in business strategy, innovation and long-term value creation. By embracing AI not as a threat but as a powerful ally, HR can lead the charge in reimagining how organisations attract, develop, and empower talent.",
+    "Key Takeaways": "* Champion a vision where human potential is amplified, not overshadowed, by technology\n* Sit at the table with tech, product and commercial teams to shape AI adoption in ways that serve people and performance\n* Use workforce intelligence and people analytics to influence high-impact decisions across the business\n* Lead the redesign of roles, workflows and organisational structures for greater agility and meaning\n* How HR will increasingly act as the strategic gatekeeper deciding where AI adds value and where human judgement must remain central",
+    "Tag1": "Change Management",
+    "Tag2": "Learning and Development",
+    "Tag3": "AI",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "10:05:00",
+    "End": "10:30:00",
+    "Type": "FIRESIDE",
+    "Title": "Humanist Culture as the Foundation of Enduring Success: Lessons from Hermès",
+    "Speaker": "Sharon MacBeath\n\nDon Sull",
+    "Position": "Group Human Resources Director\n\nProfessor of the Practice",
+    "Affiliation": "Hermes International\n\nMIT Sloan School of Management",
+    "Session Introduction": "HR as Custodians of Trust, Talent and Belonging in the Age of Technology",
+    "Session Abstract": "Nearly two centuries after its founding, Hermès is world-renowned for exquisite craftsmanship and uncompromising quality. Hermès is not only one of the world’s most admired brands, it is also an extraordinary company. Hermès leads the luxury fashion industry in employee satisfaction and retention, and numbers among the fifty most valuable companies in the world. Hermès owes much of its enduring success to its distinctive corporate culture deeply rooted in humanist values.",
+    "Session Purpose": "In this session, Sharon MacBeath, Group Human Resources Director, joins moderator Donald Sull to explore how Hermès defines, transmits, and safeguards its unique humanist culture.",
+    "Key Takeaways": "* The key elements of Hermès’ humanist corporate culture and how do they translate into best-in-class employee experience and business results\n* How Hermès embeds a shared culture across a decentralized global organization of more than 20,000 employees in 45 countries\n* How the company has maintained and strengthened its culture while nearly doubling its workforce in the past decade\n* How to preserve a healthy culture while adapting to changing conditions",
+    "Tag1": "AI",
+    "Tag2": "Transformation",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "11:30:00",
+    "End": "11:55:00",
+    "Type": "FIRESIDE",
+    "Title": "Leading the People Agenda in an AI World",
+    "Speaker": "Gina Vargiu-Breuer\n\nBruce Daisley",
+    "Position": "CPO\n\nFormet Twitter VP, Workplace culture author",
+    "Affiliation": "SAP\n\nBruce Daisley",
+    "Session Introduction": "Why skills, culture and technology need to come together to drive meaningful transformation and unleash human energy.",
+    "Session Abstract": "As the Intelligent Age unfolds, the real competitive advantage isn’t just the tech you use – it’s how you support your people to grow, adapt, and lead with purpose. Learn why organizations must build on skills, culture, and purposeful technology to stay relevant and resilient.",
+    "Session Purpose": "In a world shaped by AI and rapid innovation, lasting success depends not just on technology but on the people you grow. This session explores why a skills-first approach, a strong adaptive culture, and purposeful use of people technology form the core of sustainable growth. Leaders must reimagine workforce strategies to unlock continuous learning, agile talent models, and personalized development — creating a people ecosystem ready for the future.",
+    "Key Takeaways": "* Skills are the new currency: Prioritizing skills over roles or degrees unlocks agility, innovation, and real-time workforce adaptability.\n* Culture powers resilience: An adaptive, value-driven culture provides stability and direction in times of constant change.\n* Technology as an enabler: AI and data-driven tools amplify the impact of people strategies: from personalized learning to transparent talent mobility.\n* Skill-based frameworks reshape how we hire, develop, reward, and retain talent for long-term success.",
+    "Tag1": "AI",
+    "Tag2": "Skills Development",
+    "Tag3": "Strategy and Leadership",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "12:00:00",
+    "End": "12:30:00",
+    "Type": "CASE STUDY",
+    "Title": "Setting Up a New Corporate Culture from Scratch: What do you Want to Stand For?",
+    "Speaker": "Denis Mineret",
+    "Position": "CPO",
+    "Affiliation": "Opella",
+    "Session Introduction": "Building Culture as a Strategic Asset from Day One",
+    "Session Abstract": "When you have the rare chance to build a company culture from the ground up, every decision counts. This session explores how to create a people-first, values-led culture that attracts top talent, shapes performance, and drives long-term success without inheriting legacy mistakes.",
+    "Session Purpose": "Establishing a strong and intentional culture from the outset is a defining opportunity for any new or restructured organisation. In this session, Denis Mineret shares how Opella approached this challenge across diverse regions, balancing ambition with authenticity. From deciding what legacy HR practices to carry forward, to embedding values in hiring, rituals, and everyday behaviours, this session offers practical inspiration for HR and business leaders shaping their own cultural blueprint",
+    "Key Takeaways": "* Learn how to design a bold, attractive culture that drives growth, innovation, and competitive advantage.\n* Explore which traditional HR practices still hold value—and which to leave behind.\n* Understand how to hire and retain talent based on cultural alignment, not just skillsets.\n* Discover how to embed values through rituals, behaviours, and cross-company initiatives.\n* Hear real-world insights from Opella’s journey across Europe and Latin America.",
+    "Tag1": "AI",
+    "Tag2": "Change Management",
+    "Tag3": "Data and Analytics",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "12:35:00",
+    "End": "13:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Change Management 4.0: Human-Centred Co-Created Transformation at Global Scale",
+    "Speaker": "Jason Bloomfield",
+    "Position": "Global Head of People Change & TA Transformation",
+    "Affiliation": "Ericsson",
+    "Session Introduction": "How to Incorporate Human Nuances, Skills and End User Need into New IT Tools",
+    "Session Abstract": "In an era of rapid transformation and global complexity, change management is no longer a back-office function; it is a strategic enabler of business agility, cultural cohesion and sustained performance. At Ericsson, a 149-year-old company with deep heritage and global reach, transformation meant more than just a system overhaul. It meant rethinking how we design, implement and scale change from the inside out. This is the story of how we turned a failing global HR platform into something greater.",
+    "Session Purpose": "This session explores how Ericsson embraced a new model of change beyond the usual, moving towards a Change Management 4.0 approach that brings together human-centred design, inclusive co-creation, and technology modernisation in a complex, multinational environment. As we transitioned from a legacy B2C mindset to a B2B model, we needed to become more agile, more customer-focused, and critically, more attuned to the experience of our internal customer: the employee. By shifting from a technology-first to a people-first approach, we not only enhanced platform Net Promoter Score by 47 points in one year, but also laid the foundation for better customer experiences, stronger global collaboration, and future-proofed operational resilience.",
+    "Key Takeaways": "* Understanding Change Management 4.0: a flexible, scalable framework that applies across sectors, regions, and transformation types\n* How to redesign global HR tools to be more human-centred, intuitive, and aligned to real-world employee needs\n* Embedding cultural intelligence and neurodiversity into platform design to de-risk implementation and maximise adoption\n* Honouring legacy while enabling change, balancing heritage with innovation in long-standing organizations\n* The shift from technology-led deployment to co-creation from the outset- designing before the ink is dry\n* Leveraging cloud-based agility to accelerate responsiveness, adaptability and value delivery\n* Using employee feedback and Net Promoter Scores to track success and identify areas for continuous improvement\n* Practical strategies for building multicultural, cross-functional teams that improve engagement and co-ownership\n* Lessons learned from transforming a ‘Tool of Doom’ into into something more human, what worked, what didn’t ….and why",
+    "Tag1": "AI",
+    "Tag2": "Change Management",
+    "Tag3": "Employee Experience and Engagement",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "14:30:00",
+    "End": "14:55:00",
+    "Type": "FIRESIDE",
+    "Title": "The CEO-CHRO Alliance: Turning People Strategy into Impact at Danone",
+    "Speaker": "Antoine de Saint-Affrique\n\nIsabelle Esser\n\nDr.Charles-Henri Besseyre des Horts",
+    "Position": "CEO\n\nChief Human Resources, Research & Innovation, Quality and Food Safety Officer\n\nProfessor Emeritus",
+    "Affiliation": "Danone\n\nDanone\n\nHEC Paris",
+    "Session Introduction": "Cultivating a strong people culture, fostering continuous learning and driving innovation",
+    "Session Abstract": "In a world shaped by constant disruption and uncertainty, this session will spotlight the unique partnership between Danone’s CEO and CHRO, a leadership duo driving bold, people-powered transformation. Together, they will share how Danone is leveraging its People Strategy to navigate complexity and deliver impact through pioneering HR actions.",
+    "Session Purpose": "From employer branding and inclusive recruitment to upskilling and social protection, Danone is reimagining the role of HR as a strategic engine for sustainable growth. This conversation will explore how human-centric leadership and a shared commitment to purpose are enabling Danone to meet today’s challenges, while preparing for tomorrow.",
+    "Key Takeaways": "-",
+    "Tag1": "Learning and Development",
+    "Tag2": "Organizational Design",
+    "Tag3": "Strategic Alliances",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "15:00:00",
+    "End": "15:25:00",
+    "Type": "CASE STUDY",
+    "Title": "From Bold Vision to Future-Driven Growth: How Philip Morris International Evolved Its Culture",
+    "Speaker": "Frederic Patitucci",
+    "Position": "Chief People & Culture Officer",
+    "Affiliation": "Philip Morris International",
+    "Session Introduction": "The Role of Culture in Corporate Reinvention: A Case Study",
+    "Session Abstract": "As Philip Morris International (PMI) shifted from being a tobacco company to a leading global consumer goods company and a champion of smoke-free products, it recognized that sustaining transformation required more than a shift in business strategy; it demanded an evolution in culture. With an evolving, globally diverse workforce, PMI needed a unified, modern way of working that was essential to competing in the global talent market. Through co-creating the PMI DNA, a blueprint anchored in shared values and behaviors, PMI built a strong cultural foundation supporting continuous learning, growth, and innovation.",
+    "Session Purpose": "In 2016, PMI’s business transformation was set in motion by a bold vision: becoming a global smoke-free champion. To sustain and accelerate this journey, PMI launched the PMI DNA in 2024, a cultural blueprint co-created with employees worldwide. Firmly believing that its people strategy is its business strategy, the company uses its PMI DNA to help foster a unified, growth-driven culture essential to achieving PMI’s ambition of leading the future of smoke-free products and consumer goods innovation.\n\nThe PMI DNA defines how people at PMI work together, anchored in three core values: We care. We are better together. We are game changers. These values guide behaviors that build trust, collaboration, innovation, and a growth mindset across the organization.",
+    "Key Takeaways": "* Strengthened its business by embedding a common culture across a dynamic global workforce.\n* Co-created values and behaviors with employees, turning culture into a shared movement rather than a mandate.\n* Evolved leadership and employee experiences to reflect the needs of a changing global talent landscape.\n* Integrated learning, upskilling, and reskilling as core elements of the employee experience, which helped embed a growth mindset across the organization, ensuring employees are prepared for AI and the future of work.\n* Embedded the PMI DNA into key employee touchpoints and the lessons learned along the way.\n* Measured the impact of the PMI DNA through pulse surveys of employees’ understanding of the company’s values and perceptions of how senior leaders model those values.",
+    "Tag1": "AI",
+    "Tag2": "Change Management",
+    "Tag3": "Company Culture",
+    "Tag4": "Future of Work",
+    "Tag5": "Skills Development"
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "화/10.21.",
+    "Begin": "15:30:00",
+    "End": "15:55:00",
+    "Type": "CASE STUDY",
+    "Title": "Amplifying Human Potential: Success Stories of HCM Innovation and Excellence",
+    "Speaker": "Lukasz Stasiak\n\nClaudia Chiudinelli\n\nGeoffroy Lacan",
+    "Position": "Global HRIS Director\n\nDigital HR Transformation Lead\n\nGlobal HRIS Director",
+    "Affiliation": "AMMEGA Group\n\na2a Life Company\n\nVINCI Construction",
+    "Session Introduction": "HR Evolved: Transforming People Practices Worldwide",
+    "Session Abstract": "Join Lukasz Stasiak, Global HRIS Director at AMMEGA Group, and Claudia Chiudinelli Digital HR Transformation Manager at A2A as they share how teams are reimagining HR through innovation, GenAI, and data-driven strategy. Discover practical insights and proven tactics to elevate the employee experience and deliver meaningful business impact.",
+    "Session Purpose": "Discover how organizations around the world are reimagining human resources with Oracle HCM in this engaging case study session. Hear how leaders are elevating candidate and employee experiences, driving HR innovation, and leveraging GenAI within their applications to achieve remarkable business outcomes. The speakers will share practical insights, lessons learned, and proven strategies for delivering HR excellence and unlocking value at every stage of the employee journey. Whether you’re seeking inspiration or ready to take your HCM transformation to the next level, these real-world stories will show you what’s possible.",
+    "Key Takeaways": "-",
+    "Tag1": "Employee Experience and Engagement",
+    "Tag2": "HR Technology",
+    "Tag3": "Transformation",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "수/10.22.",
+    "Begin": "09:00:00",
+    "End": "09:25:00",
+    "Type": "CASE STUDY",
+    "Title": "Visionary Leadership: Reimagining HR’s Strategic Function for Flexibility and Growth",
+    "Speaker": "Stephen Childs",
+    "Position": "Chief Human Resources Officer",
+    "Affiliation": "Panasonic Automotive",
+    "Session Introduction": "How to ReBuild and ReInvent Your HR Department's for More Impact and Reach",
+    "Session Abstract": "The world of work is changing fast. Economic uncertainty and the rise of AI are reshaping how value is created. This keynote explores how HR can lead with purpose, strategy and agility to help businesses thrive.",
+    "Session Purpose": "As global markets shift and technology accelerates change, HR leaders are being called to step into one of the most pivotal roles in the organisation. The CHRO is no longer a back-office role but a central force in driving resilience, innovation and long-term value. In this session, discover how forward-thinking HR leaders and teams are expanding their influence, building critical business partnerships and fostering a growth mindset across the enterprise. Learn how to shape an HR function that is built for complexity and committed to people-first progress.",
+    "Key Takeaways": "* Why this is a pivotal moment in the evolution of the role of the CHRO\n* What specific changes and shifts in HR’s strategic function are needed now and in the next 5 years\n* Identify which emerging and essential skills will be needed for a more business-centric HR team\n* Strategies for developing high-impact AI and technology part of the function, from full integration to setting up high impact AI teams\n* Considerations of maintaining the integrity of your hard-won experience and culture created",
+    "Tag1": "Change Management",
+    "Tag2": "Learning and Development",
+    "Tag3": "Skills Development",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "수/10.22.",
+    "Begin": "09:30:00",
+    "End": "10:00:00",
+    "Type": "PANEL",
+    "Title": "Adaptive Leadership in a Disordered World: Rethinking Culture, Control and the Role of HR in Global Disruption",
+    "Speaker": "Janaina Tavares\n\nGreet-Jan Waasdorp\n\nDaniel Thorniley",
+    "Position": "Global Head of People and Culture\n\nFounder & Directeur Labour Market\n\nPresident",
+    "Affiliation": "ActionAid International\n\nIntelligence Group\n\nDT-Global Business Consulting",
+    "Session Introduction": "How Geopolitics and Economic Fragmentation are Reshaping Leadership Accountability and HR’s Strategic Mandate",
+    "Session Abstract": "In an age of fractured geopolitics, supply chain disruption and economic volatility, the illusion of stability in global business has given way to a more uncertain, multipolar reality. From Russia’s estrangement across global markets to inflation shocks, regionalised trade blocs and the aftershocks of COVID-era digital acceleration, the operating environment for multinationals has fundamentally changed.",
+    "Session Purpose": "This session brings together senior leaders to examine the evolving responsibilities of the HR function – not just as a steward of culture, but as a strategic engine for institutional adaptability. In a world where global ambition increasingly collides with local volatility, the ability to design resilient, culturally coherent organisations has become a critical differentiator.\n\nDr. Daniel Thorniley, a renowned expert on emerging markets, geopolitics and business strategy, will guide the discussion, drawing on real-world case studies from Central and Eastern Europe, the Middle East, and Africa. The panel will support how organisations can maintain trust, leadership and plan better across fragmented markets and competing geopolitical and economic agendas.",
+    "Key Takeaways": "* In a world of change, how are geopolitics and economic fragmentation reshaping leadership accountability and HR’s strategic mandate?\n* The role of corporate culture as ballast in turbulent markets and how can strong values offset systemic instability?\n* The implications of migration and displacement on HR are deep, multi-layered and increasingly urgent especially as climate change, geopolitical instability and economic shifts accelerate these trends\n* Building leadership teams that can adapt across jurisdictions with divergent regulatory and cultural expectations\n* What HR can learn from emerging market volatility about workforce resilience, localisation and decentralised decision-making\n* Whether ‘adaptive leadership’ is a viable long-term model or a stopgap for institutional indecision",
+    "Tag1": "Change Management",
+    "Tag2": "Future of Work",
+    "Tag3": "Strategy and Leadership",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "수/10.22.",
+    "Begin": "10:05:00",
+    "End": "10:30:00",
+    "Type": "FIRESIDE",
+    "Title": "Powering People: Building a High-Performance Culture in the Age of AI",
+    "Speaker": "Kerry Dryburgh\n\nDr.Charles-Henri Besseyre des Horts",
+    "Position": "EVP, People, Culture and Communications and Chief Human Resources and Communications Officer\n\nProfessor Emeritus",
+    "Affiliation": "BP\n\nHEC Paris",
+    "Session Introduction": "Building resilience and performance in an era of transformation",
+    "Session Abstract": "Kerry Dryburgh, bp’s EVP of People, Culture & Communications, shares how bold leadership, tech integration, and a people-first approach are fueling bp’s transformation in an AI-driven economy.",
+    "Session Purpose": "In a volatile economic climate and amid rapid AI-driven change, Kerry Dryburgh will reveal how bp is balancing cutting-edge technology with a relentless focus on human capability. Drawing on lessons from her experience leading employees across 60 countries, she will share how bp is unlocking talent potential and preparing for the future of energy.",
+    "Key Takeaways": "* The economic and industry forces driving bp’s transformation.\nHow AI and automation are being adopted without losing the human edge.\n* Leadership strategies that inspire adaptability and resilience in a legacy-rich organization.\nbp’s approach to building a high-performance culture\n* Developing future-ready skills for thriving in a fast-evolving market.",
+    "Tag1": "AI",
+    "Tag2": "Strategy and Leadership",
+    "Tag3": "Transformation",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "수/10.22.",
+    "Begin": "11:30:00",
+    "End": "11:55:00",
+    "Type": "CASE STUDY",
+    "Title": "Nurturing People at the Virgin Group: How To Embrace Human-Centric Leadership in a Data-Driven World",
+    "Speaker": "Nikki Humphrey",
+    "Position": "Chief People Officer",
+    "Affiliation": "Virgin Group",
+    "Session Introduction": "How Virgin Champions People to Drive Innovation in a Tech-Focused World",
+    "Session Abstract": "In this session, we explore how Virgin is accelerating the value of its people through its inclusive experiences. As AI and tech reshape the workplace, we find out how placing equal importance on nurturing and investing in people is key to igniting the Virgin magic across customer experience, leadership and hiring.",
+    "Session Purpose": "This session also delves into how Virgin’s commitment to nurturing human connection continues to foster an inclusive environment where everyone feels valued and enabled to perform at their Virgin best. The goal is to inspire organizations to embrace human-centred principles and not underestimate the value of their people in an AI-driven world.",
+    "Key Takeaways": "* The heritage of the Virgin brand and its history, creating an inclusive and flexible workplace.\n* Empowering people to work hand-in-glove with AI and technology and how this contributes to a competitive business advantage.\n* Nurturing an inclusive culture, where everyone feels welcome and their individual needs are supported.\n* How meeting people’s individual needs can have a positive impact on customer experience, people experience and leadership\n* How Virgin is embracing a human-centric approach at every given opportunity, e.g. through fair change hiring, candidate choice, trailblazer leadership development and growing dyslexic talent.\n* How a human-centric approach can better support leaders to drive the business forward at a time of immense geopolitical change and challenge.",
+    "Tag1": "AI",
+    "Tag2": "HR Technology",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "수/10.22.",
+    "Begin": "12:00:00",
+    "End": "12:30:00",
+    "Type": "PANEL",
+    "Title": "Moving the Dial on DE&I: Where to Next for HR Leaders?",
+    "Speaker": "Bruce Roch\n\nAlexandra Eichberger\n\nCharlotte Otter",
+    "Position": "Head of Inclusion\n\nHead of Goup People Development & Culture\n\nAuthor",
+    "Affiliation": "Adecco\n\nErste Group\n\nOtter Advisory",
+    "Session Introduction": "Safeguarding DE&I: Why Inclusive Investment Still Matters",
+    "Session Abstract": "DE&I is undergoing a dramatic shift from standalone initiatives to deeply embedded business imperatives. This session explores how HR leaders must evolve as the world shifts from a post BlackLivesMatter and strong DE&I agenda to something stronger. How do HR leaders as custodians of DE& initiatives continue to be supporters to strategic DE&I drivers of real, measurable change in a rapidly transforming landscape.",
+    "Session Purpose": "This panel dives into the future of DE&I, challenging global shifts and changes to ensure HR leaders to take ownership of meaningful progress. With a focus on wellbeing, development and inclusion in both physical and virtual workspaces, the session explores where current efforts fall short and what needs to change … and how forward-thinking organisations are re-framing the conversation. The conversation will offer practical insights on how to drive lasting impact backed by data, driven by culture and shaped by their own employees.",
+    "Key Takeaways": "* Impact of emerging change in the geo-political stage and implications for DE&I programmes in Americas, Europe, Asia and other key regions\n* Global vs Local Tensions: balancing universal DE&I values with local cultural, political, and legal realities\n* How do we reassess DE&I and wellbeing programs to maintain inclusion across culture, age, and access\n* How do company’s re-position and build positively from original DE&I agendas to the next 5 years\n* Media and wider social impact initiatives directly to retention and employee purpose\n* Make inclusive leadership a shared responsibility, not a standalone effort\n* Use data to challenge assumptions about who benefits from current initiatives\n* Tips and solutions to take away from HR Leaders",
+    "Tag1": "AI",
+    "Tag2": "Diversity",
+    "Tag3": "Wellbeing",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "수/10.22.",
+    "Begin": "12:35:00",
+    "End": "13:00:00",
+    "Type": "FIRESIDE",
+    "Title": "Leading with Purpose: Building Empowered, High Performing Teams at Scale",
+    "Speaker": "Åsa Agebäck",
+    "Position": "CHRO",
+    "Affiliation": "H&M Group",
+    "Session Introduction": "How H&M Group builds from its strength of entrepreneurial culture and deeply rooted values to empower teams and drive strong business results",
+    "Session Abstract": "At H&M Group, leadership is all about igniting passion for our customers, unleashing the potential of our people, and enabling flourishing creativity. But it’s also about driving strong business outcomes and results. In this session, Åsa Agebäck shares how a strong culture and purpose-driven leadership have made H&M one of the most admired employer brands in Europe — and how an added focus on business outcomes is now shaping the future direction. It’s not either-or; it’s about finding the right combination of both.",
+    "Session Purpose": "What makes a global company like H&M Group thrive across a competitive industry? According to Åsa Agebäck, it comes down to people, purpose and culture. As Chief Human Resources Officer, she will share how H&M Group cultivates bold leadership that sets clear direction, empowers ownership and creates space for collaboration and creativity.\n\nWhile building inclusive and diverse teams and embedding values that drive action, H&M Group’s success lies in its ability to connect business outcomes with purpose, passion, and care. With a strong belief in teamwork and personal growth, Åsa Agebäck will outline how leadership at H&M Group supports performance while keeping care at its core.\nThis is an unmissable opportunity to learn how purpose-driven leadership can drive results, retain talent, and create a workplace where people thrive together.",
+    "Key Takeaways": "* How to lead with purpose while delivering high performance at scale\nCreating a culture of ownership and accountability\n* Embedding diversity, inclusion and fairness into everyday leadership and recruitment\n* Building cross-functional teams that collaborate creatively and think boldly\n* Linking values and purpose to real-world results and business growth\n* Nurturing talent through development, trust and exciting career opportunities\n* Why people are the heart of what makes a culture thrive and drive strong business outcomes",
+    "Tag1": "Company Culture",
+    "Tag2": "Strategy and Leadership",
+    "Tag3": "Talent Development",
+    "Tag4": "Talent Management",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "수/10.22.",
+    "Begin": "14:00:00",
+    "End": "14:25:00",
+    "Type": "CASE STUDY",
+    "Title": "Keeping People for the Long Run: How Marriott Built a Culture That Lasts",
+    "Speaker": "Katharine Coombes",
+    "Position": "Vice President, Talent Acquisition & People Brand EMEA",
+    "Affiliation": "Marriott International",
+    "Session Introduction": "The people-first strategy behind Marriott’s standout employee loyalty and low turnover",
+    "Session Abstract": "In an industry defined by churn, Marriott chose a different path - investing in people, not just positions. In this new case study, discover the simple but powerful choices that turned frontline roles into long-term careers. Find out what lessons can be learned by other industries from their HR roots “Take care of your people and they will take care of the customers.” Hear how they have successfully navigated challenges of high turnover, labour shortages post-COVID and competitive wage demands.",
+    "Session Purpose": "Marriott’s story is a reminder that retention isn’t about gimmicks, it’s about genuine growth. By putting people first through development, recognition and clear career pathways, the company has built a culture of trust, loyalty and longevity in one of the world’s most high-turnover sectors. This session breaks down the steps Marriott took and what any organisation can adapt to build lasting engagement from within.",
+    "Key Takeaways": "* Start with trust: show people they matter beyond their job title\n* Grow from within: promote, mentor, and develop continuously\n* Celebrate the long haul: reward contribution and loyalty early and often\n* Working effectively with unions and labour relations globally\n* Keep the path clear: make career progression visible and real\n* Build purpose, not perks: meaningful work beats short-term benefits",
+    "Tag1": "Employee Experience and Engagement",
+    "Tag2": "",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 2",
+    "Topic": "HR Reinvention",
+    "Date": "수/10.22.",
+    "Begin": "14:30:00",
+    "End": "15:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Using Culture to Power the AI Mindset: A People-First Playbook from Sanofi",
+    "Speaker": "Raj Verma",
+    "Position": "Chief Culture, Inclusion + Ex Office",
+    "Affiliation": "Sanofi",
+    "Session Introduction": "Sanofi is aiming to be the first pharma company to scale AI, but real success goes beyond tech",
+    "Session Abstract": "In this session, Raj Verma, Chief Culture, Inclusion & Employee Experience Officer, reveals how Sanofi is weaving culture, inclusion, and employee experience into its digital transformation to keep it human at heart. After a strategic company reset, Sanofi introduced many digital employee touchpoints as key drivers of change, including Bravo!, the company's recognition platform. Bravo! is becoming a powerful lever for driving culture change, building inclusion, and helping employees adopt new behaviours aligned with Sanofi's AI transformation goals. Raj will explore how recognition and culture design are supporting Sanofi's AI ambitions, and how HR leaders can lead similar efforts in their own organizations. He'll unpack how his team was designed to lead the people strategy through the lens of culture, inclusion, and experience, sharing lessons from policies, processes, and practices while offering actionable ideas for aligning transformation with what matters most to people.",
+    "Session Purpose": "This is a session about storytelling that makes everyone feel like the protagonist, because when people see themselves in the journey, transformation becomes personal.",
+    "Key Takeaways": "* How creating the right employee experience cultivates values-based behaviours and drives strategic initiatives\n* How Sanofi is using recognition to activate values and drive growth\n* Why HR must co-lead on every digital journey\n* A model for integrating culture, inclusion and employee experience into every digital touch point",
+    "Tag1": "AI",
+    "Tag2": "HR Technology",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "09:00:00",
+    "End": "09:30:00",
+    "Type": "CASE STUDY",
+    "Title": "Agents Execute – Robots Build – Humans Lead",
+    "Speaker": "Pierre-Alexandre Balland",
+    "Position": "Professor",
+    "Affiliation": "Harvard University & CEPS",
+    "Session Introduction": "Redefining Work in the Age of Intelligent Machines",
+    "Session Abstract": "As AI and robotics continue to reshape the world of work, this opening session provides a strategic roadmap for HR leaders and decision-makers preparing for what’s next. Join Pierre-Alexandre Balland, Visiting Professor at Harvard University, Chief Data Scientist at CEPS, and Director of the AI World, to explore what AI can do today, how it can transform organizations, amplify human potential, and redefine the future workforce.",
+    "Session Purpose": "In this opening session, we’ll chart the road ahead for organizations seeking to harness the power of AI, agentic systems, and robotics without losing the human core of their workforce. This is your compass session for navigating the complexity of technological transformation with purpose and responsibility.",
+    "Key Takeaways": "* A comprehensive exploration of how AI, robotics, and automation are reshaping global workforces and the implications for businesses.\n* Insights into how roles and industries are evolving through AI-driven transformation, with a focus on emerging skills and areas where human expertise is amplified.\n* Case studies of organizations successfully navigating workforce evolution, demonstrating real-world applications of AI and automation integration.\n* The essential role of human leadership in guiding ethical AI deployment and ensuring technology enhances, rather than replaces, human potential.",
+    "Tag1": "AI",
+    "Tag2": "Future of Work",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "09:35:00",
+    "End": "10:00:00",
+    "Type": "PANEL",
+    "Title": "AI Is Here to Stay: Breaking Silos and Building Trust via Cross-Functional Collaboration in the Age of AI",
+    "Speaker": "Suart Privett\n\nOluyomi Okunowo\n\nRobyn Agoston",
+    "Position": "Head of HR Systems\n\nSVP HR, Commercial Hair and Nail Organization\n\nDirector",
+    "Affiliation": "Swissport\n\nWella Company\n\nHuman Fluency",
+    "Session Introduction": "How HR Leaders and IT Must Collaborate To Steer the Future of Work",
+    "Session Abstract": "The AI revolution is no longer theoretical ... it's operational, accelerating across functions with real implications for hiring, performance, and people strategy. This session explores how HR leaders can team up with IT, legal and compliance to shape AI's trajectory, ensuring it drives value while remaining fair, accountable, and human-centric.",
+    "Session Purpose": "As AI is making its impact felt across every corner of the business, to make it work, HR leaders, IT teams and people managers must come together to co-design systems that are fair, effective and aligned with how people actually work. This session explores how cross-functional collaboration inside the whole HR ecosystem – between strategy, operations, talent, tech and compliance – can shape AI that supports better decisions, fairer outcomes and a stronger employee experience",
+    "Key Takeaways": "* Why resisting AI is no longer an option and how to harness it with intent\n* Cross-functional collaboration: HR, IT, and legal working together to build trustworthy systems\n* Rethinking bias: Proactively monitoring and refining AI to uphold diversity and inclusion\n* Keeping humans in the loop: Ensuring AI enhances, not overrides, human judgment in hiring and reviews\n* Building agile feedback loops that evolve AI tools in line with organisational values and workforce expectations",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "Compliance and Regulation",
+    "Tag4": "Strategy and Leadership",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "10:05:00",
+    "End": "10:30:00",
+    "Type": "CASE STUDY",
+    "Title": "The Future of Work is Both AI & Human Fit: Designing New Workplaces That Align with Human Psychology",
+    "Speaker": "Al Adamsen",
+    "Position": "Founder & CEO",
+    "Affiliation": "Future of Work Project",
+    "Session Introduction": "Fit for human-purpose: How should HR leaders evaluate vendors and Ai-based solutions",
+    "Session Abstract": "In a world flooded with AI solutions, not all tech is created equal. This keynote helps HR leaders cut through the noise offering a fresh lens for evaluating vendors based on how well their tools align with human psychology and behaviour. Because the future of work isn’t just AI-powered, it’s human-fit.",
+    "Session Purpose": "As AI, hybrid models, and new management systems redefine the world of work, organisations face a pivotal challenge: How do we ensure that work truly fits the people doing it? This keynote explores how aligning work design with human psychology – cognition, emotion, motivation – can unlock engagement, performance, and wellbeing. When organisations design for human fit, they build not just better systems, but more resilient, fulfilled workforces.",
+    "Key Takeaways": "* Psychological “fit” as a foundation for future-ready work\n* Designing AI-enabled roles that elevate human strengths\n* Supporting autonomy, connection, and well-being in hybrid models\n* Moving beyond ratings: performance systems built around growth\n* Understanding and reducing friction between people and process\n* Why designing for human needs prevents resistance and failure\n* A new blueprint for building workplaces that work for people",
+    "Tag1": "AI",
+    "Tag2": "Compliance and Regulation",
+    "Tag3": "Data and Analytics",
+    "Tag4": "Diversity",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "11:30:00",
+    "End": "11:55:00",
+    "Type": "PANEL",
+    "Title": "New Exclusive Research: How HR Executives Are Navigating and Driving AI Adoption",
+    "Speaker": "Cecilia Sandberg\n\nLucía Crespo\n\nNicolas Pauthier\n\nAnand Chopra-McGowan",
+    "Position": "SVP, Chief Human Resources Officer\n\nChief Learning Officer\n\nGlobal Chief Learning Officer\n\nManaging Director, Europe",
+    "Affiliation": "Atlas Copco Group\n\nTelefónica\n\nL'Oreal\n\nValence",
+    "Session Introduction": "What every HR leader needs to know before investing in AI solutions",
+    "Session Abstract": "Choosing the right AI partner is now a strategic decision, not just a tech one. In this panel, senior CHROs share how they evaluated software vendors, navigated internal debates, and learned to balance speed with trust, scale with ethics, and automation with long-term workforce needs.",
+    "Session Purpose": "In this session, hear from senior CHROs and HR Leaders about the critical decisions they’ve made to drive AI adoption in the enterprise. Drawing from exclusive research across dozens of in-depth interviews with CHROs and startup founders, we’ll hear practical and innovative steps that HR leaders can take to successfully drive AI adoption including.",
+    "Key Takeaways": "* Understand how leading CHROs align AI investments with long-term workforce and business strategy\n* Explore the internal conversations that shaped enterprise AI adoption—from governance to stakeholder buy-in\n* Learn what questions HR leaders asked to uncover true capability, scalability, and ethical alignment in potential partners\n* See how AI partner choices are influencing reskilling priorities, IT-HR collaboration, and operating model redesign\n* Hear candid reflections on early missteps, internal resistance, and what leaders wish they had known at the start\n* Discover how partner selection is impacting everything from productivity to employee trust and leadership development\n* Get practical insight into balancing short-term automation wins with long-term cultural and capability-building outcomes",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "HR Technology",
+    "Tag4": "Strategy and Leadership",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "12:00:00",
+    "End": "12:30:00",
+    "Type": "PANEL",
+    "Title": "AI, Trust, and the Future of HR: Can People-Centricity Survive the Algorithm?",
+    "Speaker": "Patrick Hull\n\nEl Iza Mohamedou\n\nMenno Olgers\n\nDr. Heba makram",
+    "Position": "Global Head of Talent, Culture and Leadership\n\nHead-Centre for Skills\n\nFounder\n\nTransformation Advisor",
+    "Affiliation": "Heineken\n\nOECD-OCDE\n\nSurply and 9+ teams\n\nFuture of Work Expert",
+    "Session Introduction": "Facing Hard Truths About Trust, Productivity, and Human Dignity in a Digital-First Workplace",
+    "Session Abstract": "As AI becomes the operating system of modern HR, a new reality is emerging: employees are beginning to trust machines more than their managers. This session confronts the uncomfortable questions HR must answer about fairness, transparency, and how to lead transformation without losing our people.",
+    "Session Purpose": "HR is being asked to deliver more with less ie boost productivity, reduce complexity, and embrace AI across every touchpoint. But with these demands come profound human challenges. Some are totally unique to the new age of AI we are now living in. New data reveals that more than half of employees trust AI more than HR, citing greater fairness and transparency in its decisions. As automation takes hold, how can HR regain trust and deliver a more human-centric workplace?\n\nThis panel dives into the real barriers to responsible AI adoption not just the technical ones, but people ones. We’ll unpack how HR teams can navigate fear of displacement, AI literacy gaps, ethical risks and cultural resistance while still transforming roles, workflows and employee experience platforms to meet new expectations. Leaders from across the HR ecosystem will explore what it means to redesign for empowerment, not just efficiency. From talent and learning to engagement and workforce design, we’ll break down what AI means for each function—and how to protect the humanity that keeps work meaningful.",
+    "Key Takeaways": "* Rebuilding trust in HR by understanding why employees believe AI makes fairer decisions\n* Using AI to drive human value rather than reduce headcount\n* Empowering your emerging type of worker by integrating AI into skills, decision-making and performance\n* Redesigning work for a fluid, skill-based future instead of static job roles\n* Taking responsibility for algorithmic fairness, transparency and ethical guardrails\n* Creating confidence and safety around AI across generations and job levels\n* Shaping employee experiences through human-centred design of AI systems\n* Positioning HR as a driver of culture, adaptability and organisational reinvention\n* Ensuring AI is used as a labour asset without compromising human dignity",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "HR Technology",
+    "Tag4": "Strategy and Leadership",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "12:35:00",
+    "End": "13:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Why Tomorrow’s CHRO Will Be the CTO As Well",
+    "Speaker": "Peter Lynch",
+    "Position": "Chief People Officer",
+    "Affiliation": "Cardinal Group Companies",
+    "Session Introduction": "From Human Resources to Human Intelligence: The rise of the CHRO-CTO",
+    "Session Abstract": "Tech and talent are converging, and AI is accelerating the shift. Peter Lynch unpacks why tomorrow’s CHRO must master both. Discover how HR leaders are becoming architects of digital transformation, redesigning work for a human-AI future.",
+    "Session Purpose": "As organizations move from traditional HR to integrated, intelligence-driven people functions, the role of the CHRO is evolving fast. In this forward-looking session, Peter Lynch, Chief People Officer at Cardinal Group, shares why the future CHRO is also a technology leader, responsible for human capital, digital strategy, and AI enablement across the enterprise.",
+    "Key Takeaways": "* Why CHROs are uniquely positioned to lead digital transformation and workforce redesign\n* How AI and automation are shifting the focus from “workforce planning” to “work planning”\n* What it means to build systems where human and machine collaboration is seamless\n* How integrating HR and technology drives smarter decision making and better employee experience\n* The leadership capabilities required to drive both culture and code, with impact",
+    "Tag1": "Change Management",
+    "Tag2": "HR Technology",
+    "Tag3": "Strategy and Leadership",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "14:30:00",
+    "End": "14:55:00",
+    "Type": "CASE STUDY",
+    "Title": "Scaling AI Learning Across the Enterprise: From Awareness to Transformation",
+    "Speaker": "David Sperl",
+    "Position": "Head of HR for Advanced Visualization Solutions",
+    "Affiliation": "GE HealthCare",
+    "Session Introduction": "How GE HealthCare Is Building AI Literacy and Mapping the Future of HR Through Exponential Adoption",
+    "Session Abstract": "Discover how GE HealthCare is rolling out AI literacy at scale while designing the future of HR. Learn how microlearning, leadership advocacy, and peer communities are driving adoption—and how HR is preparing for an AI-transformed tomorrow.",
+    "Session Purpose": "This session explores GE HealthCare’s ambitious journey to scale AI understanding and readiness across its 50,000+ employees. David Sperl shares how they are combining structured learning, community-driven practice, and strategic foresight to reshape how HR and the broader workforce engage with AI.",
+    "Key Takeaways": "* How to design company-wide AI literacy and microlearning programs\n* Building internal AI champions through communities of practice\n* AI-powered leadership development with AI\n* How HR can model and lead exponential AI transformation\n* Insights into GE’s evolving roadmap to redefine HR’s role in the AI era",
+    "Tag1": "AI",
+    "Tag2": "Data and Analytics",
+    "Tag3": "Strategy and Leadership",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "15:00:00",
+    "End": "15:30:00",
+    "Type": "PANEL",
+    "Title": "Workforce Planning Under Pressure: Turning Complexity into Clarity",
+    "Speaker": "David Edwards\n\nChristian Vetter\n\nRussell Klosk",
+    "Position": "Global Head of Workforce Planning\n\nDirector Solution Consulting\n\nManaging Director",
+    "Affiliation": "Ericsson\n\nTalentNeuron\n\nDeloitte",
+    "Session Introduction": "How Leading Companies Are Aligning Strategy, Technology & Talent to Make Bold, Evidence-Based Decisions About the Future of Work",
+    "Session Abstract": "The ability to forecast and model the future of work and look at both investment strategies for emerging technologies as well as organizational design, sizing, workplace skills, labor segmentation and location strategy has never been greater, but it’s also never been more critical to the business. ",
+    "Session Purpose": "As companies build out workforce planning capabilities to make these decisions in evidence based ways we will talk about what is being done in the marketplace and how are different companies responding to these challenges.  Through the lens of Strategy, Governance, Process and Technology what does good look like, how do you get there, and what do you need to consider in developing or enhancing your capabilities.",
+    "Key Takeaways": "-",
+    "Tag1": "AI",
+    "Tag2": "Strategy and Leadership",
+    "Tag3": "Talent Acquisition",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "화/10.21.",
+    "Begin": "15:30:00",
+    "End": "15:55:00",
+    "Type": "CASE STUDY",
+    "Title": "Beyond Hype: Unilever’s Practical Applications for AI & Automation in Global TA",
+    "Speaker": "Kevin Laban",
+    "Position": "HR Technology Global Business Partner",
+    "Affiliation": "Unilever",
+    "Session Introduction": "How Unilever is taking a thoughtful approach to AI and innovation in TA on a global scale.",
+    "Session Abstract": "While others race toward AI in TA, Unilever takes a more deliberate path - built on simplification, strategic alignment, and trust. This session explores how thoughtful AI adoption can enhance experience, improve efficiency, and scale globally.",
+    "Session Purpose": "Unilever is taking a thoughtful approach to AI and automation in talent acquisition – focusing on aligning platforms, reducing complexity, and balancing innovation with trust. This session shares early use cases and lessons learned, showing how responsible adoption creates scalable, experience-led transformation.",
+    "Key Takeaways": "* Understand how global TA teams can leverage AI and automation to simplify hiring, enhance candidate experiences and reduce costs without adding complexity.\n* Explore Unilever’s practical use cases for AI in talent acquisition to enable data-driven decision-making to accelerate and optimize hiring outcomes.\n* Gain actionable insights on how to approach AI responsibly from platform consolidation and vendor partnerships to building trust and ensuring long-term scalability.",
+    "Tag1": "AI",
+    "Tag2": "Talent Acquisition",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "09:05:00",
+    "End": "09:30:00",
+    "Type": "CASE STUDY",
+    "Title": "The Future of AI in HR: From Automation to Agentic Intelligence and Enterprise Accountability",
+    "Speaker": "Melinda McKinley",
+    "Position": "Chief Operating Officer",
+    "Affiliation": "Standard Chartered",
+    "Session Introduction": "How HR can lead the shift from automation to empowered, responsible intelligence at scale",
+    "Session Abstract": "AI is no longer just about automating tasks:it's evolving into a decision-shaping force that demands active partnership from HR leaders. In this opening address, Melinda McKinley shares how Standard Chartered is embedding agentic AI into its HR operations with purpose, speed, and responsibility. From enterprise-wide GenAI deployments to ethics-by-design frameworks, this session explores what it takes to turn AI into a trusted, strategic enabler - especially in a highly regulated global environment.",
+    "Session Purpose": "HR leaders are becoming the architects of responsible AI adoption shaping use cases, governance and employee experience. This session lays out the core actions needed to embed AI into HR strategy: from building ethical oversight and digital fluency to designing tools employees trust and use",
+    "Key Takeaways": "How HR leaders are becoming stewards of AI transformation across the enterprise:\n\n* Prioritise AI use cases that solve real employee problems\n* Embed ethics and governance from day one\n* Use behavioural insight to guide design and adoption\n* Train HR teams to become AI-literate and change-ready\n* Equip 85,000 colleagues with trusted GenAI tools\n* Measure impact through performance, engagement, and feedback data\n* What are the practical takeaways for embedding agentic AI into your HR operating model",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "09:30:00",
+    "End": "10:00:00",
+    "Type": "CASE STUDY",
+    "Title": "The Silent Derailment of Digital Transformation in the AI Era: Uncovering the Emerging AI workforce Barrier No One Talks About",
+    "Speaker": "Alexandre Alves",
+    "Position": "Global IT Head of Business Architecture",
+    "Affiliation": "Unilever",
+    "Session Introduction": "Mistakes Hindering Your AI Future: Critical Errors for the HR Leader to Avoid",
+    "Session Abstract": "Civilization stands at the cusp of a profound mutation, driven by the rapid advancements in Artificial Intelligence (AI) and, in particular, Artificial General Intelligence (AGI). For corporations, decoding the impact of this transformation is not just an opportunity but a necessity for survival and success. However, the journey is fraught with challenges. Many companies are hindered by legacy thinking from the pre-AI era and preconceived notions about how to navigate this irreversible shift, precluding their ability to adapt and thrive.",
+    "Session Purpose": "From a corporate perspective, what are AI and AGI, and what do they truly represent for the future of business? How must our behavioural archetypes and organizational structures, many of which have remained unchanged since the Industrial Revolution, be transformed to meet the demands of this new age? What are the critical pitfalls at stake, and how can they be effectively avoided?\n\nThis conversation will address these pivotal questions, offering insights specifically tailored for Board members, Chief People Officers (CPOs), and HR Leaders who are at the forefront of this transformative journey.",
+    "Key Takeaways": "* Expose the silent workforce barriers that derail even the most well-funded digital transformations\n* Decode how legacy thinking and industrial-age structures obstruct AI-era progress\n* Anticipate the organisational mutations required to thrive in the age of AGI\n* Identify the critical errors HR leaders and boards must avoid to safeguard competitiveness\n* Reimagine leadership archetypes fit for an AI-led future of work",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "10:05:00",
+    "End": "10:30:00",
+    "Type": "CASE STUDY",
+    "Title": "AI Angst: The Emotional Cost of Innovation, Unveiling New European Research at UNLEASH World 2025",
+    "Speaker": "Erin Eatough",
+    "Position": "Chief Science Officer & Principal Advisor",
+    "Affiliation": "Fractional Insights",
+    "Session Introduction": "Pinpointing Divergence in HR leadership AI Visions and their Impact now and in the Future",
+    "Session Abstract": "So much is being said about AI adoption but many leaders are positioning it without clear purpose. There is a big opportunity now to build a clear AI vision as an industry together. At the cutting-edge of this, is the fear surrounding AI's implementation and this is often unspoken as an anxiety. There’s is therefore a need for time and cross-functional alignment around fundamental questions: What is the business trying to accomplish? What’s needed to get there? What does success actually look like? How will we know if we’ve achieved it?",
+    "Session Purpose": "As AI adoption accelerates, a quieter crisis is emerging: anxiety, resistance and emotional fatigue across European workplaces. While leaders tout the promise of AI, a growing disconnect between vision and workforce sentiment is threatening transformation success. This exclusive UNLEASH World presentation unveils new European research combining behavioural science, cultural diagnostics and psychological ergonomics to unpack the true challenge of integrating AI: the human one.\n\nDrawing on cross-industry insights, US to EU comparative data, and fresh case examples, this session will help HR and transformation leaders understand how to foster trust, manage risk appetite, and redesign work environments where people, not just systems, can thrive",
+    "Key Takeaways": "* Exclusive European findings: new data on emotional responses to AI in the workplace\n* Why trust, identity, and risk appetite are now the core blockers to AI integration\n* Introducing “psychological ergonomics” as a new framework for AI readiness\n* Lessons from the DOGE transformation effort: what goes wrong when efficiency trumps empathy\n* What’s next: practical steps for leaders to close the empowerment gap and lead human-centered change",
+    "Tag1": "Automation",
+    "Tag2": "Future of Work",
+    "Tag3": "Organizational Design",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "11:30:00",
+    "End": "11:55:00",
+    "Type": "CASE STUDY",
+    "Title": "Culture, Quantified: How AI Is Redefining the Way We Measure Organisational Culture",
+    "Speaker": "Don Sull",
+    "Position": "Professor of the Practice",
+    "Affiliation": "MIT Sloan School of Management",
+    "Session Introduction": "Making your culture visible, intentional and a source of competitive advantage",
+    "Session Abstract": "Every organisation has a culture - whether it defines one or not. How AI is transforming culture from a vague concept into a measurable business asset, revealing what really drives behaviour, performance and retention.",
+    "Session Purpose": "Culture is often treated as soft, unmeasurable or ‘just there’. However, in today’s competitive environment, that’s a missed opportunity. In this session, discover a new approach: using AI to analyse millions of employee reviews to surface how culture works in practice. How AI can quantify over 200 cultural factors, from psychological safety to bureaucracy, and reveal how they influence everything from innovation to employee retention. He also tackles the myth of the ‘perfect culture’, pinpointing how to identify your unique value creation and how that aligns with the people you want to attract and keep.",
+    "Key Takeaways": "* Learn how AI can give you real-time insight into cultural strengths and risks\n* Understand how to measure and manage culture like any other business-critical metric\n* Move beyond values statements to what truly drives behaviour when no one’s watching\n* Why your culture is your operating system: how to manage it with data, not guesswork\n* Gain a practical framework to align culture with strategy, employee experience, and performance\n* Hear how other leading firms are embedding culture into hiring, promotion, and leadership",
+    "Tag1": "AI",
+    "Tag2": "Learning and Development",
+    "Tag3": "Skills Development",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "12:00:00",
+    "End": "12:30:00",
+    "Type": "PANEL",
+    "Title": "AI as Your Ally: Implementing Scalable Solutions While Upholding Psychological Safety",
+    "Speaker": "Mahe Bayireddi\n\nMaryann Abbajay\n\nGary A. Bolles",
+    "Position": "CEO & Co-founder\n\nChief Revenue Officer\n\nGlobal Fellow for Transformation",
+    "Affiliation": "Phenom\n\nSAP SuccessFactors\n\nSingularity University",
+    "Session Introduction": "Empowering People Through Ethical, Transparent and Trust-Based AI Adoption",
+    "Session Abstract": "Discover how to scale AI across your organization without compromising trust, inclusion or psychological safety",
+    "Session Purpose": "AI can be a powerful ally – if implemented with care. This session explores how to deploy scalable AI solutions that enhance, rather than threaten, the employee experience. Learn how AI can support human potential by reducing cognitive load and improving job satisfaction, while ethical frameworks, transparent communication, and responsible governance build trust. Discover strategies for creating psychologically safe environments where employees feel empowered to adopt AI, and understand how to customize tools to meet the needs of diverse teams across all levels of the business.",
+    "Key Takeaways": "* How AI can augment human capabilities, reducing cognitive load and enhancing job satisfaction\n* The critical role of transparent communication and ethical governance to build trust and ensure responsible AI integration\n* Strategies to cultivate psychological safety, enabling employees to embrace AI technologies without fear of job displacement\n* How to tailor AI tools to meet the specific needs of diverse teams and employees at all levels",
+    "Tag1": "AI",
+    "Tag2": "Employee Experience and Engagement",
+    "Tag3": "Strategy and Leadership",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "12:35:00",
+    "End": "13:00:00",
+    "Type": "PANEL",
+    "Title": "Data Dysfunction: How HR Can Fix the Bottlenecks Blocking AI Progress",
+    "Speaker": "Francesca Caroleo\n\nGail Ursell\n\nAditya Bharadwaj",
+    "Position": "CHRO\n\nGlobal Head, Risk and Governance, Strategy and Talent\n\nGeneral Counsel at Great Place To Work and Legal Director of AI & Data Governance",
+    "Affiliation": "Citi\n\nStandard Chartered\n\nUKG",
+    "Session Introduction": "Unreliable data, internal silos and slow processes are holding AI back: How HR can lead the way forward",
+    "Session Abstract": "AI is ready but your data isn’t. While IT teams may be building fast, HR often struggles to move beyond siloed systems, outdated processes, and inconsistent people data. This session tackles the root causes of slow AI adoption in HR and explores how leaders can take control: from cleaning up legacy data, to aligning with IT and legal, to building a culture that turns insight into action. It’s time for HR to stop waiting for better data and start shaping it.",
+    "Session Purpose": "For HR, the real challenge isn’t the technology but the broken foundations it sits on. Siloed systems, mismatched definitions and slow governance are stalling AI adoption across the people function. This panel cuts through the hype to ask: what if HR is the key to fixing it? From aligning with IT and legal to owning workforce data strategy, HR has a critical role to play in making AI real, responsible and ready for impact.",
+    "Key Takeaways": "* Why bad data is the real AI blocker, and how HR can clean, connect and standardize workforce information\n* Breaking the silo mindset: Aligning data sources across HR, IT, legal and operations\n* The speed gap: How differences in AI maturity between teams are delaying business-wide progress\n* Rethinking ownership: Why HR must lead on defining data governance and ethical AI frameworks\n* From passive to proactive: How HR can create agile feedback loops that keep AI aligned with business and people needs\n* Practical first steps: Building AI-ready foundations without waiting for perfect systems",
+    "Tag1": "AI",
+    "Tag2": "Data and Analytics",
+    "Tag3": "Organizational Design",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "14:00:00",
+    "End": "14:25:00",
+    "Type": "PANEL",
+    "Title": "Why Most AI Projects Fail to Deliver: And How to Make Yours the One That Does",
+    "Speaker": "Syed Ali Abbas\n\nRavi Jay\n\nGary A. Bolles",
+    "Position": "Vice President of People - International SE and HRBP\n\nGlobal Head of Agile CoE\n\nGlobal Fellow for Transformation",
+    "Affiliation": "HelloFresh\n\nSanofi\n\nSingularity University",
+    "Session Introduction": "Hear from both technical and people perspectives common pitfalls to avoid with practical human-centric strategies",
+    "Session Abstract": "Most AI initiatives fall short of expectations. This honest fireside chat reveals why and how you can buck the trend. Discover what success really looks like when AI is built to scale, empowers teams and drives tangible impact across HR and across your organisation.",
+    "Session Purpose": "In a world where AI promises to transform work, too many initiatives still fail to deliver real return. Join senior leaders from Sanofi and HelloFresh as they unpack the reasons why AI projects often underperform and share what it takes to build AI that works. From navigating in-house challenges to adopting agentic AI that plans and executes, this session dives into the practical starting points for AI success.\n\nWe’ll explore how to prioritize projects for fast impact, avoid common pitfalls and build AI strategies that are not just scalable but sustainable. Whether you’re leading an HR transformation or curious how AI affects your individual role, this is a must-attend session for anyone seeking to unlock real value from AI, both for your team and your own development.",
+    "Key Takeaways": "* Why most AI efforts underdeliver and how to avoid the same fate\n* How Agentic AI changes the game in HR and workforce applications\n* Where to start: High-impact use cases and quick wins\n* The importance of defining and measuring real ROI not just efficiency or cost savings\n* Why quality data in = quality outcomes out\n* How to engage middle managers early to gain trust and drive adoption\n* How to align AI investments with both team goals and individual growth\n* Building for now and the future: Realistic, scalable AI architectures",
+    "Tag1": "AI",
+    "Tag2": "Risk, Compliance and Regulation",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "14:30:00",
+    "End": "15:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Reimagining Employee Experience in the AI Era",
+    "Speaker": "Pieter Neethling",
+    "Position": "Global Head of Knowledge Management Technology",
+    "Affiliation": "Novartis",
+    "Session Introduction": "From portals to proactive: How Novartis are using AI to reshape the way employees interact with support & services",
+    "Session Abstract": "Discover how Novartis is transforming employee experience through human-centred AI design, to simplify self-service, reduce inefficiencies, and unify the user experience, enabling employees to get what they need, faster.",
+    "Session Purpose": "In an era of digital overload, delivering a human-centred experience requires more than good intentions—it demands intelligent design, behavioural insights, and seamless integration. This session explores how Novartis is using AI to simplify employee support and services while reduce operational strain.",
+    "Key Takeaways": "* Reducing ticket volume through smart deflection and self-service\n* Shifting from fragmented systems to a unified employee experience\n* Encouraging behavioural change without increasing burden Aligning HR, IT, and COEs on a shared support vision",
+    "Tag1": "AI",
+    "Tag2": "Employee Experience and Engagement",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 3",
+    "Topic": "AI",
+    "Date": "수/10.22.",
+    "Begin": "15:00:00",
+    "End": "15:30:00",
+    "Type": "CASE STUDY",
+    "Title": "What You Must Do Next About AI: Action Items For You and Your Organization",
+    "Speaker": "Gary A. Bolles",
+    "Position": "Global Fellow for Transformation",
+    "Affiliation": "Singularity University",
+    "Session Introduction": "Practical Moves to Keep People at the Center of Transformation",
+    "Session Abstract": "AI is changing the world of work fast. In this closing session, Gary Bolles will outline clear, actionable next steps to lead with confidence in an AI-driven world.",
+    "Session Purpose": "As we wrap up the track, it’s time to focus on action. This closing session cuts through the noise to deliver a focused roadmap for integrating AI into HR, ethically, strategically, and with people at the core. Learn what you and your organization must do now to stay ahead.\\",
+    "Key Takeaways": "* The top 5 priorities for HR leaders as AI adoption accelerates\n* Where and how to apply AI in core HR functions\n* Which tasks and decisions should stay human-led and how to safeguard them\n* Practical ways to measure AI’s impact on experience, equity, and performance",
+    "Tag1": "AI",
+    "Tag2": "",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "09:00:00",
+    "End": "09:30:00",
+    "Type": "CASE STUDY",
+    "Title": "What’s Next in HR and Work Technology: Smarter Solutions to Increase Impact and Optimise Costs",
+    "Speaker": "David Wilson",
+    "Position": "CEO & Founder",
+    "Affiliation": "Fosway Group",
+    "Session Introduction": "What’s Next in HR and Work Technology: Moving Beyond One-Off Transformation to Continuous, High-Impact Change",
+    "Session Abstract": "The biggest myth in HR tech? That transformation is a one-and-done process. In reality, it’s a continuous journey which has many barriers in its way from shifting priorities, staff engagement, training budgets, middle management engagement and integration with legacy technologies. This session explores how to overcome common pitfalls and build a future-ready HR function that delivers sustained value.",
+    "Session Purpose": "In today’s fast-evolving work landscape, adopting new HR technologies isn’t a single implementation project but a strategic, on-going process that must adapt to changing organisational needs and employee expectations. In this keynote, David Wilson, Founder and CEO of Fosway Group, draws on the firm’s latest research to reveal the key barriers that stall progress and how leading organisations are overcoming them at each stage of their digital HR journey.",
+    "Key Takeaways": "* The biggest blockers to sustained HR tech impact from fragmented data to poor change management and misaligned stakeholder goals\n* How to build a roadmap for continuous transformation, not just initial deployment\n* Where organisations get stuck, including post-implementation fatigue, lack of user adoption and failure to measure business outcomes\n* The research draws on choosing the right technology for your modern hybrid workforce strategies for aligning AI and existing technologies with real workforce needs and long-term priorities\n* How to drive meaningful change in recruitment, learning, skills, HR systems, employee experience, and people analyticsWhether you’re just starting out or scaling an existing platform, this session will help you diagnose common issues and stay focused on long-term value not just short-term fixes",
+    "Tag1": "AI",
+    "Tag2": "Compliance and Regulation",
+    "Tag3": "Talent Management",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "09:35:00",
+    "End": "10:00:00",
+    "Type": "PANEL",
+    "Title": "Rewiring HR: The People Science Case for Smarter Systems and Human-Centred AI & HR Systems",
+    "Speaker": "Jason Bloomfield",
+    "Position": "Global Head of People Change & TA Transformation",
+    "Affiliation": "Ericsson",
+    "Session Introduction": "From Fragmentation to Intelligence – Elevating HR with Connected Data, Cloud Agility and Evidence-Based AI",
+    "Session Abstract": "HR systems are stuck in silos, draining time and energy from the people they're meant to serve. But with smarter AI, cloud agility, and a people science lens, HR can move from firefighting to foresight, making tech work for humans, not the other way around.",
+    "Session Purpose": "HR technology systems are at a tipping point. Legacy fragmentation, context switching, and siloed data continue to drain time and cognitive energy from both employees and HR teams. At the same time, advances in AI and cloud-based platforms present an opportunity to redesign HR for greater impact, centred on human needs and strategic value. This panel discussion explores how HR leaders can champion system consolidation, build trust in data-driven insights, and adopt AI use cases that actually add value, not complexity. Drawing on a people science lens, we will explore how to make the shift from reactive to proactive and from generic to genuinely human-centred HR.",
+    "Key Takeaways": "* The hidden human cost of disconnected HR systems: cognitive overload, inefficiency, and poor employee experience\n* The power of contextual integrity: turning scattered people data into strategic insights on engagement, attrition, and DEI\n* Why cloud-native HR systems unlock AI’s potential, enabling safe experimentation and scalable use cases\n* Practical “AI for All” examples that free HR to focus on what matters\nA vision for the future: how to ensure AI-enhanced HR stays inclusive, evidence-led, and human-focused",
+    "Tag1": "AI",
+    "Tag2": "Compliance and Regulation",
+    "Tag3": "Talent Management",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "10:05:00",
+    "End": "10:30:00",
+    "Type": "PANEL",
+    "Title": "Choosing the Right HR Tech and AI Tools – Getting Fit, Adoption and Impact Right",
+    "Speaker": "Jean-Côme Renaudin\n\nStuart Privett\n\nJayney Howson\n\nHoward Flint",
+    "Position": "Global AI & Data School Director\n\nHead of HR Systems\n\nSVP, Global Learning and Development\n\nCEO",
+    "Affiliation": "Schneider Electric\n\nSwissport\n\nServiceNow\n\nAMP Strategists",
+    "Session Introduction": "Too many tools, too little time? Cut through the noise and hear what really works when it comes to HR tech and AI integration.",
+    "Session Abstract": "From performance systems and recruitment platforms to generative AI, the HR tech stack is expanding rapidly. But with so many tools available, selecting the right mix, and integrating it with existing systems, can be overwhelming. This session explores how HR leaders are making smarter choices, navigating complexity, and supporting adoption across the workforce.",
+    "Session Purpose": "This practical panel discussion brings together HR and technology leaders to share frontline experiences of choosing and implementing the right digital tools. Hear how organisations are overcoming resistance, reducing complexity and making HR technology decisions that truly support people and performance. Whether you’re considering new platforms or trying to boost adoption of your existing stack, this session will offer grounded insight and honest takeaways. Aligning tech with real HR needs: how to avoid feature fatigue and focus on impact",
+    "Key Takeaways": "* Making AI and software work together: integration challenges and opportunities across the HR stack\n* Supporting adoption: what drives real employee engagement with new tools\n* Addressing fears and confusion: clear communication around purpose, benefits and safeguards\n* Balancing innovation and usability: building a tech ecosystem people actually use\n* Lessons from the field: honest stories of what’s worked (and what hasn’t) when rolling out new systems\n* Explore how HR teams can lead tech transformation in a way that’s human-centred, strategic and future-fit",
+    "Tag1": "AI",
+    "Tag2": "Talent Management",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "11:30:00",
+    "End": "11:55:00",
+    "Type": "CASE STUDY",
+    "Title": "Fluent Futures: How Carrefour Is Using Language to Unlock a New Era of Global Collaboration",
+    "Speaker": "Zoe Bordelon Grandon",
+    "Position": "Global L&D Lead",
+    "Affiliation": "Carrefour",
+    "Session Introduction": "Speaking the Same Language: Powering Cross-Border Culture and Collaboration at Scale",
+    "Session Abstract": "What happens when a global retailer decides that language is more than a skill but more of a strategic advantage? Discover how Carrefour turned language learning into a lever for unity, agility and innovation across six countries.",
+    "Session Purpose": "Carrefour has launched a bold, pan-European language learning initiative that goes far beyond vocabulary. The retailer is building a more connected, agile and culturally aware workforce: breaking down internal borders to fuel innovation and unity across its multinational footprint. Hear how this first-ever group-wide language platform spanning six countries for over 165,000 employees offered free access to 14 languages via Busuu enjoying more than 2,000 sign-ups in the first 48 hours!",
+    "Key Takeaways": "* Recognising the goal and mission: The need to overcome language barriers as a strategic obstacle to collaboration and cultural cohesion\n* Repositioning language learning as a driver of inclusion, agility and global mindset\n* Working with a new technology partner, Busuu, to roll out a scalable, mobile-first platform across Europe\n* How did the project achieve such rapid adoption with over 2,000 users in 48 hours\n* Intuitive design: How it blended tech with human-led learning to build lasting behavioural and cultural change\n* Creating a robust foundation for future L&D innovation and seamless cross-border teamwork",
+    "Tag1": "AI",
+    "Tag2": "",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "12:00:00",
+    "End": "12:30:00",
+    "Type": "PANEL",
+    "Title": "From Demand to Design: What Clients Want from AI and HR Tech Now … and Next",
+    "Speaker": "Tom Libretto\n\nToby Hough\n\nArnim Wahls\n\nKyle Lagunas",
+    "Position": "President\n\nVP People & Culture, EMEA\n\nEVP, Europe\n\nFounder",
+    "Affiliation": "Workhuman\n\nHiBob\n\nRadancy\n\nKyle & Co",
+    "Session Introduction": "How Solution Providers Are Responding to Evolving HR and AI Technology Needs",
+    "Session Abstract": "What do organisations actually want from tech? Hear directly from solution developers on how client demands are shaping the next wave of HR and AI innovation both separately - and where they intersect.",
+    "Session Purpose": "HR tech and AI providers are being asked tougher questions: not just what does your tool do, but how does it solve my workforce challenges and future-proof my organisation? In this session, hear from leading tech designers and consultants about what their clients are prioritising in 2025 and how those demands are reshaping platforms, services, and product roadmaps.",
+    "Key Takeaways": "* What clients are asking for now: current demand trends in AI-driven recruitment, skills mapping, workforce planning, and employee experience tools\n* Where AI and HR tech needs are converging: And where they’re staying distinct\n* How solution providers are redesigning tools to focus on outcomes like agility, inclusion and measurable productivity gains\n* What’s next: the trends solution partners are tracking eg from explainable AI to personalised automation, neurodivergent-friendly tools and adaptive learning ecosystems\n* How providers are working with clients to co-create tools that fit culture and context not just plug-and-play promises\n* Lessons from the frontlines: how successful partnerships are tackling legacy integration, data readiness, and change management",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "12:35:00",
+    "End": "13:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Re-Designing HR Software That Empowers People",
+    "Speaker": "Suart Privett",
+    "Position": "Head of HR Systems",
+    "Affiliation": "Swissport",
+    "Session Introduction": "Why IT, AI and HR Must Work Together",
+    "Session Abstract": "When global ground handling giant Swissport set out to unify 41 HR systems, the solution wasn’t just a better platform it was a new kind of partnership between HR, IT and AI to support people, not just processes.",
+    "Session Purpose": "Operating in 40 countries and managing a workforce through dozens of fragmented systems, Swissport faced an urgent need for standardisation, visibility and simplicity. By implementing Dayforce and aligning HR, IT and AI capabilities, Swissport built a future-ready HR ecosystem that enables better scheduling, compliance, learning and retention. This case study explores how human insight, technical fluency and smart automation came together to support real business outcomes.",
+    "Key Takeaways": "* One unified system replaced 41 disconnected HR and payroll platforms\n* Scheduling moved from spreadsheets to real-time visibility and control\n* Attrition hotspots are now identified early and addressed more strategically\n* AI supports smarter job design, compliance tracking and internal mobility\n* HR leaders are now embedding technical roles and data fluency into their teams\n* Success depends on people leading the technology, not just using it",
+    "Tag1": "HR Technology",
+    "Tag2": "Organizational Design",
+    "Tag3": "Strategic Alliances",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "14:30:00",
+    "End": "14:55:00",
+    "Type": "CASE STUDY",
+    "Title": "Beyond the Bot: Mapping the Agentic AI Ecosystem and What It Means for HR",
+    "Speaker": "David Francis",
+    "Position": "Vice President, Research & Product",
+    "Affiliation": "Talent Tech Labs",
+    "Session Introduction": "Cutting through the noise: Understanding what agentic AI really looks like in the enterprise",
+    "Session Abstract": "Everyone’s talking about AI agents but very few can explain what they actually do in an HR environment. This session lifts the lid on the emerging agentic ecosystem, offering a clear-eyed view of what’s real, what’s useful and what’s next.",
+    "Session Purpose": "Agentic AI is fast becoming the next frontier in HR transformation, but too many leaders are flying blind. From onboarding bots to reasoning agents, a new layer of digital workers is quietly taking shape on top of legacy platforms like Workday and SuccessFactors. In this revealing session, David Francis, Head of Research at Talent Tech Labs, draws from a major new research initiative to map out the evolving agentic landscape.\n\nHe’ll explain what’s really happening inside the enterprise, not vendor demos or future hype, but live deployments, governance challenges, and early lessons learned. With clarity, candour, and sharp market insight, this session will give HR and IT leaders the knowledge they need to take action now before the pace accelerates further.",
+    "Key Takeaways": "* Understand the agentic AI stack and how it integrates with your existing HR tech ecosystem\n* Learn what types of AI agents are emerging in real enterprise use cases and which are still aspirational\n* How to spot the difference between automated gimmicks and scalable value\n* Discover early lessons from implementation, governance pitfalls and where to start\n* Leave with a clearer framework for evaluating agent-readiness and preparing your HR function for this shift: Examples of different applications from real Case Studies",
+    "Tag1": "HR Technology",
+    "Tag2": "Transformation",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "15:00:00",
+    "End": "15:25:00",
+    "Type": "CASE STUDY",
+    "Title": "From Legacy HR to Conversational AI: KPN’s Bold Transformation Journey",
+    "Speaker": "Carlo Steenvoorden",
+    "Position": "EVP HR People Services, Analytics & HR AI",
+    "Affiliation": "KPN",
+    "Session Introduction": "How KPN Leverages GenAI and Self-Service to Reshape HR and Drive Strategic Business Value",
+    "Session Abstract": "Discover how KPN is revolutionizing HR through conversational AI and bold moves. Learn from their journey of embracing GenAI, reshaping service models, and navigating the human impact of rapid transformation.",
+    "Session Purpose": "This session explores how KPN’s is transitioning from traditional linear self-service to a fully conversational, AI-driven experience model. Carlo shares real-world insights on building a future-ready HR service using GenAI while navigating the deep cultural and skills shift that comes with it.",
+    "Key Takeaways": "* How to design and implement a one-channel GenAI-powered HR service model\n* The strategic value of combining GenAI with self-service to enhance employee experience\n* Why we have the ambition that 90% of employees at KPN will never touch a HR system again\n* How to prepare your HR teams for a rapid role and skill transformation within a year if you decide to take this on",
+    "Tag1": "AI",
+    "Tag2": "HR Technology",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "화/10.21.",
+    "Begin": "15:30:00",
+    "End": "15:55:00",
+    "Type": "FIRESIDE",
+    "Title": "Beyond Budgets: How team.blue Builds a Strategic Bridge Between HR and Finance",
+    "Speaker": "Sylvia Groenewold\n\nKathi Enderes",
+    "Position": "Group Chief Human Resources Officer\n\nSVP Research",
+    "Affiliation": "team.blue\n\nThe Josh Bersin Company",
+    "Session Introduction": "How HR leaders build mutual understanding with CFOs to drive people and business results",
+    "Session Abstract": "HR and Finance don’t have to be frenemies. Join us for a candid conversation with Sylvia Groenewold, CHRO of team.blue, who’s built a two-way partnership with her CFO, bridging data, language, and priorities to create shared business impact.",
+    "Session Purpose": "The CFO holds the keys to your budget, your headcount, and often your credibility. But true alignment means more than translating HR goals into financial terms, it means building mutual trust and shared understanding. In this session, Sylvia Groenewold of team.blue shares how she became a strategic translator between people and finance. Learn what worked, what didn’t, and how to personalize your approach to your own CFO.",
+    "Key Takeaways": "* Identify the key financial KPIs your CFO tracks and how HR can use them to drive people decisions\n* Hear real-world examples of how HR gained influence in business and budget decisions\n* Get replicable examples of metrics Sylvia uses at team.blue to drive strategic M&A and workforce planning\n* Learn how to adapt your approach based on your CFO’s communication style and business mindset\n* Whether you’re a CHRO or on the path to becoming one, get practical next steps to deepen your impact",
+    "Tag1": "Cost Savings",
+    "Tag2": "Strategic Alliances",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "수/10.22.",
+    "Begin": "09:05:00",
+    "End": "09:25:00",
+    "Type": "CASE STUDY",
+    "Title": "Why Succession Planning is Now Redundant: Forging Forward with New Talent Marketplaces",
+    "Speaker": "Patrick Hull",
+    "Position": "Global Head of Talent, Culture and Leadership",
+    "Affiliation": "Heineken",
+    "Session Introduction": "Is it time to let go of rigid hierarchies and reimagine how we grow future leaders?",
+    "Session Abstract": "Traditional succession planning is struggling to keep up with a world reshaped by AI, evolving skills, and new expectations of fairness. Discover how leading organisations are moving beyond static plans and embracing agile talent ecosystems that are more transparent, empowering and inclusive.",
+    "Session Purpose": "Succession planning once offered stability and predictability. But in today’s dynamic talent landscape, it can often feel outdated and exclusionary. As AI and intelligent worktech evolve, so too must the way we identify and grow talent. Join us to explore how progressive organisations are replacing top-down talent pipelines with open, skills-based marketplaces that give employees more agency over their career path. We’ll unpack how these new models are not only more adaptive but also help foster equity, unlock learning and development, and align better with a diverse, fast-changing workforce.",
+    "Key Takeaways": "What you’ll gain from attending:\n\n* Learn why traditional succession models are falling short in today’s AI-driven world\n* Discover how talent marketplaces promote fairness and employee empowerment\n* Understand how skills data and L&D can drive real workforce agility\n* Explore how AI and worktech are reshaping leadership development\n* Get practical steps to evolve from static plans to dynamic growth ecosystems",
+    "Tag1": "Learning and Development",
+    "Tag2": "",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "수/10.22.",
+    "Begin": "09:30:00",
+    "End": "10:00:00",
+    "Type": "CASE STUDY",
+    "Title": "From Insight to Impact: Re-Imagine HR Through Data Intelligence and WorkTech",
+    "Speaker": "Vincent Dupuis",
+    "Position": "VP HR Digital & AI",
+    "Affiliation": "Airbus",
+    "Session Introduction": "Unlocking the Power of Data, AI, and Agents to Shape a Future of Work That is More Digital AND More Human",
+    "Session Abstract": "In a world where every business decision is now a data decision, HR leaders are embracing data intelligence and next-gen work technologies not just to improve operations, but to Re-imagine the HR function, the employee experience and the business they serve.",
+    "Session Purpose": "This session explores the boldest opportunities and toughest challenges in using analytics, Agentic AI and automation to build more intelligent, adaptive, and human-centric organizations.",
+    "Key Takeaways": "* ‘Self-Service, Embedded, Built’ model to source your WorkTech capabilities.\n* ‘Automate, Augment, Transform’ framework to orchestrate your AI and agentic transformation priorities.\n* Address the “Human Paradox” to ensure your advanced tech stack enhances, not diminishes, human value.\n* Build the blueprint for your future, AI-Enabled Operating System for HR.",
+    "Tag1": "AI",
+    "Tag2": "Future of Work",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "수/10.22.",
+    "Begin": "10:05:00",
+    "End": "10:30:00",
+    "Type": "CASE STUDY",
+    "Title": "Skills at Scale: Capgemini’s Blueprint for a Skills-First Future",
+    "Speaker": "Anne Lebel",
+    "Position": "Chief Human Resources Officer",
+    "Affiliation": "Capgemini",
+    "Session Introduction": "How Capgemini is transforming workforce capabilities through a global, data-driven skills strategy",
+    "Session Abstract": "The WEF Future of Jobs Report 2025 says 39% of skills will be transformed by 2030. Capgemini is responding with an AI-powered talent strategy—reshaping learning, mobility, and workforce planning for 340,000+ employees in 50+ countries.",
+    "Session Purpose": "Capgemini is tackling rapid skills disruption with a global, data-driven strategy powered by AI and workforce insights. Learn how they’re aligning talent with business priorities, enabling internal mobility, and scaling workforce transformation across 340,000+ employees.",
+    "Key Takeaways": "Explore Capgemini’s end-to-end skills strategy:\n\n* Learn how AI and data are used to identify, develop, and deploy talent at scale across 340,000+ employees in a global organization.\n* Align talent with business priorities: Discover how Capgemini connects skills development to strategic workforce planning to stay agile and responsive in a rapidly evolving market.\n* Unlock internal mobility through a skills-first lens: Gain practical insights into how Capgemini empowers employees with personalized career pathways, targeted upskilling, and cross-functional mobility.",
+    "Tag1": "Data and Analytics",
+    "Tag2": "Skills Development",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "수/10.22.",
+    "Begin": "11:30:00",
+    "End": "11:55:00",
+    "Type": "FIRESIDE",
+    "Title": "Building Inclusive & Dynamic Workplaces Through HR Tech Adoption & Governance",
+    "Speaker": "Amelia Irion\n\nKyle Lagunas",
+    "Position": "Group Human Resources Vice President\n\nFounder",
+    "Affiliation": "Air Liquide\n\nKyle & Co",
+    "Session Introduction": "How AI, skills and career tools can create a more level playing field in talent management",
+    "Session Abstract": "HR technology is rapidly reshaping how organisations attract, manage and develop people. The challenge is ensuring these tools drive inclusion while being governed responsibly. Discover how Air Liquide are using technology to build equitable recruiting, performance and career systems while embedding ethical frameworks and oversight to ensure responsible use of AI.",
+    "Session Purpose": "The future of HR technology goes beyond digitising processes it must enable consistent, transparent and inclusive talent management while being governed with rigour. From skills-based performance systems to AI-powered career profiles, HR leaders have the chance to move away from assumptions and networks toward fairer, data-driven opportunities, but sustainable success depends on adoption, trust and governance. This fireside chat will also unpack how global HR teams can govern AI responsibly, applying charters, ethical guardrails and accountability measures to balance innovation with fairness.",
+    "Key Takeaways": "* Build inclusive recruiting systems that focus on skills and capabilities\nIntroduce performance management tools that provide consistency, transparency and equitable assessment across teams\n* Use career profiles and dialogue platforms to give employees a stronger voice in shaping their career journeys\n* Embed ethics and governance into HR tech rollouts are applied inclusively, transparently and with accountability\n* Foster greater trust in adoption by involving employees early and embedding transparency",
+    "Tag1": "AI",
+    "Tag2": "Equity and Inclusion",
+    "Tag3": "HR Technology",
+    "Tag4": "Skills Development",
+    "Tag5": "Talent Management"
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "수/10.22.",
+    "Begin": "12:35:00",
+    "End": "13:00:00",
+    "Type": "FIRESIDE",
+    "Title": "Securing Board Buy-In: How HR Can Speak Tech and Showcase Value",
+    "Speaker": "Josephina Smith\n\nAnna Carlsson",
+    "Position": "People Director\n\nHR Tech Analyst",
+    "Affiliation": "British Airways\n\nHR Digi",
+    "Session Introduction": "From Boardroom to Breakroom: Getting the Green Light and Igniting Change Across the Business",
+    "Session Abstract": "Winning over the board is only the beginning. This session explores how HR can make a compelling tech case to leadership and then build a movement that energizes the whole organization.",
+    "Session Purpose": "In today’s rapidly evolving business environment, HR must act as both strategist and storyteller, translating the promise of HR technology into language that wins board-level support and business-wide enthusiasm. This panel dives into how HR leaders are successfully securing buy-in from the board by framing digital transformation in terms of business value, strategic outcomes, and workforce impact.\n\nBut what happens after the board says “yes”? Discover how to turn approval into adoption through passionate internal advocacy, clear communication, and visible quick wins. Learn from HR leaders who’ve navigated this journey, aligning stakeholder interests, overcoming internal resistance, and building momentum from the top down.",
+    "Key Takeaways": "* How HR can communicate the strategic and financial value of new technology in boardroom terms\n* Building a business case and implementation roadmap that addresses risk, resources, and ROI\n* Turning board-level support into broad organizational buy-in through storytelling and champions\n* Positioning HR tech as a lever for company-wide transformation, not just operational efficiency\n* Balancing long-term tech vision with near-term results to sustain trust and enthusiasm\n* Real-world insights from 2025: what worked, what didn’t, and what you can do next",
+    "Tag1": "HR Technology",
+    "Tag2": "Strategy and Leadership",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "수/10.22.",
+    "Begin": "14:00:00",
+    "End": "14:25:00",
+    "Type": "PANEL",
+    "Title": "A New Era for the People Function, A New Era for People",
+    "Speaker": "Asmus Komm\n\nCharlotte Seiler\n\nJulian Kirchherr\n\nAndrea Pedroni",
+    "Position": "Partner\n\nAssociate Partner\n\nPartner\n\nPartner",
+    "Affiliation": "Mckinsey & Company",
+    "Session Introduction": "More Personal, More Tech, More Human.",
+    "Session Abstract": "Our global experts Asmus Komm, Julian Kirchherr, and Charlotte Seiler will provide a visionary look into the future of people management. Discover how leading organizations can integrate human and technological capabilities to build a workforce that is both highly productive and deeply human.",
+    "Session Purpose": "Asmus, Andrea, Julian, and Charlotte will share cutting-edge insights and implications for the future of people management, including strategies for creating significant business value in a new human and agentic world. Don’t miss this opportunity to gain valuable perspectives on the impact of agentic AI and technology on the people function of the future, and how to prepare your organization for the changes ahead.",
+    "Key Takeaways": "-",
+    "Tag1": "Future of Work",
+    "Tag2": "HR Technology",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 4",
+    "Topic": "Worktech",
+    "Date": "수/10.22.",
+    "Begin": "14:30:00",
+    "End": "15:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Real-World HR Acceleration at Biocodex with Workday",
+    "Speaker": "Catherine Perret",
+    "Position": "Chief People Officer",
+    "Affiliation": "Biocodex",
+    "Session Introduction": "The journey to a unified, intelligent HR solution and the impactful results.",
+    "Session Abstract": "Considering a move from your existing HR system? Hear directly from Biocodex on how they managed this critical transition and unlocked significant business value with Workday.",
+    "Session Purpose": "Join us for an in-depth case study of HR acceleration. This session shares the real-world story of why Biocodex chose to move to Workday. You’ll learn about their decision-making process, their implementation journey, and the impressive results they’ve achieved so far, from enhanced efficiency to a transformed employee experience.",
+    "Key Takeaways": "-",
+    "Tag1": "Employee Experience and Engagement",
+    "Tag2": "",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "09:00:00",
+    "End": "09:30:00",
+    "Type": "CASE STUDY",
+    "Title": "From Blame to Learning: Building a Culture of Accountability in Times of Crisis",
+    "Speaker": "Jérôme Barthélemy",
+    "Position": "Professor of Strategy and Former Executive Vice-President, Dean of Executive Education",
+    "Affiliation": "ESSEC Business School",
+    "Session Introduction": "Lessons from the Fire at Notre Dame for HR Leaders and Talent Managers",
+    "Session Abstract": "When disaster strikes, the instinct is often to assign blame to frontline workers. Yet the root causes usually lie far deeper—in systems, culture, and preparation. Drawing on lessons from the Notre Dame fire, this session explores how HR leaders can foster a culture that replaces fear of punishment with shared accountability, learning, and resilience.",
+    "Session Purpose": "Crises and failures are rarely “unforeseen.” More often, early warning signs were missed, accountability was diffused, or psychological safety was lacking. The fire at Notre Dame revealed how small oversights and cultural blind spots can cascade into catastrophe. For HR leaders, this case offers a powerful lens: instead of a culture of blame, how do we create environments where employees feel safe raising concerns, leaders act on early signals, and talent systems reinforce collective responsibility? In this session, we will explore how accountability without blame can transform workforce culture, talent management, and organisational resilience.",
+    "Key Takeaways": "* Learn how to build cultures where employees feel safe surfacing risks and mistakes\n* Understand why blame-based reactions suppress vital feedback and innovation\n* Translate lessons from crisis response into proactive talent strategies\nApply systemic thinking to uncover root causes instead of focusing narrowly on individuals\n* Equip managers with tools to turn near-misses and failures into opportunities for organisational learning",
+    "Tag1": "Talent Management",
+    "Tag2": "",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "09:35:00",
+    "End": "10:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Building AI To Support Speed & Integration Across HR Tools: Embedding Governance, Ethics and Legal Oversight into Every Bot & System",
+    "Speaker": "Michiel van Duin",
+    "Position": "Chief People Technology, Data & Insights Officer",
+    "Affiliation": "Novartis",
+    "Session Introduction": "How Cross-Functional Collaboration is Powering Scalable, Responsible AI in the Workplace",
+    "Session Abstract": "The future of AI isn’t just about capability, it’s about control. In this session, discover how to design enterprise AI systems that are safe, transparent and scalable from day one. You’ll hear how governance, legal alignment and data quality underpin every stage of AI development—from prototype to deployment and how building trust into bots from the start unlocks value without compromise.",
+    "Session Purpose": "Taking a closer look at how to build a cross-functional governance model that brings together legal, privacy, HR and technology teams to evaluate, design and deploy enterprise-grade AI tools. You’ll hear practical insights to take away ideas for your own AI roadmap from automating job profiles and onboarding to launching persona-driven prompt libraries and citizen development programs. Find out how to build multi-agent orchestration platforms to launching AI copilots for HR and workforce planning. The emphasis will be on translating strategic intent into hands-on execution. Central to this is embedding governance and legal collaboration into every phase of development ensuring responsible AI is not an afterthought but a foundation.",
+    "Key Takeaways": "* How governance is operationalised with legal, DPO, and global process leaders\n* Frameworks for risk-tiered legal review and use case prioritisation\nEmbedding ethical safeguards and disclaimers into conversational AI\n* Why good data, clean knowledge and responsible prompting matter more than models\n* Lessons from training business teams to co-build with copilots and no-code tools\n* Strategies to surface data risks early and speed up compliance\nA blueprint for aligning tech innovation with workforce trust",
+    "Tag1": "AI",
+    "Tag2": "Company Culture",
+    "Tag3": "Data and Analytics",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "10:05:00",
+    "End": "10:30:00",
+    "Type": "PANEL",
+    "Title": "Rethinking Talent for Performance: HR as a Strategic Partner in a High Performance Workplace",
+    "Speaker": "Neha Khicha\n\nJochen Eckhold\n\nTeresa Wykes\n\nDr. Heba Makram",
+    "Position": "Strategic Business & Talent Partner, HR Director\n\nSVP Global HR\n\nSenior Director, Talent-Centered Transformation\n\nTransformation Advisor",
+    "Affiliation": "The Hershey Company\n\nHUGO BOSS\n\nEightfold\n\nFuture of Work Expert",
+    "Session Introduction": "Blending the optimum strategic HR, L&D and technologies for smarter talent management",
+    "Session Abstract": "In today’s fast-changing world, top-performing organisations aren’t just hiring for talent, they’re building it. This panel dives into how HR, learning, and business leaders are using data, technology, and targeted development to shape agile, aligned, high-performing teams.",
+    "Session Purpose": "Next-generation talent management demands more than better tech, it requires deeper collaboration across the business. As expectations shift from transactional HR to strategic partnership, high-performing organisations are aligning people strategy with business goals through joined-up leadership, intelligent talent practices and smarter use of workforce data. By combining people analytics with real-time insight from line managers and business leaders, HR can become the architect of a more agile, productive, and resilient organisation.",
+    "Key Takeaways": "* From service provider to strategic partner: What the next era of HR leadership looks like\n* Building high-performance ecosystems through cross-functional talent partnerships\n* Precision talent: Using people data to match capabilities to evolving business needs\n* Moving from measurement to action: What good looks like beyond dashboards and KPIs\n* Embedding talent strategy into everyday business decisions, from succession to mobility\n* Creating shared accountability for performance across HR, leadership, and the line",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "Talent Management",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "11:30:00",
+    "End": "11:55:00",
+    "Type": "PANEL",
+    "Title": "Riding the Job Revolution: Shaping Workforce in a Disruptive Labor Market",
+    "Speaker": "Kerstin Wagner",
+    "Position": "Executive Vice President Talent Acquisition",
+    "Affiliation": "Deutsche Bahn AG",
+    "Session Introduction": "Inside Deutsche Bahn’s Strategy to Rewire Talent Acquisition and Workforce Transformation in a Volatile Market Landscape",
+    "Session Abstract": "Talent is scarce. Jobs are shifting. And work is being rewritten by automation and AI. Discover how Deutsche Bahn, one of Europe’s largest employers, is rethinking job roles, empowering recruiters, and building a workforce ready for the age of automation, AI, agents, and future transformation.",
+    "Session Purpose": "The labor market is at a crossroads: while talent shortages intensify, entire roles are being reshaped by AI, automation, and digitalization. Under the leadership of Kerstin Wagner, Deutsche Bahn is pioneering a bold and future-focused approach to Talent Acquisition, one that maps evolving job landscapes, empowers recruiters, and integrates data-driven foresight to meet transformation head-on.",
+    "Key Takeaways": "* Mapping the job revolution: A powerful strategic method to make the job revolution tangible and develop proactive strategies to redesign roles and retrain the workforce.\n* Bridging market fragmentation: Addressing both talent scarcity and role redundancy with targeted, inclusive hiring strategies across all levels — from blue-collar roles to academic and leadership positions.\n* Preparing recruiters for change: A large-scale TA transformation effort empowers a nationwide network of recruiters with digital tools, AI capabilities, and labor market intelligence to thrive in a disrupted landscape.\n* Unlocking hidden potential: Tapping into underrepresented talent pools through diversity initiatives, strong employer branding, and reimagined access to career pathways.\n* Data-driven TA in action: Leveraging analytics to capture emerging labor market trends, anticipate disruption, and align talent acquisition strategy with the company’s broader transformation agenda",
+    "Tag1": "AI",
+    "Tag2": "Talent Acquisition",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "12:00:00",
+    "End": "12:30:00",
+    "Type": "CASE STUDY",
+    "Title": "Work in Transition: Opportunities and Challenges in the Era of Digitalization, Demographic Change and Environmental Transformation",
+    "Speaker": "Katarina Roder",
+    "Position": "Head of People Development & Culture",
+    "Affiliation": "ÖBB",
+    "Session Introduction": "The future of work is being reshaped by three powerful forces: an ageing population, accelerating digitalisation and the urgency of environmental transformation. These shifts present profound challenges but also open the door to a more inclusive, skilled and sustainable labour market. The time to act is now.",
+    "Session Abstract": "As work evolves, organisations and policymakers must rethink how we engage talent, build skills and support economic resilience. From adapting to demographic shifts and unlocking underutilised labour pools, to managing automation and driving green growth, this session offers practical strategies for navigating a dynamic workforce landscape. Success will depend on inclusive design, agile learning and cross-sector collaboration.",
+    "Session Purpose": "In an era of rapid technological and environmental shifts, we are facing fundamental changes in the labor market.",
+    "Key Takeaways": "* Demographic Change: With a predicted increase in the population over 65 and a decline in the number of working-age individuals, we are confronted with the challenge of optimally utilizing our available workforce. What strategies can companies and policymakers adopt to actively manage this demographic transition?\n* Digitalization and Automation:Artificial intelligence, automation, and technological advancements are radically transforming existing job roles. While new job profiles are emerging, many traditional roles are disappearing. How can we manage this transition and foster the necessary skills and competencies for the future?\n* New Work Models and Green Jobs: In the face of an acute shortage of skilled workers: especially in areas such as IT, finance, technology, and sales: we must tap into underutilized resources, including part-time workers, women, and older employees. Additionally, the challenges posed by the climate crisis present opportunities for green jobs that are not only environmentally sustainable but also economically promising.",
+    "Tag1": "AI",
+    "Tag2": "Automation",
+    "Tag3": "Change Management",
+    "Tag4": "Future of Work",
+    "Tag5": "Transformation"
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "12:35:00",
+    "End": "13:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Building a Future-Ready Workforce – Inside the Launch of ServiceNow University",
+    "Speaker": "Jayney Howson",
+    "Position": "SVP, Global Learning and Development",
+    "Affiliation": "ServiceNow",
+    "Session Introduction": "Empowering Talent with AI-Personalised Learning",
+    "Session Abstract": "As AI reshapes the world of work, companies need bold, scalable approaches to talent development. At ServiceNow, that vision has taken form through the creation of ServiceNow University a groundbreaking initiative designed to deliver hyper-personalised, AI-driven learning at scale. Hear from Jayney Howson, SVP and Global Head of Learning & Development, as she shares the story behind the university’s launch and how it’s unlocking potential across the business.",
+    "Session Purpose": "To stay ahead in a fast-changing business landscape, ServiceNow recognised it needed to invest in more than skills it needed to transform how employees learn, grow, and adapt. That’s why it built ServiceNow University: a next-generation learning ecosystem designed to harness the power of AI to deliver tailored learning journeys, drive capability at scale, and embed continuous development into the flow of work.\n\nIn this exclusive case study session, Jayney Howson takes us behind the scenes sharing the strategy, design principles, and change management approach behind the university’s creation. She’ll explore what it takes to build learning cultures that keep pace with business transformation, and why human-centric, AI-enabled L&D is now essential for enterprise success.",
+    "Key Takeaways": "* Why ServiceNow created its own learning university and what made now the right time\n* How AI and data personalisation are shaping learning pathways at scale\n* Lessons learned in building a future-focused L&D culture across a global organisation\n* How ServiceNow is linking capability-building to wider transformation and innovation goals\n* The role of leadership, trust, and bold experimentation in reshaping learning for the AI era",
+    "Tag1": "AI",
+    "Tag2": "Learning and Development",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "14:30:00",
+    "End": "14:55:00",
+    "Type": "CASE STUDY",
+    "Title": "High-Performance Talent and Teams: Unlocking Human Potential Across Generations in the Age of AI",
+    "Speaker": "Jane N. Fedoretz",
+    "Position": "Executive Vice President of People, Culture and Chief Administrative Officer",
+    "Affiliation": "TransAlta Corporation",
+    "Session Introduction": "Harnessing Talent Intelligence and Intergenerational Strengths for a More Inclusive, High-Impact Workforce",
+    "Session Abstract": "What if your greatest competitive edge isn’t just AI, but the unique blend of perspectives, values, and untapped potential within your multigenerational workforce? This session explores how to unlock the full spectrum of human potential through inclusive talent strategies, psychological safety, and next-gen retention techniques that empower Boomers to Gen Z.",
+    "Session Purpose": "As AI transforms the nature of work, the real differentiator for business success will be how well organisations understand, develop, and retain the diverse potential of their people. This session dives into how high-performing organisations build team culture and psychological safety to unlock hidden talent across generations. Discover how to craft retention strategies that work for every age group, build inclusive team dynamics, and balance tech with human care. Explore frameworks that elevate individual contribution and collective performance, turning intergenerational differences into strengths. Learn how to future-proof your teams by combining AI capabilities with deeper emotional intelligence, adaptability, and multigenerational insight.",
+    "Key Takeaways": "* How to activate and align hidden potential across Gen Z to Boomers using inclusive, data-informed talent strategies.\n* Techniques for building psychological safety and a feedback-rich culture that boosts performance and belonging.\n* Practical ways to reduce generational friction and build authentic, purpose-driven team dynamics.\n* Retention and development strategies that evolve with talent priorities and life stages.\n* Balancing AI augmentation with human empathy to maximise engagement and adaptability across your workforce.",
+    "Tag1": "Data and Analytics",
+    "Tag2": "Employee Experience and Engagement",
+    "Tag3": "Talent Management",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "15:00:00",
+    "End": "15:25:00",
+    "Type": "FIRESIDE",
+    "Title": "Behind the Numbers: How People Analytics Shapes Strategy at Scale",
+    "Speaker": "Samuel Thayer\n\nAntony Ebelle\n\nMarilyn Pearson Hendricks",
+    "Position": "VP, People Operations and Analytics\n\nGlobal Head of Digital Surgery Integration\n\nCEO",
+    "Affiliation": "Compass Group\n\nJohnson & Johnson\n\nWorkTech Advisory",
+    "Session Introduction": "From insight to impact: Aligning stakeholders for strategic workforce planning through data and people analytics best practices.",
+    "Session Abstract": "In this candid conversation, the Heads of People Analytics at Ford Motor Company and Compass Group share hard-earned lessons from embedding data-driven workforce and talent planning capabilities within two of the world’s largest and most complex organizations. From early skepticism to executive alignment, they’ll reveal how they built trust, shaped long-term workforce strategies, and unified diverse business needs around a shared vision.",
+    "Session Purpose": "What does it really take to future-proof your workforce using people analytics? In this behind-the-scenes session, senior analytics leaders from Ford Motor Company and Compass Group unpack their journey:from initial resistance to boardroom endorsement. Discover how they embedded workforce planning into the business fabric, won over cross-functional leaders, and built systems that support long-term talent, process, and operational decisions. This is a masterclass in influencing change, building momentum, and making people data matter where it counts most. Attendees will gain practical insights, real-world examples, and proven tactics to accelerate talent forecasting, strengthen process planning, and embed analytics into strategic workforce decision-making. You chance to ask questions and gain fresh insights.",
+    "Key Takeaways": "* How to shift the conversation from dashboards to decisions which will shape future diverse workforce needs\n* How do you align people analytics with operational and strategic business planning\n* Winning executive advocacy and embedding planning tools into talent and process decisions\n* Building scalable frameworks for forecasting, capacity planning and workforce transformation\n* Real-world examples of navigating stakeholder tensions and turning doubt into direction",
+    "Tag1": "AI",
+    "Tag2": "Change Management",
+    "Tag3": "Data and Analytics",
+    "Tag4": "Talent Management",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "화/10.21.",
+    "Begin": "15:30:00",
+    "End": "15:55:00",
+    "Type": "FIRESIDE",
+    "Title": "How CCEP Is Using AI To Build Skills, Careers, and Culture for a Distributed Workforce",
+    "Speaker": "Wilfrid Bas\n\nMadeline Laurano",
+    "Position": "Directeur Talent management - CCEP\n\nFounder and Chief Analyst",
+    "Affiliation": "Coca-Cola Europacific Partners\n\nAptitude Research",
+    "Session Introduction": "Unlocking Growth with AI",
+    "Session Abstract": "As one of the world’s largest bottling companies, Coca-Cola Europacific Partners (CCEP) is working to unlock growth and opportunity for 30,000+ employees spread across diverse markets—while ensuring every individual feels seen, supported, and engaged.",
+    "Session Purpose": "In this session, CCEP will share how they are using Eightfold to create career development pathways and mentoring opportunities that improve retention and internal mobility, while also laying the groundwork for future workforce transformation. This discussion will highlight how skills visibility powers reskilling and succession planning, and how they’re driving employee engagement, adoption, and culture change at scale.",
+    "Key Takeaways": "-",
+    "Tag1": "Talent Management",
+    "Tag2": "",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "수/10.22.",
+    "Begin": "09:00:00",
+    "End": "09:25:00",
+    "Type": "CASE STUDY",
+    "Title": "A New Era for AI-Augmented HR Leadership",
+    "Speaker": "Oliver Grohmann",
+    "Position": "Executive Vice President Human Resources",
+    "Affiliation": "Emirates Group",
+    "Session Introduction": "Reshaping and Powering Up the Employee Experience Through Analytics and AI, Whilst Maintaining the Human Touch",
+    "Session Abstract": "HR is undergoing a quiet revolution. No longer solely centred on policy and processes, today’s HR function is becoming a strategic powerhouse driven by data, guided by insight, and reshaped by AI.",
+    "Session Purpose": "This opening session explores how the Emirates Group is applying people analytics, machine learning, and digital tools to transform the end-to-end stages of the employee journey. From optimizing sourcing strategies to delivering seamless onboarding experiences, AI and analytics are enabling HR to act with greater speed, precision, and foresight, while never losing sight of what matters most: the human touch.",
+    "Key Takeaways": "* Applying AI to improve candidate matching, optimise sourcing channels, and reduce time-to-hire\n* Designing tech-enabled onboarding journeys that enhance engagement and accelerate integration\n* Using dashboards and predictive analytics to monitor and improve retention, agility and long-term growth\n* Leveraging machine learning to provide timely, personalised support to employees throughout their lifecycle\n* As we embrace this new era, the Emirates Group remains committed to combining innovation with empathy, ensuring every digital advancement enhances the human experience.",
+    "Tag1": "AI",
+    "Tag2": "Compliance and Regulation",
+    "Tag3": "Talent Acquisition",
+    "Tag4": "Talent Management",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "수/10.22.",
+    "Begin": "09:30:00",
+    "End": "10:00:00",
+    "Type": "CASE STUDY",
+    "Title": "The Missing Middle: Rebuilding Manager Confidence and Capability in a Changing World",
+    "Speaker": "Sandrine Girszyn",
+    "Position": "Chief Human Resources Officer",
+    "Affiliation": "AXA",
+    "Session Introduction": "Why revitalising middle management is essential to leadership, care and transformation",
+    "Session Abstract": "Middle managers are under pressure like never before and are now expected to lead through disruption, coach with empathy, whilst embracing AI and deliver high performance outcomes, all while battling many incoming new challenges from an unstable global economy and workplace change. This session explores how vitally important this sector of the corporate community and and ways to reignite their role and build a stronger bridge between people and strategy.",
+    "Session Purpose": "As organisations adapt to rapid technological, social and structural change, the role of the middle manager has become both more critical and more complex. This session offers a candid look at how forward-thinking HR leaders are reimagining manager support and development, from emotional intelligence and coaching culture to AI fluency and inclusive leadership. We’ll explore a practical case study of how one global HR team built a resilient, community-based approach to empowering managers with the tools, space and support they need to thrive. Learn how creating safe spaces for peer learning, embedding coaching capability and introducing AI into the flow of manager development can transform performance, wellbeing and retention, not just for managers, but across the organisation.",
+    "Key Takeaways": "* What managers really need in today’s high-pressure environment\n* How to rebuild trust, connection and confidence in the manager role\n* Ways to embed AI into everyday manager development without losing the human touch\n* Strategies to reduce manager isolation and improve collaboration\n* The case for investing in prevention, empathy and inclusive practices at the middle level",
+    "Tag1": "Company Culture",
+    "Tag2": "Strategy and Leadership",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "수/10.22.",
+    "Begin": "10:05:00",
+    "End": "10:30:00",
+    "Type": "CASE STUDY",
+    "Title": "Maximum Business Impact: Merck’s Blueprint for AI Upskilling at Scale",
+    "Speaker": "Alexis Saussinan",
+    "Position": "Global Head, People Insights & Effectiveness",
+    "Affiliation": "Merck KGaA, Darmstadt, Germany",
+    "Session Introduction": "Moving beyond AI pilots to enterprise-wide capability with measurable business impact",
+    "Session Abstract": "The gap between AI potential and actual workforce readiness is real. Merck Group bridged it with a systematic upskilling approach that prepared their entire organization for AI impact. Here's their practical framework.",
+    "Session Purpose": "Most organizations talk about AI transformation but struggle to move beyond pilots to actual workforce capability. Merck Group solved this by creating scalable upskilling strategies that prepare leaders and employees to leverage AI effectively. They’ll share their framework for responsible AI implementation that drives tangible business outcomes and builds a truly skills-powered workforce.",
+    "Key Takeaways": "* Learn Merck’s approach to AI upskilling that goes beyond technical teams to the entire workforce\n* Get their methodology for measuring real business impact from AI training investments\n* Discover how to implement responsible AI practices while scaling capability\n* Walk away with strategies for moving from AI experimentation to enterprise-wide results",
+    "Tag1": "AI",
+    "Tag2": "",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "수/10.22.",
+    "Begin": "11:30:00",
+    "End": "11:55:00",
+    "Type": "CASE STUDY",
+    "Title": "Rebooting Lloyds Banking Group – Teaching an Old Horse New Tricks",
+    "Speaker": "Sharon Doherty",
+    "Position": "Chief People & Places Officer",
+    "Affiliation": "Lloyds Banking Group",
+    "Session Introduction": "Discover how Lloyds Banking Group is rebooting at scale: 90,000 colleagues, over 1,600+ AI models in production, 1,000 buildings, 28 million customers",
+    "Session Abstract": "Join Sharon Doherty, Chief People and Places Officer, for a candid look at Lloyds’ transformation journey—what’s working, what’s been learnt, and the many hats a CPPO wears on this rollercoaster ride.",
+    "Session Purpose": "How do you reboot a 300-year-old institution into the UK’s biggest fintech? Sharon Doherty shares how Lloyds Banking Group is rapidly reshaping its organisational capacity, capabilities, and culture.",
+    "Key Takeaways": "* Teaching an old horse new tricks to better serve 28 million customers\n* Fast-paced change across systems and behaviours, with early symbols and amplified storytelling\n* Thoughtful, scaled adoption of AI\n* A turnaround in talent strategy—faster forward, with some tough love\n* The evolving role of People and Places in continuous, scaled transformation",
+    "Tag1": "AI",
+    "Tag2": "Strategy and Leadership",
+    "Tag3": "Talent Management",
+    "Tag4": "Transformation",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "수/10.22.",
+    "Begin": "12:00:00",
+    "End": "12:35:00",
+    "Type": "PANEL",
+    "Title": "Awaken the Why: Purpose-Driven Leadership for an AI led Digital Workplace",
+    "Speaker": "Uzair Qadeer\n\nDavid Green",
+    "Position": "Chief People Officer\n\nManaging Partner",
+    "Affiliation": "BBC\n\nInsight222",
+    "Session Introduction": "Leading with purpose when technology transforms the why of work",
+    "Session Abstract": "At the BBC, AI and digital tools are reshaping how work gets done. But for Uzair Qadeer, Chief People Officer, the bigger challenge is making sure performance never overshadows purpose. In this fireside chat, he shares how the BBC is harnessing AI to empower employees, digitise HR, and strengthen culture while keeping trust, values and humanity at the centre.",
+    "Session Purpose": "Since joining the BBC as Chief People Officer, Uzair Qadeer has led one of the most complex people transformations in UK media. He believes that technology must serve the mission, not the other way around. With AI now part of everyday workflows, the focus is on building an employee experience that is ethical, transparent and purpose-driven. In this conversation, Uzair will share how the BBC is balancing digital innovation with cultural stewardship, what it takes to lead through disruption, and why purpose is the most powerful compass in an AI era. Expect candid reflections on leadership, resilience, and the future of work at one of the world’s most iconic institutions.",
+    "Key Takeaways": "* Why purpose must guide AI adoption at the BBC\n* How HR is being digitised to empower employees and improve experience\n* Balancing performance with culture, trust and values\n* Lessons in leading transformation across a global creative organisation\n* The future of people leadership in an AI led workplace",
+    "Tag1": "AI",
+    "Tag2": "Strategy and Leadership",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "수/10.22.",
+    "Begin": "12:35:00",
+    "End": "13:00:00",
+    "Type": "PANEL",
+    "Title": "Using AI for More Effective Talent Management: Putting the Right People in the Right Roles",
+    "Speaker": "Dominik A. Hahn\n\nDr.Swathi Palasamudram\n\nLynsey Douglas-Lowe\n\nJess Von Bank",
+    "Position": "Global Head of Goup Talent Acquisition\n\nDirector of HR Systems, AI & Digitalization\n\nVP of Global Talent Acquisition\n\nGlobal Leader, HR Transformation and Technology Advisor",
+    "Affiliation": "Allianz SE\n\nRobert Bosch GmbH\n\nWolt\n\nMercer",
+    "Session Introduction": "Exploring AI’s role in smarter sourcing, recruiter evolution, and HR collaboration",
+    "Session Abstract": "Will AI replace recruiters or enhance them? Join this panel to explore how AI is reshaping recruitment, boosting efficiency, and rebalancing the human-tech dynamic across talent management functions.",
+    "Session Purpose": "AI is rapidly transforming how organizations identify, engage, and place talent. This panel discussion delves into the future of recruitment, the tools and trends shaping hiring, and how to maintain the human connection amidst growing automation.",
+    "Key Takeaways": "* Will AI replace the need for recruiters in 5 years from now?\n* Streamlining recruitment with data-driven sourcing and empowered process automation\n* Survival for recruitment and sourcing: where does AI, robotics and platforms fit into the function\n* Part of the HR powershift: Have we been using the wrong tools or using them badly?\n* Re-energising the human connection between HR, recruiters & hiring managers\n* Regaining control without disregarding the cost and time efficiencies of AI and Talent technology",
+    "Tag1": "AI",
+    "Tag2": "Talent Management",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "수/10.22.",
+    "Begin": "14:00:00",
+    "End": "14:25:00",
+    "Type": "CASE STUDY",
+    "Title": "Luxury Talent Mobility: From Career Compass to Cross-Market Growth",
+    "Speaker": "Laura parkes\n\nWilliam Richards",
+    "Position": "Senior Vice President, Talent and Development\n\nVP, Talent Acquisition and Development",
+    "Affiliation": "Louis Vitton\n\nChristian Dior Couture",
+    "Session Introduction": "How Dior and Louis Vuitton are rethinking global talent mobility across all career levels",
+    "Session Abstract": "In today's dynamic luxury sector, talent mobility is essential. Christian Dior and Louis Vuitton are refining their talent development strategies across markets, functions, and geographies.",
+    "Session Purpose": "In this session, William Richards and Laura Parkes will discuss how they are shaping and implementing agile, inclusive, and skill-focused talent strategies, addressing both opportunities and challenges.",
+    "Key Takeaways": "* Leveraging the LVMH ecosystem and driving transparency in internal talent mobility, to promote a more open and equitable workplace.\n* Using a global, cross-functional approach to cultivate diverse and dynamic career trajectories.\n* Employing short-term mobility assignments as valuable global talent development tools.\n* Aligning individual career goals with overarching business objectives.",
+    "Tag1": "Talent Management",
+    "Tag2": "AI",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  },
+  {
+    "Stage": "Stage 5",
+    "Topic": "Talent",
+    "Date": "수/10.22.",
+    "Begin": "14:30:00",
+    "End": "15:00:00",
+    "Type": "CASE STUDY",
+    "Title": "Inside HR Tech’s Biggest Shake-Up",
+    "Speaker": "Robecca Carr\n\nLara Albert\n\nNima Sherpa Green",
+    "Position": "CEO\n\nChief Marketing Officer\n\nEditor-in-Chief",
+    "Affiliation": "SmartRecruiters\n\nSAP SuccessFactors\n\nUNLEASH",
+    "Session Introduction": "Behind the scenes of SAP recent acquisition of SmartRecruiters Talent Stage",
+    "Session Abstract": "In this unique behind-the-scenes session, UNLEASH Editor-in-Chief Nima Sherpa Green will interview SmartRecruiters CEO Rebecca Carr and SAP SuccessFactors CMO Lara Albert live on stage to uncover the rationale behind the deal, what customers can expect in the coming months, and how this acquisition will define the next frontier of talent acquisition.",
+    "Session Purpose": "If you’re investing in TA or HCM as a HR practitioner, this is the must-attend session of the year. Hear directly from SAP and Smart Recruiters’ top leadership on the vision and strategy driving this industry-defining acquisition and how it will translate into new opportunities and value.\n\n“In the age of AI and automation, what an amazing moment to raise the bar in this space, and lead the market,” SmartRecruiters CEO Rebecca Carr tells UNLEASH.\n\nSAP SuccessFactors and SmartRecruiters will also share how they will connect their portfolios to deliver richer, more personalised candidate experiences and enable measurable business outcomes from technology investments.\n\nDon’t miss access to these top-level access leaders shaping the future of work. Be sure to stay for the Q&A in this exclusive UNLEASH World session.",
+    "Key Takeaways": "-",
+    "Tag1": "Talent Management",
+    "Tag2": "AI",
+    "Tag3": "",
+    "Tag4": "",
+    "Tag5": ""
+  }
+];
+
+        let filteredSessions = [...sessionsData];
+
+        // Initialize filters
+        function initializeFilters() {
+            const dates = [...new Set(sessionsData.map(s => s.Date))].filter(d => d);
+            const stages = [...new Set(sessionsData.map(s => s.Stage))].filter(s => s);
+            const types = [...new Set(sessionsData.map(s => s.Type))].filter(t => t);
+            const topics = [...new Set(sessionsData.map(s => s.Topic))].filter(t => t);
+
+            populateSelect('dateFilter', dates);
+            populateSelect('stageFilter', stages);
+            populateSelect('typeFilter', types);
+            populateSelect('topicFilter', topics);
+        }
+
+        function populateSelect(selectId, options) {
+            const select = document.getElementById(selectId);
+            options.forEach(option => {
+                const opt = document.createElement('option');
+                opt.value = option;
+                opt.textContent = option;
+                select.appendChild(opt);
+            });
+        }
+
+        // Filter sessions
+        function filterSessions() {
+            const searchTerm = document.getElementById('searchBox').value.toLowerCase();
+            const dateFilter = document.getElementById('dateFilter').value;
+            const stageFilter = document.getElementById('stageFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const topicFilter = document.getElementById('topicFilter').value;
+
+            filteredSessions = sessionsData.filter(session => {
+                const matchesSearch = !searchTerm || 
+                    session.Title.toLowerCase().includes(searchTerm) ||
+                    session.Speaker.toLowerCase().includes(searchTerm) ||
+                    session['Session Introduction'].toLowerCase().includes(searchTerm) ||
+                    session['Session Abstract'].toLowerCase().includes(searchTerm);
+
+                const matchesDate = !dateFilter || session.Date === dateFilter;
+                const matchesStage = !stageFilter || session.Stage === stageFilter;
+                const matchesType = !typeFilter || session.Type === typeFilter;
+                const matchesTopic = !topicFilter || session.Topic === topicFilter;
+
+                return matchesSearch && matchesDate && matchesStage && matchesType && matchesTopic;
+            });
+
+            renderSessions();
+        }
+
+        // Render sessions
+        function renderSessions() {
+            const container = document.getElementById('sessionsContainer');
+            const resultCount = document.getElementById('resultCount');
+
+            resultCount.textContent = filteredSessions.length;
+
+            if (filteredSessions.length === 0) {
+                container.innerHTML = `
+                    <div class="no-results">
+                        <h2>No sessions found</h2>
+                        <p>Please adjust your filters or search terms</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filteredSessions.map((session, index) => `
+                <div class="session-card" onclick="openModal(${index})">
+                    <div class="session-type">${session.Type}</div>
+                    <div class="session-time">
+                        ${session.Date} | ${session.Begin} - ${session.End}
+                    </div>
+                    <div class="session-title">${session.Title}</div>
+                    ${session.Speaker ? `<div class="session-speaker">${session.Speaker}</div>` : ''}
+                    ${session.Affiliation ? `<div class="session-affiliation">${session.Affiliation}</div>` : ''}
+                    <div class="session-meta">
+                        <span class="meta-badge">${session.Stage}</span>
+                        <span class="meta-badge">${session.Topic}</span>
+                    </div>
+                    ${session['Session Introduction'] ? `<div class="session-intro">${session['Session Introduction']}</div>` : ''}
+                </div>
+            `).join('');
+        }
+
+        // Open modal with session details - FIXED
+        function openModal(index) {
+            const session = filteredSessions[index];
+            const modal = document.getElementById('sessionModal');
+            const modalBody = document.getElementById('modalBody');
+
+            // Parse Key Takeaways if it contains bullet points
+            let keyTakeawaysHtml = '';
+            if (session['Key Takeaways']) {
+                const takeaways = session['Key Takeaways'].split('\n').filter(t => t.trim());
+                if (takeaways.length > 1) {
+                    keyTakeawaysHtml = '<ul>' + takeaways.map(t => `<li>${t.replace(/^[*-]\s*/, '')}</li>`).join('') + '</ul>';
+                } else {
+                    keyTakeawaysHtml = `<p>${session['Key Takeaways']}</p>`;
+                }
+            }
+
+            modalBody.innerHTML = `
+                <div class="modal-header">
+                    <div class="session-type">${session.Type}</div>
+                    <div class="modal-title">${session.Title}</div>
+                    <div class="session-time" style="font-size: 15px;">
+                        ${session.Date} | ${session.Begin} - ${session.End}
+                    </div>
+                    ${session.Speaker ? `
+                        <div class="session-speaker" style="font-size: 17px; margin-top: 16px;">${session.Speaker}</div>
+                        ${session.Position ? `<div style="color: #5c5c5c; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">${session.Position}</div>` : ''}
+                        ${session.Affiliation ? `<div class="session-affiliation">${session.Affiliation}</div>` : ''}
+                    ` : ''}
+                    <div class="modal-meta">
+                        <span class="meta-badge">${session.Stage}</span>
+                        <span class="meta-badge">${session.Topic}</span>
+                    </div>
+                </div>
+
+                ${session['Session Introduction'] ? `
+                    <div class="modal-section">
+                        <h3>Introduction</h3>
+                        <p>${session['Session Introduction']}</p>
+                    </div>
+                ` : ''}
+
+                ${session['Session Abstract'] ? `
+                    <div class="modal-section">
+                        <h3>Abstract</h3>
+                        <p>${session['Session Abstract']}</p>
+                    </div>
+                ` : ''}
+
+                ${session['Session Purpose'] ? `
+                    <div class="modal-section">
+                        <h3>Purpose</h3>
+                        <p>${session['Session Purpose']}</p>
+                    </div>
+                ` : ''}
+
+                ${session['Key Takeaways'] ? `
+                    <div class="modal-section">
+                        <h3>Key Takeaways</h3>
+                        ${keyTakeawaysHtml}
+                    </div>
+                ` : ''}
+            `;
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+
+            // Scroll to top of modal content
+            modal.scrollTop = 0;
+        }
+
+        // Close modal
+        function closeModal() {
+            const modal = document.getElementById('sessionModal');
+            modal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        }
+
+        // Close modal when clicking outside - FIXED
+        function closeModalOnOutsideClick(event) {
+            if (event.target.classList.contains('modal-wrapper')) {
+                closeModal();
+            }
+        }
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Reset filters
+        function resetFilters() {
+            document.getElementById('searchBox').value = '';
+            document.getElementById('dateFilter').value = '';
+            document.getElementById('stageFilter').value = '';
+            document.getElementById('typeFilter').value = '';
+            document.getElementById('topicFilter').value = '';
+            filterSessions();
+        }
+
+        // Event listeners
+        document.getElementById('searchBox').addEventListener('input', filterSessions);
+        document.getElementById('dateFilter').addEventListener('change', filterSessions);
+        document.getElementById('stageFilter').addEventListener('change', filterSessions);
+        document.getElementById('typeFilter').addEventListener('change', filterSessions);
+        document.getElementById('topicFilter').addEventListener('change', filterSessions);
+
+        // Initialize on page load
+        initializeFilters();
+        filterSessions();
+    </script>
+</body>
+</html>

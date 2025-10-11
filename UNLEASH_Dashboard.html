@@ -200,6 +200,25 @@
             opacity: 1;
         }
 
+        .card-top-meta {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .meta-badge {
+            padding: 6px 12px;
+            background: #f5f5f5;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            font-size: 11px;
+            color: #5c5c5c;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
         .session-type {
             display: inline-block;
             padding: 6px 14px;
@@ -245,23 +264,23 @@
             font-style: italic;
         }
 
-        .session-meta {
+        .session-tags {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
-            margin-bottom: 16px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e0e0e0;
         }
 
-        .meta-badge {
-            padding: 6px 12px;
-            background: #f5f5f5;
-            border: 1px solid #e0e0e0;
+        .tag-badge {
+            padding: 5px 10px;
+            background: #ffffff;
+            border: 1px solid #c0c0c0;
             border-radius: 2px;
             font-size: 11px;
             color: #5c5c5c;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
 
         .session-intro {
@@ -306,7 +325,6 @@
             font-size: 1.1em;
         }
 
-        /* Modal styles */
         .modal {
             display: none;
             position: fixed;
@@ -473,7 +491,7 @@
         </div>
 
         <div class="controls">
-            <input type="text" id="searchBox" class="search-box" placeholder="Search by title, speaker, or content...">
+            <input type="text" id="searchBox" class="search-box" placeholder="Search by title, speaker, content, or tags...">
 
             <div class="filters">
                 <div class="filter-group">
@@ -491,6 +509,13 @@
                 </div>
 
                 <div class="filter-group">
+                    <label for="topicFilter">Topic</label>
+                    <select id="topicFilter">
+                        <option value="">All Topics</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
                     <label for="typeFilter">Type</label>
                     <select id="typeFilter">
                         <option value="">All Types</option>
@@ -498,9 +523,9 @@
                 </div>
 
                 <div class="filter-group">
-                    <label for="topicFilter">Topic</label>
-                    <select id="topicFilter">
-                        <option value="">All Topics</option>
+                    <label for="tagFilter">Tag</label>
+                    <select id="tagFilter">
+                        <option value="">All Tags</option>
                     </select>
                 </div>
             </div>
@@ -519,7 +544,6 @@
         <div class="click-hint">Click on any session card to view complete details</div>
     </div>
 
-    <!-- Modal -->
     <div id="sessionModal" class="modal">
         <div class="modal-wrapper" onclick="closeModalOnOutsideClick(event)">
             <div class="modal-content" onclick="event.stopPropagation()">
@@ -535,8 +559,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "화/10.21.",
-    "Begin": "08:55:00",
-    "End": "09:35:00",
+    "Begin": "08:55",
+    "End": "09:35",
     "Type": "KEYNOTE",
     "Title": "Reimagining People Strategies in an Era of AI",
     "Speaker": "Amy Coleman",
@@ -556,8 +580,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "화/10.21.",
-    "Begin": "09:40:00",
-    "End": "09:55:00",
+    "Begin": "09:40",
+    "End": "09:55",
     "Type": "KEYNOTE",
     "Title": "I’m Not Here to Take Your Job: Where Humanoids and AI Merge",
     "Speaker": "Ameca",
@@ -577,8 +601,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "화/10.21.",
-    "Begin": "10:00:00",
-    "End": "10:30:00",
+    "Begin": "10:00",
+    "End": "10:30",
     "Type": "PANEL",
     "Title": "Culture as a Superpower",
     "Speaker": "Ulrika Biesèrt\n/\nSharon Doherty \n/\nEmilee DeMartino",
@@ -598,8 +622,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "화/10.21.",
-    "Begin": "16:25:00",
-    "End": "17:00:00",
+    "Begin": "16:25",
+    "End": "17:00",
     "Type": "PANEL",
     "Title": "The Next Chapter: Reimagining DEI and Sustainability in the Global Workplace",
     "Speaker": "Dailah Nihot\n/\nVincent Lecerf\n/\nUzair Qadeer",
@@ -619,8 +643,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "화/10.21.",
-    "Begin": "17:00:00",
-    "End": "18:00:00",
+    "Begin": "17:00",
+    "End": "18:00",
     "Type": "KEYNOTE",
     "Title": "AI Optimist",
     "Speaker": "Scott Galloway",
@@ -640,8 +664,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "수/10.22.",
-    "Begin": "08:55:00",
-    "End": "09:45:00",
+    "Begin": "08:55",
+    "End": "09:45",
     "Type": "KEYNOTE",
     "Title": "The Disruption Never Stops: How AI is Radically Transforming HR",
     "Speaker": "Josh Bersin",
@@ -661,8 +685,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "수/10.22.",
-    "Begin": "09:50:00",
-    "End": "10:15:00",
+    "Begin": "09:50",
+    "End": "10:15",
     "Type": "KEYNOTE",
     "Title": "Human Intelligence",
     "Speaker": "Eric Mosley",
@@ -682,8 +706,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "수/10.22.",
-    "Begin": "15:50:00",
-    "End": "16:25:00",
+    "Begin": "15:50",
+    "End": "16:25",
     "Type": "PANEL",
     "Title": "New Frontiers: Workforce Planning in the Age of AI",
     "Speaker": "Mick Collins\n/\nBen Pierce\n/\nNancy Estell Zoder",
@@ -703,8 +727,8 @@
     "Stage": "Stage 1",
     "Topic": "Main Stage",
     "Date": "수/10.22.",
-    "Begin": "16:30:00",
-    "End": "17:00:00",
+    "Begin": "16:30",
+    "End": "17:00",
     "Type": "KEYNOTE",
     "Title": "The Future of Work in the Age of AI and How HR Should Respond",
     "Speaker": "Daniel Susskind",
@@ -724,8 +748,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "09:00:00",
-    "End": "09:30:00",
+    "Begin": "09:00",
+    "End": "09:30",
     "Type": "CASE STUDY",
     "Title": "Empowering Human Capital in the Age of AI: Keeping Humans at the Helm",
     "Speaker": "Bruce Daisley",
@@ -745,8 +769,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "09:35:00",
-    "End": "10:00:00",
+    "Begin": "09:35",
+    "End": "10:00",
     "Type": "PANEL",
     "Title": "HR’s Defining Moment : Leading the Human-AI Transformation",
     "Speaker": "Syed Ali Abbas\n/\nVincent Dupuis\n/\nAlexandre Alves",
@@ -766,8 +790,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "10:05:00",
-    "End": "10:30:00",
+    "Begin": "10:05",
+    "End": "10:30",
     "Type": "FIRESIDE",
     "Title": "Humanist Culture as the Foundation of Enduring Success: Lessons from Hermès",
     "Speaker": "Sharon MacBeath\n/\nDon Sull",
@@ -787,8 +811,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "11:30:00",
-    "End": "11:55:00",
+    "Begin": "11:30",
+    "End": "11:55",
     "Type": "FIRESIDE",
     "Title": "Leading the People Agenda in an AI World",
     "Speaker": "Gina Vargiu-Breuer\n/\nBruce Daisley",
@@ -808,8 +832,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "12:00:00",
-    "End": "12:30:00",
+    "Begin": "12:00",
+    "End": "12:30",
     "Type": "CASE STUDY",
     "Title": "Setting Up a New Corporate Culture from Scratch: What do you Want to Stand For?",
     "Speaker": "Denis Mineret",
@@ -829,8 +853,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "12:35:00",
-    "End": "13:00:00",
+    "Begin": "12:35",
+    "End": "13:00",
     "Type": "CASE STUDY",
     "Title": "Change Management 4.0: Human-Centred Co-Created Transformation at Global Scale",
     "Speaker": "Jason Bloomfield",
@@ -850,8 +874,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "14:30:00",
-    "End": "14:55:00",
+    "Begin": "14:30",
+    "End": "14:55",
     "Type": "FIRESIDE",
     "Title": "The CEO-CHRO Alliance: Turning People Strategy into Impact at Danone",
     "Speaker": "Antoine de Saint-Affrique\n/\nIsabelle Esser\n/\nDr.Charles-Henri Besseyre des Horts",
@@ -871,8 +895,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "15:00:00",
-    "End": "15:25:00",
+    "Begin": "15:00",
+    "End": "15:25",
     "Type": "CASE STUDY",
     "Title": "From Bold Vision to Future-Driven Growth: How Philip Morris International Evolved Its Culture",
     "Speaker": "Frederic Patitucci",
@@ -892,8 +916,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "화/10.21.",
-    "Begin": "15:30:00",
-    "End": "15:55:00",
+    "Begin": "15:30",
+    "End": "15:55",
     "Type": "CASE STUDY",
     "Title": "Amplifying Human Potential: Success Stories of HCM Innovation and Excellence",
     "Speaker": "Lukasz Stasiak\n/\nClaudia Chiudinelli\n/\nGeoffroy Lacan",
@@ -913,8 +937,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "수/10.22.",
-    "Begin": "09:00:00",
-    "End": "09:25:00",
+    "Begin": "09:00",
+    "End": "09:25",
     "Type": "CASE STUDY",
     "Title": "Visionary Leadership: Reimagining HR’s Strategic Function for Flexibility and Growth",
     "Speaker": "Stephen Childs",
@@ -934,8 +958,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "수/10.22.",
-    "Begin": "09:30:00",
-    "End": "10:00:00",
+    "Begin": "09:30",
+    "End": "10:00",
     "Type": "PANEL",
     "Title": "Adaptive Leadership in a Disordered World: Rethinking Culture, Control and the Role of HR in Global Disruption",
     "Speaker": "Janaina Tavares\n/\nGreet-Jan Waasdorp\n/\nDaniel Thorniley",
@@ -955,8 +979,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "수/10.22.",
-    "Begin": "10:05:00",
-    "End": "10:30:00",
+    "Begin": "10:05",
+    "End": "10:30",
     "Type": "FIRESIDE",
     "Title": "Powering People: Building a High-Performance Culture in the Age of AI",
     "Speaker": "Kerry Dryburgh\n/\nDr.Charles-Henri Besseyre des Horts",
@@ -976,8 +1000,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "수/10.22.",
-    "Begin": "11:30:00",
-    "End": "11:55:00",
+    "Begin": "11:30",
+    "End": "11:55",
     "Type": "CASE STUDY",
     "Title": "Nurturing People at the Virgin Group: How To Embrace Human-Centric Leadership in a Data-Driven World",
     "Speaker": "Nikki Humphrey",
@@ -997,8 +1021,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "수/10.22.",
-    "Begin": "12:00:00",
-    "End": "12:30:00",
+    "Begin": "12:00",
+    "End": "12:30",
     "Type": "PANEL",
     "Title": "Moving the Dial on DE&I: Where to Next for HR Leaders?",
     "Speaker": "Bruce Roch\n/\nAlexandra Eichberger\n/\nCharlotte Otter",
@@ -1018,8 +1042,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "수/10.22.",
-    "Begin": "12:35:00",
-    "End": "13:00:00",
+    "Begin": "12:35",
+    "End": "13:00",
     "Type": "FIRESIDE",
     "Title": "Leading with Purpose: Building Empowered, High Performing Teams at Scale",
     "Speaker": "Åsa Agebäck",
@@ -1039,8 +1063,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "수/10.22.",
-    "Begin": "14:00:00",
-    "End": "14:25:00",
+    "Begin": "14:00",
+    "End": "14:25",
     "Type": "CASE STUDY",
     "Title": "Keeping People for the Long Run: How Marriott Built a Culture That Lasts",
     "Speaker": "Katharine Coombes",
@@ -1060,8 +1084,8 @@
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
     "Date": "수/10.22.",
-    "Begin": "14:30:00",
-    "End": "15:00:00",
+    "Begin": "14:30",
+    "End": "15:00",
     "Type": "CASE STUDY",
     "Title": "Using Culture to Power the AI Mindset: A People-First Playbook from Sanofi",
     "Speaker": "Raj Verma",
@@ -1081,8 +1105,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "09:00:00",
-    "End": "09:30:00",
+    "Begin": "09:00",
+    "End": "09:30",
     "Type": "CASE STUDY",
     "Title": "Agents Execute – Robots Build – Humans Lead",
     "Speaker": "Pierre-Alexandre Balland",
@@ -1102,8 +1126,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "09:35:00",
-    "End": "10:00:00",
+    "Begin": "09:35",
+    "End": "10:00",
     "Type": "PANEL",
     "Title": "AI Is Here to Stay: Breaking Silos and Building Trust via Cross-Functional Collaboration in the Age of AI",
     "Speaker": "Suart Privett\n/\nOluyomi Okunowo\n/\nRobyn Agoston",
@@ -1123,8 +1147,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "10:05:00",
-    "End": "10:30:00",
+    "Begin": "10:05",
+    "End": "10:30",
     "Type": "CASE STUDY",
     "Title": "The Future of Work is Both AI & Human Fit: Designing New Workplaces That Align with Human Psychology",
     "Speaker": "Al Adamsen",
@@ -1144,8 +1168,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "11:30:00",
-    "End": "11:55:00",
+    "Begin": "11:30",
+    "End": "11:55",
     "Type": "PANEL",
     "Title": "New Exclusive Research: How HR Executives Are Navigating and Driving AI Adoption",
     "Speaker": "Cecilia Sandberg\n/\nLucía Crespo\n/\nNicolas Pauthier\n/\nAnand Chopra-McGowan",
@@ -1165,8 +1189,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "12:00:00",
-    "End": "12:30:00",
+    "Begin": "12:00",
+    "End": "12:30",
     "Type": "PANEL",
     "Title": "AI, Trust, and the Future of HR: Can People-Centricity Survive the Algorithm?",
     "Speaker": "Patrick Hull\n/\nEl Iza Mohamedou\n/\nMenno Olgers\n/\nDr. Heba makram",
@@ -1186,8 +1210,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "12:35:00",
-    "End": "13:00:00",
+    "Begin": "12:35",
+    "End": "13:00",
     "Type": "CASE STUDY",
     "Title": "Why Tomorrow’s CHRO Will Be the CTO As Well",
     "Speaker": "Peter Lynch",
@@ -1207,8 +1231,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "14:30:00",
-    "End": "14:55:00",
+    "Begin": "14:30",
+    "End": "14:55",
     "Type": "CASE STUDY",
     "Title": "Scaling AI Learning Across the Enterprise: From Awareness to Transformation",
     "Speaker": "David Sperl",
@@ -1228,8 +1252,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "15:00:00",
-    "End": "15:30:00",
+    "Begin": "15:00",
+    "End": "15:30",
     "Type": "PANEL",
     "Title": "Workforce Planning Under Pressure: Turning Complexity into Clarity",
     "Speaker": "David Edwards\n/\nChristian Vetter\n/\nRussell Klosk",
@@ -1249,8 +1273,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "화/10.21.",
-    "Begin": "15:30:00",
-    "End": "15:55:00",
+    "Begin": "15:30",
+    "End": "15:55",
     "Type": "CASE STUDY",
     "Title": "Beyond Hype: Unilever’s Practical Applications for AI & Automation in Global TA",
     "Speaker": "Kevin Laban",
@@ -1270,8 +1294,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "09:05:00",
-    "End": "09:30:00",
+    "Begin": "09:05",
+    "End": "09:30",
     "Type": "CASE STUDY",
     "Title": "The Future of AI in HR: From Automation to Agentic Intelligence and Enterprise Accountability",
     "Speaker": "Melinda McKinley",
@@ -1291,8 +1315,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "09:30:00",
-    "End": "10:00:00",
+    "Begin": "09:30",
+    "End": "10:00",
     "Type": "CASE STUDY",
     "Title": "The Silent Derailment of Digital Transformation in the AI Era: Uncovering the Emerging AI workforce Barrier No One Talks About",
     "Speaker": "Alexandre Alves",
@@ -1312,8 +1336,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "10:05:00",
-    "End": "10:30:00",
+    "Begin": "10:05",
+    "End": "10:30",
     "Type": "CASE STUDY",
     "Title": "AI Angst: The Emotional Cost of Innovation, Unveiling New European Research at UNLEASH World 2025",
     "Speaker": "Erin Eatough",
@@ -1333,8 +1357,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "11:30:00",
-    "End": "11:55:00",
+    "Begin": "11:30",
+    "End": "11:55",
     "Type": "CASE STUDY",
     "Title": "Culture, Quantified: How AI Is Redefining the Way We Measure Organisational Culture",
     "Speaker": "Don Sull",
@@ -1354,8 +1378,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "12:00:00",
-    "End": "12:30:00",
+    "Begin": "12:00",
+    "End": "12:30",
     "Type": "PANEL",
     "Title": "AI as Your Ally: Implementing Scalable Solutions While Upholding Psychological Safety",
     "Speaker": "Mahe Bayireddi\n/\nMaryann Abbajay\n/\nGary A. Bolles",
@@ -1375,8 +1399,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "12:35:00",
-    "End": "13:00:00",
+    "Begin": "12:35",
+    "End": "13:00",
     "Type": "PANEL",
     "Title": "Data Dysfunction: How HR Can Fix the Bottlenecks Blocking AI Progress",
     "Speaker": "Francesca Caroleo\n/\nGail Ursell\n/\nAditya Bharadwaj",
@@ -1396,8 +1420,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "14:00:00",
-    "End": "14:25:00",
+    "Begin": "14:00",
+    "End": "14:25",
     "Type": "PANEL",
     "Title": "Why Most AI Projects Fail to Deliver: And How to Make Yours the One That Does",
     "Speaker": "Syed Ali Abbas\n/\nRavi Jay\n/\nGary A. Bolles",
@@ -1417,8 +1441,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "14:30:00",
-    "End": "15:00:00",
+    "Begin": "14:30",
+    "End": "15:00",
     "Type": "CASE STUDY",
     "Title": "Reimagining Employee Experience in the AI Era",
     "Speaker": "Pieter Neethling",
@@ -1438,8 +1462,8 @@
     "Stage": "Stage 3",
     "Topic": "AI",
     "Date": "수/10.22.",
-    "Begin": "15:00:00",
-    "End": "15:30:00",
+    "Begin": "15:00",
+    "End": "15:30",
     "Type": "CASE STUDY",
     "Title": "What You Must Do Next About AI: Action Items For You and Your Organization",
     "Speaker": "Gary A. Bolles",
@@ -1459,8 +1483,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "09:00:00",
-    "End": "09:30:00",
+    "Begin": "09:00",
+    "End": "09:30",
     "Type": "CASE STUDY",
     "Title": "What’s Next in HR and Work Technology: Smarter Solutions to Increase Impact and Optimise Costs",
     "Speaker": "David Wilson",
@@ -1480,8 +1504,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "09:35:00",
-    "End": "10:00:00",
+    "Begin": "09:35",
+    "End": "10:00",
     "Type": "PANEL",
     "Title": "Rewiring HR: The People Science Case for Smarter Systems and Human-Centred AI & HR Systems",
     "Speaker": "Jason Bloomfield",
@@ -1501,8 +1525,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "10:05:00",
-    "End": "10:30:00",
+    "Begin": "10:05",
+    "End": "10:30",
     "Type": "PANEL",
     "Title": "Choosing the Right HR Tech and AI Tools – Getting Fit, Adoption and Impact Right",
     "Speaker": "Jean-Côme Renaudin\n/\nStuart Privett\n/\nJayney Howson\n/\nHoward Flint",
@@ -1522,8 +1546,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "11:30:00",
-    "End": "11:55:00",
+    "Begin": "11:30",
+    "End": "11:55",
     "Type": "CASE STUDY",
     "Title": "Fluent Futures: How Carrefour Is Using Language to Unlock a New Era of Global Collaboration",
     "Speaker": "Zoe Bordelon Grandon",
@@ -1543,8 +1567,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "12:00:00",
-    "End": "12:30:00",
+    "Begin": "12:00",
+    "End": "12:30",
     "Type": "PANEL",
     "Title": "From Demand to Design: What Clients Want from AI and HR Tech Now … and Next",
     "Speaker": "Tom Libretto\n/\nToby Hough\n/\nArnim Wahls\n/\nKyle Lagunas",
@@ -1564,8 +1588,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "12:35:00",
-    "End": "13:00:00",
+    "Begin": "12:35",
+    "End": "13:00",
     "Type": "CASE STUDY",
     "Title": "Re-Designing HR Software That Empowers People",
     "Speaker": "Suart Privett",
@@ -1585,8 +1609,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "14:30:00",
-    "End": "14:55:00",
+    "Begin": "14:30",
+    "End": "14:55",
     "Type": "CASE STUDY",
     "Title": "Beyond the Bot: Mapping the Agentic AI Ecosystem and What It Means for HR",
     "Speaker": "David Francis",
@@ -1606,8 +1630,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "15:00:00",
-    "End": "15:25:00",
+    "Begin": "15:00",
+    "End": "15:25",
     "Type": "CASE STUDY",
     "Title": "From Legacy HR to Conversational AI: KPN’s Bold Transformation Journey",
     "Speaker": "Carlo Steenvoorden",
@@ -1627,8 +1651,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "화/10.21.",
-    "Begin": "15:30:00",
-    "End": "15:55:00",
+    "Begin": "15:30",
+    "End": "15:55",
     "Type": "FIRESIDE",
     "Title": "Beyond Budgets: How team.blue Builds a Strategic Bridge Between HR and Finance",
     "Speaker": "Sylvia Groenewold\n/\nKathi Enderes",
@@ -1648,8 +1672,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "수/10.22.",
-    "Begin": "09:05:00",
-    "End": "09:25:00",
+    "Begin": "09:05",
+    "End": "09:25",
     "Type": "CASE STUDY",
     "Title": "Why Succession Planning is Now Redundant: Forging Forward with New Talent Marketplaces",
     "Speaker": "Patrick Hull",
@@ -1669,8 +1693,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "수/10.22.",
-    "Begin": "09:30:00",
-    "End": "10:00:00",
+    "Begin": "09:30",
+    "End": "10:00",
     "Type": "CASE STUDY",
     "Title": "From Insight to Impact: Re-Imagine HR Through Data Intelligence and WorkTech",
     "Speaker": "Vincent Dupuis",
@@ -1690,8 +1714,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "수/10.22.",
-    "Begin": "10:05:00",
-    "End": "10:30:00",
+    "Begin": "10:05",
+    "End": "10:30",
     "Type": "CASE STUDY",
     "Title": "Skills at Scale: Capgemini’s Blueprint for a Skills-First Future",
     "Speaker": "Anne Lebel",
@@ -1711,8 +1735,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "수/10.22.",
-    "Begin": "11:30:00",
-    "End": "11:55:00",
+    "Begin": "11:30",
+    "End": "11:55",
     "Type": "FIRESIDE",
     "Title": "Building Inclusive & Dynamic Workplaces Through HR Tech Adoption & Governance",
     "Speaker": "Amelia Irion\n/\nKyle Lagunas",
@@ -1732,8 +1756,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "수/10.22.",
-    "Begin": "12:35:00",
-    "End": "13:00:00",
+    "Begin": "12:35",
+    "End": "13:00",
     "Type": "FIRESIDE",
     "Title": "Securing Board Buy-In: How HR Can Speak Tech and Showcase Value",
     "Speaker": "Josephina Smith\n/\nAnna Carlsson",
@@ -1753,8 +1777,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "수/10.22.",
-    "Begin": "14:00:00",
-    "End": "14:25:00",
+    "Begin": "14:00",
+    "End": "14:25",
     "Type": "PANEL",
     "Title": "A New Era for the People Function, A New Era for People",
     "Speaker": "Asmus Komm\n/\nCharlotte Seiler\n/\nJulian Kirchherr\n/\nAndrea Pedroni",
@@ -1774,8 +1798,8 @@
     "Stage": "Stage 4",
     "Topic": "Worktech",
     "Date": "수/10.22.",
-    "Begin": "14:30:00",
-    "End": "15:00:00",
+    "Begin": "14:30",
+    "End": "15:00",
     "Type": "CASE STUDY",
     "Title": "Real-World HR Acceleration at Biocodex with Workday",
     "Speaker": "Catherine Perret",
@@ -1795,8 +1819,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "09:00:00",
-    "End": "09:30:00",
+    "Begin": "09:00",
+    "End": "09:30",
     "Type": "CASE STUDY",
     "Title": "From Blame to Learning: Building a Culture of Accountability in Times of Crisis",
     "Speaker": "Jérôme Barthélemy",
@@ -1816,8 +1840,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "09:35:00",
-    "End": "10:00:00",
+    "Begin": "09:35",
+    "End": "10:00",
     "Type": "CASE STUDY",
     "Title": "Building AI To Support Speed & Integration Across HR Tools: Embedding Governance, Ethics and Legal Oversight into Every Bot & System",
     "Speaker": "Michiel van Duin",
@@ -1837,8 +1861,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "10:05:00",
-    "End": "10:30:00",
+    "Begin": "10:05",
+    "End": "10:30",
     "Type": "PANEL",
     "Title": "Rethinking Talent for Performance: HR as a Strategic Partner in a High Performance Workplace",
     "Speaker": "Neha Khicha\n/\nJochen Eckhold\n/\nTeresa Wykes\n/\nDr. Heba Makram",
@@ -1858,8 +1882,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "11:30:00",
-    "End": "11:55:00",
+    "Begin": "11:30",
+    "End": "11:55",
     "Type": "PANEL",
     "Title": "Riding the Job Revolution: Shaping Workforce in a Disruptive Labor Market",
     "Speaker": "Kerstin Wagner",
@@ -1879,8 +1903,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "12:00:00",
-    "End": "12:30:00",
+    "Begin": "12:00",
+    "End": "12:30",
     "Type": "CASE STUDY",
     "Title": "Work in Transition: Opportunities and Challenges in the Era of Digitalization, Demographic Change and Environmental Transformation",
     "Speaker": "Katarina Roder",
@@ -1900,8 +1924,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "12:35:00",
-    "End": "13:00:00",
+    "Begin": "12:35",
+    "End": "13:00",
     "Type": "CASE STUDY",
     "Title": "Building a Future-Ready Workforce – Inside the Launch of ServiceNow University",
     "Speaker": "Jayney Howson",
@@ -1921,8 +1945,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "14:30:00",
-    "End": "14:55:00",
+    "Begin": "14:30",
+    "End": "14:55",
     "Type": "CASE STUDY",
     "Title": "High-Performance Talent and Teams: Unlocking Human Potential Across Generations in the Age of AI",
     "Speaker": "Jane N. Fedoretz",
@@ -1942,8 +1966,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "15:00:00",
-    "End": "15:25:00",
+    "Begin": "15:00",
+    "End": "15:25",
     "Type": "FIRESIDE",
     "Title": "Behind the Numbers: How People Analytics Shapes Strategy at Scale",
     "Speaker": "Samuel Thayer\n/\nAntony Ebelle\n/\nMarilyn Pearson Hendricks",
@@ -1963,8 +1987,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "화/10.21.",
-    "Begin": "15:30:00",
-    "End": "15:55:00",
+    "Begin": "15:30",
+    "End": "15:55",
     "Type": "FIRESIDE",
     "Title": "How CCEP Is Using AI To Build Skills, Careers, and Culture for a Distributed Workforce",
     "Speaker": "Wilfrid Bas\n/\nMadeline Laurano",
@@ -1984,8 +2008,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "수/10.22.",
-    "Begin": "09:00:00",
-    "End": "09:25:00",
+    "Begin": "09:00",
+    "End": "09:25",
     "Type": "CASE STUDY",
     "Title": "A New Era for AI-Augmented HR Leadership",
     "Speaker": "Oliver Grohmann",
@@ -2005,8 +2029,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "수/10.22.",
-    "Begin": "09:30:00",
-    "End": "10:00:00",
+    "Begin": "09:30",
+    "End": "10:00",
     "Type": "CASE STUDY",
     "Title": "The Missing Middle: Rebuilding Manager Confidence and Capability in a Changing World",
     "Speaker": "Sandrine Girszyn",
@@ -2026,8 +2050,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "수/10.22.",
-    "Begin": "10:05:00",
-    "End": "10:30:00",
+    "Begin": "10:05",
+    "End": "10:30",
     "Type": "CASE STUDY",
     "Title": "Maximum Business Impact: Merck’s Blueprint for AI Upskilling at Scale",
     "Speaker": "Alexis Saussinan",
@@ -2047,8 +2071,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "수/10.22.",
-    "Begin": "11:30:00",
-    "End": "11:55:00",
+    "Begin": "11:30",
+    "End": "11:55",
     "Type": "CASE STUDY",
     "Title": "Rebooting Lloyds Banking Group – Teaching an Old Horse New Tricks",
     "Speaker": "Sharon Doherty",
@@ -2068,8 +2092,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "수/10.22.",
-    "Begin": "12:00:00",
-    "End": "12:35:00",
+    "Begin": "12:00",
+    "End": "12:35",
     "Type": "PANEL",
     "Title": "Awaken the Why: Purpose-Driven Leadership for an AI led Digital Workplace",
     "Speaker": "Uzair Qadeer\n/\nDavid Green",
@@ -2089,8 +2113,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "수/10.22.",
-    "Begin": "12:35:00",
-    "End": "13:00:00",
+    "Begin": "12:35",
+    "End": "13:00",
     "Type": "PANEL",
     "Title": "Using AI for More Effective Talent Management: Putting the Right People in the Right Roles",
     "Speaker": "Dominik A. Hahn\n/\nDr.Swathi Palasamudram\n/\nLynsey Douglas-Lowe\n/\nJess Von Bank",
@@ -2110,8 +2134,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "수/10.22.",
-    "Begin": "14:00:00",
-    "End": "14:25:00",
+    "Begin": "14:00",
+    "End": "14:25",
     "Type": "CASE STUDY",
     "Title": "Luxury Talent Mobility: From Career Compass to Cross-Market Growth",
     "Speaker": "Laura parkes\n/\nWilliam Richards",
@@ -2131,8 +2155,8 @@
     "Stage": "Stage 5",
     "Topic": "Talent",
     "Date": "수/10.22.",
-    "Begin": "14:30:00",
-    "End": "15:00:00",
+    "Begin": "14:30",
+    "End": "15:00",
     "Type": "CASE STUDY",
     "Title": "Inside HR Tech’s Biggest Shake-Up",
     "Speaker": "Robecca Carr\n/\nLara Albert\n/\nNima Sherpa Green",
@@ -2152,17 +2176,28 @@
 
         let filteredSessions = [...sessionsData];
 
-        // Initialize filters
         function initializeFilters() {
             const dates = [...new Set(sessionsData.map(s => s.Date))].filter(d => d);
             const stages = [...new Set(sessionsData.map(s => s.Stage))].filter(s => s);
-            const types = [...new Set(sessionsData.map(s => s.Type))].filter(t => t);
             const topics = [...new Set(sessionsData.map(s => s.Topic))].filter(t => t);
+            const types = [...new Set(sessionsData.map(s => s.Type))].filter(t => t);
+
+            // Collect all unique tags from Tag1-5
+            const allTags = new Set();
+            sessionsData.forEach(session => {
+                [session.Tag1, session.Tag2, session.Tag3, session.Tag4, session.Tag5].forEach(tag => {
+                    if (tag && tag.trim()) {
+                        allTags.add(tag);
+                    }
+                });
+            });
+            const tags = [...allTags].sort();
 
             populateSelect('dateFilter', dates);
             populateSelect('stageFilter', stages);
-            populateSelect('typeFilter', types);
             populateSelect('topicFilter', topics);
+            populateSelect('typeFilter', types);
+            populateSelect('tagFilter', tags);
         }
 
         function populateSelect(selectId, options) {
@@ -2175,33 +2210,43 @@
             });
         }
 
-        // Filter sessions
         function filterSessions() {
             const searchTerm = document.getElementById('searchBox').value.toLowerCase();
             const dateFilter = document.getElementById('dateFilter').value;
             const stageFilter = document.getElementById('stageFilter').value;
-            const typeFilter = document.getElementById('typeFilter').value;
             const topicFilter = document.getElementById('topicFilter').value;
+            const typeFilter = document.getElementById('typeFilter').value;
+            const tagFilter = document.getElementById('tagFilter').value;
 
             filteredSessions = sessionsData.filter(session => {
                 const matchesSearch = !searchTerm || 
-                    session.Title.toLowerCase().includes(searchTerm) ||
-                    session.Speaker.toLowerCase().includes(searchTerm) ||
-                    session['Session Introduction'].toLowerCase().includes(searchTerm) ||
-                    session['Session Abstract'].toLowerCase().includes(searchTerm);
+                    (session.Title && session.Title.toLowerCase().includes(searchTerm)) ||
+                    (session.Speaker && session.Speaker.toLowerCase().includes(searchTerm)) ||
+                    (session['Session Introduction'] && session['Session Introduction'].toLowerCase().includes(searchTerm)) ||
+                    (session['Session Abstract'] && session['Session Abstract'].toLowerCase().includes(searchTerm)) ||
+                    (session.Tag1 && session.Tag1.toLowerCase().includes(searchTerm)) ||
+                    (session.Tag2 && session.Tag2.toLowerCase().includes(searchTerm)) ||
+                    (session.Tag3 && session.Tag3.toLowerCase().includes(searchTerm)) ||
+                    (session.Tag4 && session.Tag4.toLowerCase().includes(searchTerm)) ||
+                    (session.Tag5 && session.Tag5.toLowerCase().includes(searchTerm));
 
                 const matchesDate = !dateFilter || session.Date === dateFilter;
                 const matchesStage = !stageFilter || session.Stage === stageFilter;
-                const matchesType = !typeFilter || session.Type === typeFilter;
                 const matchesTopic = !topicFilter || session.Topic === topicFilter;
+                const matchesType = !typeFilter || session.Type === typeFilter;
+                const matchesTag = !tagFilter || 
+                    session.Tag1 === tagFilter || 
+                    session.Tag2 === tagFilter || 
+                    session.Tag3 === tagFilter || 
+                    session.Tag4 === tagFilter || 
+                    session.Tag5 === tagFilter;
 
-                return matchesSearch && matchesDate && matchesStage && matchesType && matchesTopic;
+                return matchesSearch && matchesDate && matchesStage && matchesTopic && matchesType && matchesTag;
             });
 
             renderSessions();
         }
 
-        // Render sessions
         function renderSessions() {
             const container = document.getElementById('sessionsContainer');
             const resultCount = document.getElementById('resultCount');
@@ -2218,31 +2263,39 @@
                 return;
             }
 
-            container.innerHTML = filteredSessions.map((session, index) => `
-                <div class="session-card" onclick="openModal(${index})">
-                    <div class="session-type">${session.Type}</div>
-                    <div class="session-time">
-                        ${session.Date} | ${session.Begin} - ${session.End}
+            container.innerHTML = filteredSessions.map((session, index) => {
+                const tags = [session.Tag1, session.Tag2, session.Tag3, session.Tag4, session.Tag5]
+                    .filter(tag => tag && tag.trim());
+
+                const tagsHtml = tags.length > 0 
+                    ? `<div class="session-tags">${tags.map(tag => `<span class="tag-badge">${tag}</span>`).join('')}</div>`
+                    : '';
+
+                return `
+                    <div class="session-card" onclick="openModal(${index})">
+                        <div class="card-top-meta">
+                            <span class="meta-badge">${session.Stage}</span>
+                            <span class="meta-badge">${session.Topic}</span>
+                        </div>
+                        <div class="session-type">${session.Type}</div>
+                        <div class="session-time">
+                            ${session.Date} | ${session.Begin} - ${session.End}
+                        </div>
+                        <div class="session-title">${session.Title}</div>
+                        ${session.Speaker ? `<div class="session-speaker">${session.Speaker.replace(/\n\/\n/g, ' / ')}</div>` : ''}
+                        ${session.Affiliation ? `<div class="session-affiliation">${session.Affiliation.replace(/\n\/\n/g, ' / ')}</div>` : ''}
+                        ${tagsHtml}
+                        ${session['Session Introduction'] ? `<div class="session-intro">${session['Session Introduction']}</div>` : ''}
                     </div>
-                    <div class="session-title">${session.Title}</div>
-                    ${session.Speaker ? `<div class="session-speaker">${session.Speaker.replace(/\n\/\n/g, ' / ')}</div>` : ''}
-                    ${session.Affiliation ? `<div class="session-affiliation">${session.Affiliation.replace(/\n\/\n/g, ' / ')}</div>` : ''}
-                    <div class="session-meta">
-                        <span class="meta-badge">${session.Stage}</span>
-                        <span class="meta-badge">${session.Topic}</span>
-                    </div>
-                    ${session['Session Introduction'] ? `<div class="session-intro">${session['Session Introduction']}</div>` : ''}
-                </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Open modal with session details
         function openModal(index) {
             const session = filteredSessions[index];
             const modal = document.getElementById('sessionModal');
             const modalBody = document.getElementById('modalBody');
 
-            // Parse Key Takeaways if it contains bullet points
             let keyTakeawaysHtml = '';
             if (session['Key Takeaways']) {
                 const takeaways = session['Key Takeaways'].split('\n').filter(t => t.trim());
@@ -2253,7 +2306,6 @@
                 }
             }
 
-            // Format speaker info with slashes displayed properly
             let speakerHtml = '';
             if (session.Speaker) {
                 const speakers = session.Speaker.split('\n/\n');
@@ -2272,18 +2324,25 @@
                 }).join('');
             }
 
+            const tags = [session.Tag1, session.Tag2, session.Tag3, session.Tag4, session.Tag5]
+                .filter(tag => tag && tag.trim());
+            const tagsHtml = tags.length > 0 
+                ? tags.map(tag => `<span class="tag-badge" style="margin-right: 8px;">${tag}</span>`).join('')
+                : '';
+
             modalBody.innerHTML = `
                 <div class="modal-header">
+                    <div class="card-top-meta">
+                        <span class="meta-badge">${session.Stage}</span>
+                        <span class="meta-badge">${session.Topic}</span>
+                    </div>
                     <div class="session-type">${session.Type}</div>
                     <div class="modal-title">${session.Title}</div>
                     <div class="session-time" style="font-size: 15px;">
                         ${session.Date} | ${session.Begin} - ${session.End}
                     </div>
                     ${speakerHtml}
-                    <div class="modal-meta">
-                        <span class="meta-badge">${session.Stage}</span>
-                        <span class="meta-badge">${session.Topic}</span>
-                    </div>
+                    ${tagsHtml ? `<div style="margin-top: 20px;">${tagsHtml}</div>` : ''}
                 </div>
 
                 ${session['Session Introduction'] ? `
@@ -2317,50 +2376,44 @@
 
             modal.classList.add('active');
             document.body.style.overflow = 'hidden';
-
-            // Scroll to top of modal content
             modal.scrollTop = 0;
         }
 
-        // Close modal
         function closeModal() {
             const modal = document.getElementById('sessionModal');
             modal.classList.remove('active');
             document.body.style.overflow = 'auto';
         }
 
-        // Close modal when clicking outside
         function closeModalOnOutsideClick(event) {
             if (event.target.classList.contains('modal-wrapper')) {
                 closeModal();
             }
         }
 
-        // Close modal with ESC key
         document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeModal();
             }
         });
 
-        // Reset filters
         function resetFilters() {
             document.getElementById('searchBox').value = '';
             document.getElementById('dateFilter').value = '';
             document.getElementById('stageFilter').value = '';
-            document.getElementById('typeFilter').value = '';
             document.getElementById('topicFilter').value = '';
+            document.getElementById('typeFilter').value = '';
+            document.getElementById('tagFilter').value = '';
             filterSessions();
         }
 
-        // Event listeners
         document.getElementById('searchBox').addEventListener('input', filterSessions);
         document.getElementById('dateFilter').addEventListener('change', filterSessions);
         document.getElementById('stageFilter').addEventListener('change', filterSessions);
-        document.getElementById('typeFilter').addEventListener('change', filterSessions);
         document.getElementById('topicFilter').addEventListener('change', filterSessions);
+        document.getElementById('typeFilter').addEventListener('change', filterSessions);
+        document.getElementById('tagFilter').addEventListener('change', filterSessions);
 
-        // Initialize on page load
         initializeFilters();
         filterSessions();
     </script>

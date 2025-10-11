@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNLEASH Conference Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,9 +13,9 @@
         }
 
         body {
-            font-family: 'Georgia', 'Times New Roman', serif;
-            background: #ffffff;
-            color: #000000;
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #2caae4 0%, #1e90d4 50%, #1670b8 100%);
+            color: #1e293b;
             padding: 0;
             min-height: 100vh;
         }
@@ -22,37 +23,42 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 60px 40px;
+            padding: 40px 20px;
         }
 
         .header {
-            margin-bottom: 60px;
-            padding-bottom: 40px;
-            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 40px;
+            text-align: center;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
         }
 
         .header h1 {
-            font-size: 3.2em;
-            margin-bottom: 20px;
-            font-weight: 400;
-            color: #000000;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #2caae4 0%, #1e90d4 50%, #1670b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -1px;
         }
 
         .header p {
-            font-size: 1.3em;
-            color: #5c5c5c;
-            font-weight: 300;
-            line-height: 1.5;
+            font-size: 1.1em;
+            color: #64748b;
+            font-weight: 400;
+            line-height: 1.6;
         }
 
         .controls {
-            background: #f5f5f5;
-            padding: 40px;
-            border-radius: 4px;
-            margin-bottom: 40px;
-            border: 1px solid #e0e0e0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .search-box {
@@ -60,27 +66,28 @@
             padding: 16px 20px;
             font-size: 16px;
             background: #ffffff;
-            border: 1px solid #c0c0c0;
-            border-radius: 2px;
-            margin-bottom: 30px;
-            color: #000000;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            transition: border-color 0.2s;
+            border: 2px solid #d4ebf7;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            color: #1e293b;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.3s;
         }
 
         .search-box::placeholder {
-            color: #808080;
+            color: #94a3b8;
         }
 
         .search-box:focus {
             outline: none;
-            border-color: #000000;
+            border-color: #2caae4;
+            box-shadow: 0 0 0 3px rgba(44, 170, 228, 0.1);
         }
 
         .filters {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
         }
 
         .filter-group {
@@ -90,36 +97,38 @@
 
         .filter-group label {
             font-weight: 600;
-            margin-bottom: 12px;
-            color: #000000;
+            margin-bottom: 8px;
+            color: #334155;
             font-size: 13px;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            letter-spacing: 0.5px;
         }
 
         .filter-group select {
-            padding: 14px 16px;
+            padding: 12px 14px;
             background: #ffffff;
-            border: 1px solid #c0c0c0;
-            border-radius: 2px;
-            font-size: 15px;
+            border: 2px solid #d4ebf7;
+            border-radius: 10px;
+            font-size: 14px;
             cursor: pointer;
-            color: #000000;
-            font-family: 'Georgia', 'Times New Roman', serif;
-            transition: border-color 0.2s;
+            color: #1e293b;
+            font-family: 'Noto Sans KR', sans-serif;
+            transition: all 0.3s;
+            font-weight: 500;
         }
 
         .filter-group select:focus {
             outline: none;
-            border-color: #000000;
+            border-color: #2caae4;
+            box-shadow: 0 0 0 3px rgba(44, 170, 228, 0.1);
         }
 
         .stats {
-            background: #ffffff;
-            padding: 25px 0;
-            margin-bottom: 40px;
-            border-bottom: 1px solid #e0e0e0;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .stats-content {
@@ -127,61 +136,65 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 20px;
+            gap: 15px;
         }
 
         .stat-item {
-            font-size: 17px;
-            color: #5c5c5c;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            font-size: 16px;
+            color: #64748b;
+            font-weight: 500;
         }
 
         .stat-number {
             font-weight: 700;
-            color: #000000;
-            font-size: 28px;
+            background: linear-gradient(135deg, #2caae4 0%, #1e90d4 50%, #1670b8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-size: 32px;
         }
 
         .reset-btn {
-            padding: 14px 32px;
-            background: #000000;
+            padding: 12px 28px;
+            background: linear-gradient(135deg, #2caae4 0%, #1e90d4 100%);
             color: #ffffff;
             border: none;
-            border-radius: 2px;
+            border-radius: 10px;
             cursor: pointer;
             font-size: 13px;
             font-weight: 600;
-            transition: background 0.2s;
+            transition: all 0.3s;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            box-shadow: 0 4px 15px rgba(44, 170, 228, 0.3);
         }
 
         .reset-btn:hover {
-            background: #333333;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(44, 170, 228, 0.4);
         }
 
         .sessions-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-            gap: 30px;
-            margin-bottom: 40px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
         }
 
         .session-card {
-            background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            padding: 32px;
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 16px;
+            padding: 28px;
             transition: all 0.3s;
             cursor: pointer;
             position: relative;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
 
         .session-card:hover {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border-color: #000000;
-            transform: translateY(-4px);
+            transform: translateY(-8px);
+            box-shadow: 0 12px 35px rgba(44, 170, 228, 0.3);
         }
 
         .session-card::before {
@@ -189,9 +202,10 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 3px;
+            width: 4px;
             height: 100%;
-            background: #000000;
+            background: linear-gradient(135deg, #2caae4 0%, #1e90d4 50%, #1670b8 100%);
+            border-radius: 16px 0 0 16px;
             opacity: 0;
             transition: opacity 0.3s;
         }
@@ -202,94 +216,93 @@
 
         .card-top-meta {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             margin-bottom: 12px;
         }
 
         .meta-badge {
             padding: 6px 12px;
-            background: #f5f5f5;
-            border: 1px solid #e0e0e0;
-            border-radius: 2px;
+            background: linear-gradient(135deg, #d4ebf7 0%, #c4e4f5 100%);
+            border: 1px solid #7dc8e8;
+            border-radius: 8px;
             font-size: 11px;
-            color: #5c5c5c;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #126a9a;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
         .session-type {
             display: inline-block;
-            padding: 6px 14px;
-            background: #000000;
+            padding: 7px 16px;
+            background: linear-gradient(135deg, #2caae4 0%, #1e90d4 100%);
             color: #ffffff;
-            border-radius: 2px;
-            font-size: 10px;
+            border-radius: 8px;
+            font-size: 11px;
             font-weight: 700;
-            margin-bottom: 16px;
+            margin-bottom: 14px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            box-shadow: 0 2px 10px rgba(44, 170, 228, 0.3);
         }
 
         .session-time {
-            color: #808080;
+            color: #94a3b8;
             font-size: 14px;
-            margin-bottom: 16px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            margin-bottom: 14px;
+            font-weight: 500;
         }
 
         .session-title {
-            font-size: 22px;
-            font-weight: 400;
-            color: #000000;
-            margin-bottom: 16px;
-            line-height: 1.4;
-            letter-spacing: -0.5px;
+            font-size: 20px;
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 14px;
+            line-height: 1.5;
+            letter-spacing: -0.3px;
         }
 
         .session-speaker {
-            color: #000000;
+            color: #334155;
             font-weight: 600;
             margin-bottom: 6px;
             font-size: 15px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .session-affiliation {
-            color: #5c5c5c;
+            color: #64748b;
             font-size: 14px;
-            margin-bottom: 20px;
-            font-style: italic;
+            margin-bottom: 18px;
+            font-weight: 400;
         }
 
         .session-tags {
             display: flex;
-            gap: 8px;
+            gap: 6px;
             flex-wrap: wrap;
-            margin-top: 16px;
-            padding-top: 16px;
-            border-top: 1px solid #e0e0e0;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #e2e8f0;
         }
 
         .tag-badge {
             padding: 5px 10px;
-            background: #ffffff;
-            border: 1px solid #c0c0c0;
-            border-radius: 2px;
+            background: #e8f5fc;
+            border: 1px solid #a8d8f0;
+            border-radius: 6px;
             font-size: 11px;
-            color: #5c5c5c;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #0d5a82;
+            font-weight: 500;
         }
 
         .session-intro {
-            color: #5c5c5c;
-            font-size: 15px;
+            color: #64748b;
+            font-size: 14px;
             line-height: 1.7;
-            margin-top: 20px;
-            border-top: 1px solid #e0e0e0;
-            padding-top: 20px;
+            margin-top: 18px;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 18px;
             display: -webkit-box;
             -webkit-line-clamp: 3;
             -webkit-box-orient: vertical;
@@ -298,31 +311,30 @@
 
         .click-hint {
             text-align: center;
-            color: #808080;
+            color: rgba(255, 255, 255, 0.95);
             font-size: 14px;
             margin-top: 20px;
-            font-style: italic;
-            font-family: 'Georgia', 'Times New Roman', serif;
+            font-weight: 500;
         }
 
         .no-results {
             text-align: center;
-            padding: 100px 40px;
-            background: #f5f5f5;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
+            padding: 80px 30px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         .no-results h2 {
-            color: #000000;
+            color: #1e293b;
             margin-bottom: 12px;
-            font-weight: 400;
-            font-size: 2em;
+            font-weight: 600;
+            font-size: 1.8em;
         }
 
         .no-results p {
-            color: #5c5c5c;
-            font-size: 1.1em;
+            color: #64748b;
+            font-size: 1em;
         }
 
         .modal {
@@ -333,7 +345,7 @@
             top: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             overflow-y: auto;
             padding: 40px 0;
         }
@@ -352,14 +364,14 @@
 
         .modal-content {
             background: #ffffff;
-            border: 1px solid #e0e0e0;
-            border-radius: 4px;
-            padding: 60px;
+            border-radius: 20px;
+            padding: 50px;
             max-width: 900px;
             width: 100%;
             position: relative;
             margin: auto;
             animation: modalFadeIn 0.3s ease;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
         }
 
         @keyframes modalFadeIn {
@@ -375,76 +387,67 @@
 
         .modal-close {
             position: absolute;
-            top: 30px;
-            right: 30px;
-            width: 36px;
-            height: 36px;
-            background: #f5f5f5;
-            border: 1px solid #e0e0e0;
-            border-radius: 2px;
+            top: 25px;
+            right: 25px;
+            width: 40px;
+            height: 40px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 10px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 24px;
-            color: #000000;
-            transition: all 0.2s;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            color: #64748b;
+            transition: all 0.3s;
             z-index: 10;
         }
 
         .modal-close:hover {
-            background: #000000;
+            background: linear-gradient(135deg, #2caae4 0%, #1e90d4 100%);
             color: #ffffff;
-            border-color: #000000;
+            transform: rotate(90deg);
         }
 
         .modal-header {
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid #e0e0e0;
+            margin-bottom: 35px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #d4ebf7;
         }
 
         .modal-title {
-            font-size: 32px;
-            font-weight: 400;
-            color: #000000;
-            margin-bottom: 20px;
-            line-height: 1.3;
-            letter-spacing: -1px;
-        }
-
-        .modal-meta {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-top: 20px;
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 18px;
+            line-height: 1.4;
+            letter-spacing: -0.5px;
         }
 
         .modal-section {
-            margin-bottom: 35px;
+            margin-bottom: 30px;
         }
 
         .modal-section h3 {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 700;
-            color: #000000;
-            margin-bottom: 16px;
+            color: #2caae4;
+            margin-bottom: 14px;
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .modal-section p {
-            color: #5c5c5c;
+            color: #334155;
             line-height: 1.8;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .modal-section ul {
-            color: #5c5c5c;
+            color: #334155;
             line-height: 1.9;
-            font-size: 16px;
+            font-size: 15px;
             padding-left: 24px;
         }
 
@@ -454,31 +457,73 @@
 
         @media (max-width: 768px) {
             .container {
-                padding: 40px 20px;
+                padding: 20px 15px;
             }
 
-            .sessions-grid {
-                grid-template-columns: 1fr;
+            .header {
+                padding: 30px 20px;
+                border-radius: 16px;
             }
 
             .header h1 {
-                font-size: 2.5em;
+                font-size: 2em;
+            }
+
+            .header p {
+                font-size: 1em;
+            }
+
+            .controls {
+                padding: 20px;
+                border-radius: 12px;
             }
 
             .filters {
                 grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .filter-group select {
+                padding: 14px;
+                font-size: 15px;
+            }
+
+            .sessions-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .session-card {
+                padding: 24px;
+                border-radius: 12px;
             }
 
             .modal-content {
-                padding: 40px 30px;
+                padding: 35px 25px;
+                border-radius: 16px;
             }
 
             .modal-title {
-                font-size: 26px;
+                font-size: 22px;
             }
 
             .modal-wrapper {
+                padding: 20px 15px;
+            }
+
+            .stats {
                 padding: 20px;
+            }
+
+            .stats-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .reset-btn {
+                width: 100%;
+                padding: 14px;
             }
         }
     </style>
@@ -558,7 +603,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "08:55",
     "End": "09:35",
     "Type": "KEYNOTE",
@@ -579,7 +624,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:40",
     "End": "09:55",
     "Type": "KEYNOTE",
@@ -600,7 +645,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "10:00",
     "End": "10:30",
     "Type": "PANEL",
@@ -621,7 +666,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "16:25",
     "End": "17:00",
     "Type": "PANEL",
@@ -642,7 +687,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "17:00",
     "End": "18:00",
     "Type": "KEYNOTE",
@@ -663,7 +708,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "08:55",
     "End": "09:45",
     "Type": "KEYNOTE",
@@ -684,7 +729,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:50",
     "End": "10:15",
     "Type": "KEYNOTE",
@@ -705,7 +750,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "15:50",
     "End": "16:25",
     "Type": "PANEL",
@@ -726,7 +771,7 @@
   {
     "Stage": "Stage 1",
     "Topic": "Main Stage",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "16:30",
     "End": "17:00",
     "Type": "KEYNOTE",
@@ -747,7 +792,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:00",
     "End": "09:30",
     "Type": "CASE STUDY",
@@ -768,7 +813,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:35",
     "End": "10:00",
     "Type": "PANEL",
@@ -789,7 +834,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "10:05",
     "End": "10:30",
     "Type": "FIRESIDE",
@@ -810,7 +855,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "11:30",
     "End": "11:55",
     "Type": "FIRESIDE",
@@ -831,7 +876,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "12:00",
     "End": "12:30",
     "Type": "CASE STUDY",
@@ -852,7 +897,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "12:35",
     "End": "13:00",
     "Type": "CASE STUDY",
@@ -873,7 +918,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "14:30",
     "End": "14:55",
     "Type": "FIRESIDE",
@@ -894,7 +939,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "15:00",
     "End": "15:25",
     "Type": "CASE STUDY",
@@ -915,7 +960,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "15:30",
     "End": "15:55",
     "Type": "CASE STUDY",
@@ -936,7 +981,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:00",
     "End": "09:25",
     "Type": "CASE STUDY",
@@ -957,7 +1002,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:30",
     "End": "10:00",
     "Type": "PANEL",
@@ -978,7 +1023,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "10:05",
     "End": "10:30",
     "Type": "FIRESIDE",
@@ -999,7 +1044,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "11:30",
     "End": "11:55",
     "Type": "CASE STUDY",
@@ -1020,7 +1065,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "12:00",
     "End": "12:30",
     "Type": "PANEL",
@@ -1041,7 +1086,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "12:35",
     "End": "13:00",
     "Type": "FIRESIDE",
@@ -1062,7 +1107,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "14:00",
     "End": "14:25",
     "Type": "CASE STUDY",
@@ -1083,7 +1128,7 @@
   {
     "Stage": "Stage 2",
     "Topic": "HR Reinvention",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "14:30",
     "End": "15:00",
     "Type": "CASE STUDY",
@@ -1104,7 +1149,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:00",
     "End": "09:30",
     "Type": "CASE STUDY",
@@ -1125,7 +1170,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:35",
     "End": "10:00",
     "Type": "PANEL",
@@ -1146,7 +1191,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "10:05",
     "End": "10:30",
     "Type": "CASE STUDY",
@@ -1167,7 +1212,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "11:30",
     "End": "11:55",
     "Type": "PANEL",
@@ -1188,7 +1233,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "12:00",
     "End": "12:30",
     "Type": "PANEL",
@@ -1209,7 +1254,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "12:35",
     "End": "13:00",
     "Type": "CASE STUDY",
@@ -1230,7 +1275,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "14:30",
     "End": "14:55",
     "Type": "CASE STUDY",
@@ -1251,7 +1296,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "15:00",
     "End": "15:30",
     "Type": "PANEL",
@@ -1272,7 +1317,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "15:30",
     "End": "15:55",
     "Type": "CASE STUDY",
@@ -1293,7 +1338,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:05",
     "End": "09:30",
     "Type": "CASE STUDY",
@@ -1314,7 +1359,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:30",
     "End": "10:00",
     "Type": "CASE STUDY",
@@ -1335,7 +1380,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "10:05",
     "End": "10:30",
     "Type": "CASE STUDY",
@@ -1356,7 +1401,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "11:30",
     "End": "11:55",
     "Type": "CASE STUDY",
@@ -1377,7 +1422,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "12:00",
     "End": "12:30",
     "Type": "PANEL",
@@ -1398,7 +1443,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "12:35",
     "End": "13:00",
     "Type": "PANEL",
@@ -1419,7 +1464,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "14:00",
     "End": "14:25",
     "Type": "PANEL",
@@ -1440,7 +1485,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "14:30",
     "End": "15:00",
     "Type": "CASE STUDY",
@@ -1461,7 +1506,7 @@
   {
     "Stage": "Stage 3",
     "Topic": "AI",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "15:00",
     "End": "15:30",
     "Type": "CASE STUDY",
@@ -1482,7 +1527,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:00",
     "End": "09:30",
     "Type": "CASE STUDY",
@@ -1503,7 +1548,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:35",
     "End": "10:00",
     "Type": "PANEL",
@@ -1524,7 +1569,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "10:05",
     "End": "10:30",
     "Type": "PANEL",
@@ -1545,7 +1590,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "11:30",
     "End": "11:55",
     "Type": "CASE STUDY",
@@ -1566,7 +1611,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "12:00",
     "End": "12:30",
     "Type": "PANEL",
@@ -1587,7 +1632,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "12:35",
     "End": "13:00",
     "Type": "CASE STUDY",
@@ -1608,7 +1653,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "14:30",
     "End": "14:55",
     "Type": "CASE STUDY",
@@ -1629,7 +1674,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "15:00",
     "End": "15:25",
     "Type": "CASE STUDY",
@@ -1650,7 +1695,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "15:30",
     "End": "15:55",
     "Type": "FIRESIDE",
@@ -1671,7 +1716,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:05",
     "End": "09:25",
     "Type": "CASE STUDY",
@@ -1692,7 +1737,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:30",
     "End": "10:00",
     "Type": "CASE STUDY",
@@ -1713,7 +1758,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "10:05",
     "End": "10:30",
     "Type": "CASE STUDY",
@@ -1734,7 +1779,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "11:30",
     "End": "11:55",
     "Type": "FIRESIDE",
@@ -1755,7 +1800,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "12:35",
     "End": "13:00",
     "Type": "FIRESIDE",
@@ -1776,7 +1821,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "14:00",
     "End": "14:25",
     "Type": "PANEL",
@@ -1797,7 +1842,7 @@
   {
     "Stage": "Stage 4",
     "Topic": "Worktech",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "14:30",
     "End": "15:00",
     "Type": "CASE STUDY",
@@ -1818,7 +1863,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:00",
     "End": "09:30",
     "Type": "CASE STUDY",
@@ -1839,7 +1884,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "09:35",
     "End": "10:00",
     "Type": "CASE STUDY",
@@ -1860,7 +1905,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "10:05",
     "End": "10:30",
     "Type": "PANEL",
@@ -1881,7 +1926,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "11:30",
     "End": "11:55",
     "Type": "PANEL",
@@ -1902,7 +1947,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "12:00",
     "End": "12:30",
     "Type": "CASE STUDY",
@@ -1923,7 +1968,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "12:35",
     "End": "13:00",
     "Type": "CASE STUDY",
@@ -1944,7 +1989,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "14:30",
     "End": "14:55",
     "Type": "CASE STUDY",
@@ -1965,7 +2010,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "15:00",
     "End": "15:25",
     "Type": "FIRESIDE",
@@ -1986,7 +2031,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1021.(화)",
+    "Date": "10.21.(화)",
     "Begin": "15:30",
     "End": "15:55",
     "Type": "FIRESIDE",
@@ -2007,7 +2052,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:00",
     "End": "09:25",
     "Type": "CASE STUDY",
@@ -2028,7 +2073,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "09:30",
     "End": "10:00",
     "Type": "CASE STUDY",
@@ -2049,7 +2094,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "10:05",
     "End": "10:30",
     "Type": "CASE STUDY",
@@ -2070,7 +2115,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "11:30",
     "End": "11:55",
     "Type": "CASE STUDY",
@@ -2091,7 +2136,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "12:00",
     "End": "12:35",
     "Type": "PANEL",
@@ -2112,7 +2157,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "12:35",
     "End": "13:00",
     "Type": "PANEL",
@@ -2133,7 +2178,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "14:00",
     "End": "14:25",
     "Type": "CASE STUDY",
@@ -2154,7 +2199,7 @@
   {
     "Stage": "Stage 5",
     "Topic": "Talent",
-    "Date": "1022.(수)",
+    "Date": "10.22.(수)",
     "Begin": "14:30",
     "End": "15:00",
     "Type": "CASE STUDY",
@@ -2314,7 +2359,7 @@
                 speakerHtml = speakers.map((speaker, idx) => {
                     let html = `<div class="session-speaker" style="font-size: 17px; margin-top: 16px;">${speaker.trim()}</div>`;
                     if (positions[idx]) {
-                        html += `<div style="color: #5c5c5c; font-size: 15px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;">${positions[idx].trim()}</div>`;
+                        html += `<div style="color: #64748b; font-size: 15px;">${positions[idx].trim()}</div>`;
                     }
                     if (affiliations[idx]) {
                         html += `<div class="session-affiliation">${affiliations[idx].trim()}</div>`;
